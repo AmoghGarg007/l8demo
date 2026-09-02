@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Layer8 — front page
 
-## Getting Started
-
-First, run the development server:
+Landing page for **Layer8**, the cybersecurity club at PES University, Electronic
+City Campus. Next.js 16 (App Router) + Tailwind v4.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev     # http://localhost:3000
+npm run build
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## What's here
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `src/app/page.tsx` — the whole landing page (header, hero + typed terminal,
+  domains grid, weekly-CTF strip, footer). Client component for the mobile menu
+  and the terminal typewriter.
+- `src/app/globals.css` — the single theme (club colours: navy `#05070d` /
+  `#0b1120`, white text, blue `#3b82f6` accent) plus every component style.
+- `src/app/layout.tsx` — fonts: Space Grotesk (display) + JetBrains Mono (body).
+- `src/app/icon.svg` — favicon (hexagonal figure-8).
+- `public/brand/` — `l8-mark.png` (logo, inverted to white in CSS) and
+  `pesu.png` (PES University lockup, footer).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Header nav
 
-## Learn More
+Buttons are intentionally non-functional (`<button type="button">`), no routes
+yet: Blogs · Weekly CTFs · Events · Resources · Projects · Core · Domains ·
+Legacy/Alumni · Hall of Fame. The same `NAV` array in `page.tsx` also drives the
+footer "pages" column.
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Linked to the Vercel project `l8demo` (`.vercel/`). Ship with:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+vercel deploy --prod
+```
