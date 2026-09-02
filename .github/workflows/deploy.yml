@@ -40,5 +40,5 @@ jobs:
 
       - name: Point canonical domain at this deploy
         run: |
-          vercel alias set "$(tail -n1 deployment-url.txt)" layer8-pesu-ecc.vercel.app \
+          vercel alias set "$(tail -n1 deployment-url.txt)" layer8ecc.vercel.app \
             --token=${{ secrets.VERCEL_TOKEN }}
