@@ -331,10 +331,6 @@
     color: var(--accent);
   }
 
-  .noise-hover:hover {
-    animation: shake 0.25s linear;
-  }
-
   /* per-route enter animation (see app/template.tsx).
      z-index keeps this above the fixed vignette/scanline overlays while the
      animation temporarily makes it its own stacking context. */
@@ -395,12 +391,6 @@
   91% { clip-path: inset(70% 0 12% 0); }
   94% { clip-path: inset(30% 0 40% 0); }
   98% { clip-path: inset(5% 0 80% 0); }
-}
-
-@keyframes shake {
-  0%, 100% { transform: translate(0, 0); }
-  25% { transform: translate(-1px, 1px); }
-  75% { transform: translate(1px, -1px); }
 }
 
 @keyframes route-in {

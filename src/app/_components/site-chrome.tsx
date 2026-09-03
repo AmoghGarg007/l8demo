@@ -86,7 +86,7 @@ export function Header({ current }: { current?: string }) {
     <header className="sticky top-0 z-50 backdrop-blur-md bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] border-b border-border">
       <div className="wrap">
         <div className="flex items-center justify-between gap-4 h-16">
-          <Link href="/" className="text-lg noise-hover">
+          <Link href="/" className="text-lg">
             <Wordmark />
           </Link>
 
