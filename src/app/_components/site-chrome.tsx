@@ -23,6 +23,7 @@ export const NAV = [
 const ROUTES: Partial<Record<(typeof NAV)[number], string>> = {
   Blogs: "/blogs",
   Resources: "/resources",
+  Core: "/core",
 };
 
 /* ------------------------------------------------------------------ */
