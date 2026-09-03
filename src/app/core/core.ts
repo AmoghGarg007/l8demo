@@ -164,8 +164,30 @@ export const DOMAINS: Domain[] = [
 
 export const LEADERSHIP: Member[] = MEMBERS.filter((m) => m.group === "Club");
 
+/** Per-group accent — keeps the four domains visually distinct. */
+export const GROUP_ACCENT: Record<Member["group"], string> = {
+  Club: "#3b82f6",
+  Tech: "#38bdf8",
+  Events: "#f59e0b",
+  Media: "#a855f7",
+  Design: "#10b981",
+};
+
 export function getMember(slug: string): Member | undefined {
   return MEMBERS.find((m) => m.slug === slug);
+}
+
+/** The other half of a member's pair — domain co-lead, or the other club lead. */
+export function counterpartOf(slug: string): Member | undefined {
+  const d = DOMAINS.find((x) => x.headSlug === slug || x.viceSlug === slug);
+  if (d) {
+    return getMember(d.headSlug === slug ? d.viceSlug : d.headSlug);
+  }
+  const m = getMember(slug);
+  if (m?.group === "Club") {
+    return MEMBERS.find((x) => x.group === "Club" && x.slug !== slug);
+  }
+  return undefined;
 }
 
 export function initials(name: string): string {
