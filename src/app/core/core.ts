@@ -164,17 +164,23 @@ export const DOMAINS: Domain[] = [
 
 export const LEADERSHIP: Member[] = MEMBERS.filter((m) => m.group === "Club");
 
-/**
- * Domain accent. Kept as a per-group map so individual domains can be tinted
- * later, but for now every group uses the site accent so /core stays on-theme.
- */
-export const GROUP_ACCENT: Record<Member["group"], string> = {
-  Club: "var(--accent)",
-  Tech: "var(--accent)",
-  Events: "var(--accent)",
-  Media: "var(--accent)",
-  Design: "var(--accent)",
+/** The roster grouped for display: leadership first, then each domain. */
+export type RosterGroup = {
+  label: string;
+  hint?: string;
+  members: Member[];
 };
+
+export const ROSTER: RosterGroup[] = [
+  { label: "leadership", members: LEADERSHIP },
+  ...DOMAINS.map((d) => ({
+    label: `~/${d.slug}`,
+    hint: d.tagline,
+    members: [d.headSlug, d.viceSlug]
+      .map((s) => MEMBERS.find((m) => m.slug === s))
+      .filter((m): m is Member => Boolean(m)),
+  })),
+];
 
 export function getMember(slug: string): Member | undefined {
   return MEMBERS.find((m) => m.slug === slug);

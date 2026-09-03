@@ -1,133 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Header, Footer } from "../_components/site-chrome";
 import {
-  DOMAINS,
-  GROUP_ACCENT,
-  LEADERSHIP,
+  MEMBERS,
+  ROSTER,
+  counterpartOf,
   getMember,
   initials,
   type Member,
 } from "./core";
 
-const ROSTER_STATS: readonly (readonly [string, string])[] = [
-  ["roster", "10"],
-  ["domains", "04"],
-  ["cadence", "weekly"],
-  ["seats", "next cycle"],
-];
-
 const CORE_TERM = `$ cat core/roster.txt
-club_head        1
-club_vice_head   1
-domains          4   (tech events media design)
-per_domain       head + vice
+club            head + vice
+tech events     head + vice
+media design    head + vice
+total           10 people
 
 $ `;
-const CORE_TYPE_LINE = "./standup --domain all";
+const CORE_TYPE_LINE = "./whois --select";
 
 /* ------------------------------------------------------------------ */
-/*  bits                                                                */
+/*  terminal                                                            */
 /* ------------------------------------------------------------------ */
-
-function Monogram({
-  name,
-  accent,
-  className = "w-11 h-11 text-sm",
-}: {
-  name: string;
-  accent?: string;
-  className?: string;
-}) {
-  return (
-    <span
-      className={`grid place-items-center shrink-0 border border-border bg-bg-3 font-display font-bold select-none ${className}`}
-      style={accent ? { color: accent } : undefined}
-      aria-hidden
-    >
-      {initials(name)}
-    </span>
-  );
-}
-
-/* club head / vice — richer card with inline contact */
-function LeaderCard({ member }: { member: Member }) {
-  const accent = GROUP_ACCENT[member.group];
-  const contacts = [
-    { label: "github", href: `https://github.com/${member.github}` },
-    { label: "linkedin", href: `https://www.linkedin.com/in/${member.linkedin}` },
-    { label: "email", href: `mailto:${member.email}` },
-  ];
-  return (
-    <article className="card flex flex-col gap-4">
-      <div className="flex items-center gap-4">
-        <Monogram
-          name={member.name}
-          accent={accent}
-          className="w-14 h-14 text-base"
-        />
-        <div className="min-w-0">
-          <Link
-            href={`/core/${member.slug}`}
-            className="font-display font-bold text-lg text-fg hover:text-accent"
-          >
-            {member.name}
-          </Link>
-          <div className="text-[0.7rem] tracking-[0.14em] uppercase text-fg-faint">
-            {member.role}
-          </div>
-          <div className="mt-0.5 font-mono text-xs text-fg-faint">
-            @{member.github}
-          </div>
-        </div>
-      </div>
-
-      <p className="text-sm text-fg-dim">{member.bio}</p>
-
-      <div className="mt-auto pt-4 border-t border-border flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-        {contacts.map((c) => (
-          <a
-            key={c.label}
-            href={c.href}
-            target={c.label === "email" ? undefined : "_blank"}
-            rel={c.label === "email" ? undefined : "noreferrer"}
-            className="link-ghost"
-          >
-            {c.label}
-          </a>
-        ))}
-        <Link href={`/core/${member.slug}`} className="ml-auto text-accent">
-          profile &gt;
-        </Link>
-      </div>
-    </article>
-  );
-}
-
-/* compact head/vice row inside a domain card */
-function MemberRow({ member, accent }: { member: Member; accent: string }) {
-  return (
-    <Link
-      href={`/core/${member.slug}`}
-      className="flex items-center gap-3 -mx-2 px-2 py-1.5 transition-colors hover:bg-bg-3"
-    >
-      <Monogram name={member.name} accent={accent} className="w-9 h-9 text-xs" />
-      <span className="min-w-0">
-        <span className="block font-display font-bold text-sm text-fg leading-tight">
-          {member.name}
-        </span>
-        <span className="block text-[0.68rem] tracking-[0.14em] uppercase text-fg-faint">
-          {member.role}
-        </span>
-      </span>
-      <span className="ml-auto text-sm" style={{ color: accent }} aria-hidden>
-        &gt;
-      </span>
-    </Link>
-  );
-}
 
 function CoreTerminal() {
   const [typed, setTyped] = useState("");
@@ -182,10 +78,162 @@ function CoreTerminal() {
 }
 
 /* ------------------------------------------------------------------ */
+/*  roster + detail                                                     */
+/* ------------------------------------------------------------------ */
+
+function RosterRow({
+  member,
+  active,
+  onSelect,
+}: {
+  member: Member;
+  active: boolean;
+  onSelect: (slug: string) => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(member.slug)}
+      aria-pressed={active}
+      className={`w-full flex items-center gap-3 px-3 py-2.5 text-left border-l-2 transition-colors ${
+        active
+          ? "border-l-accent bg-bg-2"
+          : "border-l-transparent hover:bg-bg-2/60"
+      }`}
+    >
+      <span
+        className={`text-xs ${active ? "text-accent" : "text-fg-faint"}`}
+        aria-hidden
+      >
+        {active ? "▸" : "·"}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block font-display font-bold text-sm text-fg leading-tight truncate">
+          {member.name}
+        </span>
+        <span className="block text-[0.62rem] tracking-[0.14em] uppercase text-fg-faint">
+          {member.role}
+        </span>
+      </span>
+    </button>
+  );
+}
+
+function Detail({
+  member,
+  onSelect,
+}: {
+  member: Member;
+  onSelect: (slug: string) => void;
+}) {
+  const counterpart = counterpartOf(member.slug);
+  const contacts = [
+    { label: "github", href: `https://github.com/${member.github}` },
+    { label: "linkedin", href: `https://www.linkedin.com/in/${member.linkedin}` },
+    { label: "email", href: `mailto:${member.email}` },
+  ];
+
+  return (
+    <div
+      key={member.slug}
+      style={{ animation: "route-in 0.22s ease-out" }}
+      className="card p-6 md:p-7"
+    >
+      <div className="flex items-start gap-4">
+        <span
+          className="grid place-items-center w-16 h-16 shrink-0 border border-border bg-bg-3 font-display font-bold text-xl text-accent select-none"
+          aria-hidden
+        >
+          {initials(member.name)}
+        </span>
+        <div className="min-w-0">
+          <span className="tag">{member.group}</span>
+          <h2 className="mt-2 font-display font-bold text-xl md:text-2xl leading-tight">
+            {member.name}
+          </h2>
+          <p className="mt-0.5 text-[0.7rem] tracking-[0.14em] uppercase text-fg-faint">
+            {member.role}
+          </p>
+          <p className="mt-0.5 font-mono text-xs text-fg-faint">
+            @{member.github}
+          </p>
+        </div>
+      </div>
+
+      <div className="rule my-5" />
+
+      <p className="text-sm text-fg-dim">{member.bio}</p>
+
+      <div className="mt-6 flex flex-wrap gap-2.5">
+        {contacts.map((c) => (
+          <a
+            key={c.label}
+            className="btn"
+            href={c.href}
+            target={c.label === "email" ? undefined : "_blank"}
+            rel={c.label === "email" ? undefined : "noreferrer"}
+          >
+            &gt; {c.label}
+          </a>
+        ))}
+      </div>
+      <p className="mt-3 text-xs text-fg-faint break-all">{member.email}</p>
+
+      {counterpart && (
+        <div className="mt-6 pt-5 border-t border-border">
+          <p className="kicker mb-2">alongside</p>
+          <button
+            type="button"
+            onClick={() => onSelect(counterpart.slug)}
+            className="group flex w-full items-center gap-3 text-left"
+          >
+            <span
+              className="grid place-items-center w-10 h-10 shrink-0 border border-border bg-bg-3 font-display font-bold text-xs text-accent select-none"
+              aria-hidden
+            >
+              {initials(counterpart.name)}
+            </span>
+            <span className="min-w-0">
+              <span className="block font-display font-bold text-sm text-fg leading-tight group-hover:text-accent transition-colors">
+                {counterpart.name}
+              </span>
+              <span className="block text-[0.62rem] tracking-[0.14em] uppercase text-fg-faint">
+                {counterpart.role}
+              </span>
+            </span>
+            <span className="ml-auto text-accent text-sm" aria-hidden>
+              &#8596;
+            </span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /*  page                                                                */
 /* ------------------------------------------------------------------ */
 
 export default function CoreClient() {
+  const [selected, setSelected] = useState<string>(MEMBERS[0].slug);
+  const detailRef = useRef<HTMLDivElement>(null);
+
+  const select = useCallback((slug: string) => {
+    setSelected(slug);
+    if (
+      typeof window !== "undefined" &&
+      !window.matchMedia("(min-width: 1024px)").matches
+    ) {
+      // on small screens the panel is below the list — bring it into view
+      requestAnimationFrame(() =>
+        detailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
+      );
+    }
+  }, []);
+
+  const member = getMember(selected) ?? MEMBERS[0];
+
   return (
     <>
       <Header current="Core" />
@@ -202,57 +250,16 @@ export default function CoreClient() {
                 Core
               </h1>
               <p className="mt-6 text-sm md:text-base text-fg-dim max-w-xl">
-                The people who keep Layer8 running — a club head and vice-head,
-                and a head and vice-head for each of the four domains. Click any
-                card for their profile and contact.
+                A club head and vice-head, and a head and vice-head for each of
+                the four domains. Pick a name to read their profile and contact —
+                it opens right here, no page change.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a className="btn btn-solid" href="#leadership">
-                  &gt; meet_the_team
-                </a>
-                <a className="btn" href="#domains">
-                  &gt; the_domains
-                </a>
-              </div>
+              <p className="mt-4 font-mono text-xs text-fg-faint">
+                10 people · 4 domains · re-picked each cycle
+              </p>
             </div>
 
             <CoreTerminal />
-          </div>
-        </section>
-
-        {/* roster stats */}
-        <section className="wrap pb-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 border border-border divide-x divide-border">
-            {ROSTER_STATS.map(([k, v]) => (
-              <div key={k} className="p-4 md:p-5 bg-bg-2">
-                <div className="kicker">{k}</div>
-                <div className="mt-1 font-display font-bold text-xl md:text-2xl text-accent">
-                  {v}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <div className="wrap">
-          <div className="rule my-6" />
-        </div>
-
-        {/* leadership */}
-        <section id="leadership" className="wrap py-14 md:py-18">
-          <span className="tag">leadership</span>
-          <h2 className="mt-3 font-display font-bold text-2xl md:text-3xl">
-            Club head &amp; vice-head
-          </h2>
-          <p className="mt-2 text-sm text-fg-dim max-w-2xl">
-            One point of contact for the department, the sponsors and the other
-            clubs. Everything else rolls up to here.
-          </p>
-
-          <div className="mt-8 grid md:grid-cols-2 gap-3">
-            {LEADERSHIP.map((m) => (
-              <LeaderCard key={m.slug} member={m} />
-            ))}
           </div>
         </section>
 
@@ -260,65 +267,38 @@ export default function CoreClient() {
           <div className="rule" />
         </div>
 
-        {/* domains */}
-        <section id="domains" className="wrap py-14 md:py-18">
-          <span className="tag">domains</span>
-          <h2 className="mt-3 font-display font-bold text-2xl md:text-3xl">
-            Four domains, a head and vice-head each
-          </h2>
-          <p className="mt-2 text-sm text-fg-dim max-w-2xl">
-            Each domain owns its own calendar and output. The head runs it; the
-            vice-head covers and steps up next cycle.
-          </p>
+        {/* roster / detail */}
+        <section className="wrap py-12 md:py-16">
+          <div className="grid lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] gap-8 lg:gap-10 items-start">
+            {/* roster */}
+            <nav aria-label="Core team" className="flex flex-col gap-6">
+              {ROSTER.map((group) => (
+                <div key={group.label}>
+                  <span className="kicker">{group.label}</span>
+                  {group.hint && (
+                    <p className="mt-1 text-xs text-fg-dim">{group.hint}</p>
+                  )}
+                  <div className="mt-2.5 border border-border divide-y divide-border">
+                    {group.members.map((m) => (
+                      <RosterRow
+                        key={m.slug}
+                        member={m}
+                        active={m.slug === selected}
+                        onSelect={select}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </nav>
 
-          <div className="mt-8 grid md:grid-cols-2 gap-3">
-            {DOMAINS.map((d, i) => {
-              const head = getMember(d.headSlug);
-              const vice = getMember(d.viceSlug);
-              const accent = GROUP_ACCENT[d.name as Member["group"]];
-              return (
-                <article
-                  key={d.slug}
-                  className="card relative flex flex-col gap-4 overflow-hidden"
-                >
-                  <span
-                    className="absolute inset-x-0 top-0 h-[2px]"
-                    style={{ background: accent }}
-                    aria-hidden
-                  />
-                  <div className="flex items-baseline gap-3">
-                    <span
-                      className="font-display font-bold text-2xl md:text-3xl tabular-nums"
-                      style={{ color: accent }}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div>
-                      <div className="flex items-baseline gap-2">
-                        <span
-                          className="text-xs"
-                          style={{ color: accent }}
-                          aria-hidden
-                        >
-                          ~/
-                        </span>
-                        <h3 className="font-display font-bold text-lg text-fg">
-                          {d.name}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-sm text-fg-dim">{d.tagline}</p>
-                  <div className="mt-auto grid gap-2 pt-4 border-t border-border">
-                    {[head, vice]
-                      .filter((m): m is Member => Boolean(m))
-                      .map((m) => (
-                        <MemberRow key={m.slug} member={m} accent={accent} />
-                      ))}
-                  </div>
-                </article>
-              );
-            })}
+            {/* detail */}
+            <div
+              ref={detailRef}
+              className="scroll-mt-24 lg:sticky lg:top-24"
+            >
+              <Detail member={member} onSelect={select} />
+            </div>
           </div>
         </section>
 
