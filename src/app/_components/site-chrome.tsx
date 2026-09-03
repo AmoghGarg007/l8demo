@@ -136,20 +136,19 @@ export function Header({ current }: { current?: string }) {
 export function Footer({ current }: { current?: string }) {
   return (
     <footer className="mt-auto border-t border-border bg-bg-2">
-      <div className="wrap py-14">
-        <div className="grid md:grid-cols-[1.4fr_1fr_1fr] gap-10">
+      <div className="wrap py-9">
+        <div className="grid gap-x-8 gap-y-7 md:grid-cols-[1.5fr_1fr_1fr]">
           <div>
-            <Wordmark className="text-lg" />
-            <p className="mt-3 text-sm text-fg-dim max-w-sm">
+            <Wordmark className="text-base" />
+            <p className="mt-2.5 text-xs text-fg-dim max-w-xs">
               Cybersecurity Club · PES University, Electronic City Campus,
-              Bengaluru. Offense, defense, and a lot of capture the flag.
+              Bengaluru.
             </p>
-            <div className="kicker mt-6 mb-2">part of</div>
             <a
               href="https://www.pes.edu"
               target="_blank"
               rel="noreferrer"
-              className="pesu-chip"
+              className="pesu-chip mt-4"
               aria-label="PES University"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -158,8 +157,8 @@ export function Footer({ current }: { current?: string }) {
           </div>
 
           <div>
-            <div className="kicker mb-3">pages</div>
-            <ul className="space-y-1.5 text-sm">
+            <div className="kicker mb-2.5">pages</div>
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-[13px]">
               {NAV.map((item) => {
                 const href = ROUTES[item];
                 return (
@@ -184,8 +183,8 @@ export function Footer({ current }: { current?: string }) {
           </div>
 
           <div>
-            <div className="kicker mb-3">elsewhere</div>
-            <ul className="space-y-1.5 text-sm">
+            <div className="kicker mb-2.5">elsewhere</div>
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-[13px]">
               {["Instagram", "Discord", "GitHub", "LinkedIn", "Email"].map((s) => (
                 <li key={s}>
                   <button type="button" className="link-ghost">
@@ -197,10 +196,10 @@ export function Footer({ current }: { current?: string }) {
           </div>
         </div>
 
-        <div className="rule my-8" />
+        <div className="rule my-5" />
 
-        <div className="flex flex-col sm:flex-row justify-between gap-2 text-xs text-fg-dim">
-          <span>© {new Date().getFullYear()} Layer8 · built in the 8th layer</span>
+        <div className="text-xs text-fg-dim">
+          © {new Date().getFullYear()} Layer8 · built in the 8th layer
         </div>
       </div>
     </footer>
