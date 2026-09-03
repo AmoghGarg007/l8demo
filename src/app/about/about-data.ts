@@ -1,8 +1,8 @@
 /**
- * Core team roster for /core and /core/[slug].
+ * Core team roster for the /about page.
  *
  * Names, bios and social handles are placeholders — swap them for the real
- * roster. Slugs are derived from names and are what /core/[slug] resolves.
+ * roster. Slugs are stable ids used for the master–detail selection.
  */
 
 export type Member = {

@@ -13,10 +13,10 @@ export const NAV = [
   "Events",
   "Resources",
   "Sandbox",
-  "Core",
   "Domains",
   "Legacy/Alumni",
   "Hall of Fame",
+  "About Us",
 ] as const;
 
 // nav entries that have a real route yet — everything else is still a button.
@@ -24,7 +24,7 @@ const ROUTES: Partial<Record<(typeof NAV)[number], string>> = {
   Blogs: "/blogs",
   Resources: "/resources",
   Sandbox: "/sandbox",
-  Core: "/core",
+  "About Us": "/about",
 };
 
 /* ------------------------------------------------------------------ */
@@ -95,7 +95,16 @@ export function Header({ current }: { current?: string }) {
 
           <nav className="hidden lg:flex items-center gap-x-6 gap-y-2 flex-wrap justify-end">
             {NAV.map((item) => (
-              <NavItem key={item} item={item} current={current} />
+              <NavItem
+                key={item}
+                item={item}
+                current={current}
+                className={
+                  item === "About Us"
+                    ? "lg:ml-1 lg:pl-5 lg:border-l lg:border-border"
+                    : ""
+                }
+              />
             ))}
           </nav>
 

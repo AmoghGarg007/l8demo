@@ -10,22 +10,28 @@ import {
   getMember,
   initials,
   type Member,
-} from "./core";
+} from "./about-data";
 
-const CORE_TERM = `$ cat core/roster.txt
-club            head + vice
-tech events     head + vice
-media design    head + vice
-total           10 people
-
+const CORE_TERM = `$ whoami
+layer8 — cybersecurity club, pesu ecc
+$ cat about/mission.txt
+teach offense. build defense. capture flags.
+$ ls core/
+club/  tech/  events/  media/  design/
 $ `;
 const CORE_TYPE_LINE = "./whois --select";
+
+const WHAT_WE_DO = [
+  ["weekly ctfs", "A fresh set of flags every week — beginner-friendly, live scoreboard, writeups after."],
+  ["offense + defense", "Web, crypto, reversing and pwn, plus blue-team fundamentals and incident write-ups."],
+  ["made by members", "Challenges, tooling, competitions and this site — all built and run by students."],
+] as const;
 
 /* ------------------------------------------------------------------ */
 /*  terminal                                                            */
 /* ------------------------------------------------------------------ */
 
-function CoreTerminal() {
+function AboutTerminal() {
   const [typed, setTyped] = useState("");
 
   useEffect(() => {
@@ -48,7 +54,7 @@ function CoreTerminal() {
         <span className="term-dot" />
         <span className="term-dot" />
         <span className="term-dot" />
-        <span className="ml-2 text-xs text-fg-dim">layer8@pesu — ~/core</span>
+        <span className="ml-2 text-xs text-fg-dim">layer8@pesu — ~/about</span>
       </div>
       <div className="term-body font-mono">
         {rows.map((line, idx) => {
@@ -148,9 +154,9 @@ function Detail({
         </span>
         <div className="min-w-0">
           <span className="tag">{member.group}</span>
-          <h2 className="mt-2 font-display font-bold text-xl md:text-2xl leading-tight">
+          <h3 className="mt-2 font-display font-bold text-xl md:text-2xl leading-tight">
             {member.name}
-          </h2>
+          </h3>
           <p className="mt-0.5 text-[0.7rem] tracking-[0.14em] uppercase text-fg-faint">
             {member.role}
           </p>
@@ -215,7 +221,7 @@ function Detail({
 /*  page                                                                */
 /* ------------------------------------------------------------------ */
 
-export default function CoreClient() {
+export default function AboutClient() {
   const [selected, setSelected] = useState<string>(MEMBERS[0].slug);
   const detailRef = useRef<HTMLDivElement>(null);
 
@@ -225,7 +231,6 @@ export default function CoreClient() {
       typeof window !== "undefined" &&
       !window.matchMedia("(min-width: 1024px)").matches
     ) {
-      // on small screens the panel is below the list — bring it into view
       requestAnimationFrame(() =>
         detailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
       );
@@ -236,7 +241,7 @@ export default function CoreClient() {
 
   return (
     <>
-      <Header current="Core" />
+      <Header current="About Us" />
 
       <main className="flex-1">
         {/* hero */}
@@ -247,19 +252,19 @@ export default function CoreClient() {
                 {"// PES University — Electronic City Campus"}
               </p>
               <h1 className="font-display font-bold leading-[0.95] text-[clamp(3rem,11vw,6.5rem)]">
-                Core
+                About Us
               </h1>
               <p className="mt-6 text-sm md:text-base text-fg-dim max-w-xl">
-                A club head and vice-head, and a head and vice-head for each of
-                the four domains. Pick a name to read their profile and contact —
-                it opens right here, no page change.
+                Layer8 is the student-run cybersecurity club at PES University,
+                Electronic City Campus. The OSI model stops at seven — the layer
+                we train is the one operating the keyboard.
               </p>
               <p className="mt-4 font-mono text-xs text-fg-faint">
-                10 people · 4 domains · re-picked each cycle
+                weekly · student-run · offense &amp; defense
               </p>
             </div>
 
-            <CoreTerminal />
+            <AboutTerminal />
           </div>
         </section>
 
@@ -267,9 +272,64 @@ export default function CoreClient() {
           <div className="rule" />
         </div>
 
-        {/* roster / detail */}
+        {/* who we are */}
         <section className="wrap py-12 md:py-16">
-          <div className="grid lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] gap-8 lg:gap-10 items-start">
+          <span className="tag">who we are</span>
+          <h2 className="mt-3 font-display font-bold text-2xl md:text-3xl">
+            A room full of people who like breaking things
+          </h2>
+          <div className="mt-4 grid md:grid-cols-2 gap-x-10 gap-y-4 max-w-4xl text-sm text-fg-dim">
+            <p>
+              We meet every week to work through capture-the-flag challenges
+              across web, cryptography, reverse engineering and binary
+              exploitation, then compare notes on what worked. New members start
+              from zero; nobody is expected to arrive knowing this stuff.
+            </p>
+            <p>
+              Between sessions we play external CTFs as a team, write up what we
+              solve, build tooling and challenge infrastructure, and run
+              workshops for the wider campus. Everything with the Layer8 name on
+              it was made by a student.
+            </p>
+          </div>
+
+          <div className="mt-8 grid sm:grid-cols-3 gap-3">
+            {WHAT_WE_DO.map(([title, copy]) => (
+              <article key={title} className="card">
+                <h3 className="font-display font-bold text-sm tracking-[0.1em] uppercase text-fg">
+                  {title}
+                </h3>
+                <p className="mt-2 text-[13px] text-fg-dim">{copy}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="kicker">in association with</span>
+            <span className="font-display font-bold text-sm text-fg">CCNCS</span>
+            <span className="text-fg-faint text-sm">
+              · PES University, Electronic City Campus
+            </span>
+          </div>
+        </section>
+
+        <div className="wrap">
+          <div className="rule" />
+        </div>
+
+        {/* core team */}
+        <section className="wrap py-12 md:py-16">
+          <span className="tag">core team</span>
+          <h2 className="mt-3 font-display font-bold text-2xl md:text-3xl">
+            Who keeps it running
+          </h2>
+          <p className="mt-2 text-sm text-fg-dim max-w-2xl">
+            A club head and vice-head, and a head and vice-head for each of the
+            four domains. Pick a name to read their profile and contact — it
+            opens right here.
+          </p>
+
+          <div className="mt-8 grid lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] gap-8 lg:gap-10 items-start">
             {/* roster */}
             <nav aria-label="Core team" className="flex flex-col gap-6">
               {ROSTER.map((group) => (
@@ -293,10 +353,7 @@ export default function CoreClient() {
             </nav>
 
             {/* detail */}
-            <div
-              ref={detailRef}
-              className="scroll-mt-24 lg:sticky lg:top-24"
-            >
+            <div ref={detailRef} className="scroll-mt-24 lg:sticky lg:top-24">
               <Detail member={member} onSelect={select} />
             </div>
           </div>
@@ -311,12 +368,11 @@ export default function CoreClient() {
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div>
               <h2 className="font-display font-bold text-2xl md:text-3xl">
-                Want a seat next cycle?
+                Want in?
               </h2>
               <p className="mt-2 text-sm text-fg-dim max-w-2xl">
-                Core is picked from people already showing up and shipping. Come
-                to the weekly sessions, take on a challenge or a writeup, and
-                make yourself hard to ignore.
+                Come to a weekly session with a laptop. Take on a challenge or a
+                writeup, and stick around — that is the whole application.
               </p>
             </div>
             <Link href="/#top" className="btn btn-solid">
@@ -326,7 +382,7 @@ export default function CoreClient() {
         </section>
       </main>
 
-      <Footer current="Core" />
+      <Footer current="About Us" />
     </>
   );
 }

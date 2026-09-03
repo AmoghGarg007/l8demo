@@ -1,12 +1,6 @@
-import type { Metadata } from "next";
-import CoreClient from "./core-client";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Core · Layer8 — PES University, ECC",
-  description:
-    "The Layer8 core team — club head and vice-head, plus a head and vice-head for each of the Tech, Events, Media and Design domains.",
-};
-
-export default function CorePage() {
-  return <CoreClient />;
+// /core was renamed to /about — keep old links working.
+export default function CoreRedirect() {
+  redirect("/about");
 }
