@@ -335,9 +335,13 @@
     animation: shake 0.25s linear;
   }
 
-  /* per-route enter animation (see app/template.tsx) */
+  /* per-route enter animation (see app/template.tsx).
+     z-index keeps this above the fixed vignette/scanline overlays while the
+     animation temporarily makes it its own stacking context. */
   .route-transition {
-    animation: route-in 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+    position: relative;
+    z-index: 3;
+    animation: route-in 0.3s ease-out;
   }
 
   /* brand marks — l8-mark.png is black on transparent; invert to white. */
@@ -400,8 +404,8 @@
 }
 
 @keyframes route-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
