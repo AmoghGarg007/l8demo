@@ -164,13 +164,16 @@ export const DOMAINS: Domain[] = [
 
 export const LEADERSHIP: Member[] = MEMBERS.filter((m) => m.group === "Club");
 
-/** Per-group accent — keeps the four domains visually distinct. */
+/**
+ * Domain accent. Kept as a per-group map so individual domains can be tinted
+ * later, but for now every group uses the site accent so /core stays on-theme.
+ */
 export const GROUP_ACCENT: Record<Member["group"], string> = {
-  Club: "#3b82f6",
-  Tech: "#38bdf8",
-  Events: "#f59e0b",
-  Media: "#a855f7",
-  Design: "#10b981",
+  Club: "var(--accent)",
+  Tech: "var(--accent)",
+  Events: "var(--accent)",
+  Media: "var(--accent)",
+  Design: "var(--accent)",
 };
 
 export function getMember(slug: string): Member | undefined {

@@ -53,19 +53,14 @@ export default async function MemberPage({ params }: Params) {
 
           <div className="mt-6 flex items-start gap-5">
             <span
-              className="grid place-items-center w-20 h-20 shrink-0 border bg-bg-3 font-display font-bold text-2xl select-none"
-              style={{ color: accent, borderColor: `${accent}59` }}
+              className="grid place-items-center w-20 h-20 shrink-0 border border-border bg-bg-3 font-display font-bold text-2xl select-none"
+              style={{ color: accent }}
               aria-hidden
             >
               {initials(m.name)}
             </span>
             <div className="min-w-0">
-              <span
-                className="inline-block text-[0.68rem] tracking-[0.14em] uppercase border px-2 py-0.5"
-                style={{ color: accent, borderColor: `${accent}80` }}
-              >
-                {m.group}
-              </span>
+              <span className="tag">{m.group}</span>
               <h1 className="mt-2 font-display font-bold leading-[1.1] text-[clamp(1.9rem,5vw,2.8rem)]">
                 {m.name}
               </h1>
