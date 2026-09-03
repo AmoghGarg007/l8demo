@@ -3,60 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Header, Footer } from "../_components/site-chrome";
-
-/* ------------------------------------------------------------------ */
-/*  data — placeholder names, swap for the real roster                  */
-/* ------------------------------------------------------------------ */
-
-type Member = { name: string; role: string };
-
-const LEADERSHIP: Member[] = [
-  { name: "Marcus Antonius", role: "Club Head" },
-  { name: "Livia Drusilla", role: "Club Vice-Head" },
-];
-
-type Domain = {
-  slug: string;
-  name: string;
-  tagline: string;
-  head: Member;
-  vice: Member;
-};
-
-const DOMAINS: Domain[] = [
-  {
-    slug: "tech",
-    name: "Tech",
-    tagline:
-      "CTF infrastructure, challenge development, tooling and running the weekly sessions.",
-    head: { name: "Gaius Plinius", role: "Tech Head" },
-    vice: { name: "Aulus Persius", role: "Tech Vice-Head" },
-  },
-  {
-    slug: "events",
-    name: "Events",
-    tagline:
-      "CTFs, workshops, talks and inter-college competitions — everything with a date on it.",
-    head: { name: "Fulvia Flacca", role: "Events Head" },
-    vice: { name: "Decimus Brutus", role: "Events Vice-Head" },
-  },
-  {
-    slug: "media",
-    name: "Media",
-    tagline:
-      "Writeups, socials, recaps and the newsletter. If it went out with the club's name on it, Media shipped it.",
-    head: { name: "Julia Agrippina", role: "Media Head" },
-    vice: { name: "Servius Tullius", role: "Media Vice-Head" },
-  },
-  {
-    slug: "design",
-    name: "Design",
-    tagline:
-      "Brand, posters, slides and the site. Makes the rest of it look deliberate.",
-    head: { name: "Claudia Pulchra", role: "Design Head" },
-    vice: { name: "Marcus Vitruvius", role: "Design Vice-Head" },
-  },
-];
+import { DOMAINS, LEADERSHIP, getMember, initials, type Member } from "./core";
 
 const CORE_TERM = `$ cat core/roster.txt
 club_head        1
@@ -71,31 +18,30 @@ const CORE_TYPE_LINE = "./standup --domain all";
 /*  bits                                                                */
 /* ------------------------------------------------------------------ */
 
-function initials(name: string): string {
-  return name
-    .split(/\s+/)
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
-
-function Person({ name, role }: Member) {
+function PersonCard({ member }: { member: Member }) {
   return (
-    <div className="flex items-center gap-3">
+    <Link
+      href={`/core/${member.slug}`}
+      className="card flex items-center gap-3 transition-colors hover:border-accent"
+    >
       <span
         className="grid place-items-center w-11 h-11 shrink-0 border border-border bg-bg-3 font-display font-bold text-sm text-accent select-none"
         aria-hidden
       >
-        {initials(name)}
+        {initials(member.name)}
       </span>
       <div className="min-w-0">
-        <div className="font-display font-bold text-fg leading-tight">{name}</div>
+        <div className="font-display font-bold text-fg leading-tight">
+          {member.name}
+        </div>
         <div className="text-[0.7rem] tracking-[0.14em] uppercase text-fg-faint">
-          {role}
+          {member.role}
         </div>
       </div>
-    </div>
+      <span className="ml-auto text-accent text-sm" aria-hidden>
+        &gt;
+      </span>
+    </Link>
   );
 }
 
@@ -173,8 +119,8 @@ export default function CoreClient() {
               </h1>
               <p className="mt-6 text-sm md:text-base text-fg-dim max-w-xl">
                 The people who keep Layer8 running — a club head and vice-head,
-                and a head and vice-head for each of the four domains. They set
-                the calendar, build the challenges, and answer for what ships.
+                and a head and vice-head for each of the four domains. Click any
+                card for their profile and contact.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a className="btn btn-solid" href="#leadership">
@@ -207,9 +153,7 @@ export default function CoreClient() {
 
           <div className="mt-8 grid sm:grid-cols-2 gap-3">
             {LEADERSHIP.map((m) => (
-              <article key={m.role} className="card">
-                <Person name={m.name} role={m.role} />
-              </article>
+              <PersonCard key={m.slug} member={m} />
             ))}
           </div>
         </section>
@@ -230,23 +174,53 @@ export default function CoreClient() {
           </p>
 
           <div className="mt-8 grid md:grid-cols-2 gap-3">
-            {DOMAINS.map((d) => (
-              <article key={d.slug} className="card flex flex-col gap-4">
-                <div>
-                  <div className="flex items-baseline gap-2.5">
-                    <span className="text-xs text-accent">~/</span>
-                    <h3 className="font-display font-bold text-lg text-fg">
-                      {d.name}
-                    </h3>
+            {DOMAINS.map((d) => {
+              const head = getMember(d.headSlug);
+              const vice = getMember(d.viceSlug);
+              return (
+                <article key={d.slug} className="card flex flex-col gap-4">
+                  <div>
+                    <div className="flex items-baseline gap-2.5">
+                      <span className="text-xs text-accent">~/</span>
+                      <h3 className="font-display font-bold text-lg text-fg">
+                        {d.name}
+                      </h3>
+                    </div>
+                    <p className="mt-2 text-sm text-fg-dim">{d.tagline}</p>
                   </div>
-                  <p className="mt-2 text-sm text-fg-dim">{d.tagline}</p>
-                </div>
-                <div className="mt-auto grid gap-3 pt-4 border-t border-border">
-                  <Person name={d.head.name} role={d.head.role} />
-                  <Person name={d.vice.name} role={d.vice.role} />
-                </div>
-              </article>
-            ))}
+                  <div className="mt-auto grid gap-2 pt-4 border-t border-border">
+                    {[head, vice].filter(Boolean).map((m) => (
+                      <Link
+                        key={m!.slug}
+                        href={`/core/${m!.slug}`}
+                        className="flex items-center gap-3 -mx-2 px-2 py-1.5 transition-colors hover:bg-bg-3"
+                      >
+                        <span
+                          className="grid place-items-center w-9 h-9 shrink-0 border border-border bg-bg-3 font-display font-bold text-xs text-accent select-none"
+                          aria-hidden
+                        >
+                          {initials(m!.name)}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block font-display font-bold text-sm text-fg leading-tight">
+                            {m!.name}
+                          </span>
+                          <span className="block text-[0.68rem] tracking-[0.14em] uppercase text-fg-faint">
+                            {m!.role}
+                          </span>
+                        </span>
+                        <span
+                          className="ml-auto text-accent text-sm"
+                          aria-hidden
+                        >
+                          &gt;
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </section>
 
