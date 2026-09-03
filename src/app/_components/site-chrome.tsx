@@ -12,7 +12,7 @@ export const NAV = [
   "Weekly CTFs",
   "Events",
   "Resources",
-  "Projects",
+  "Sandbox",
   "Core",
   "Domains",
   "Legacy/Alumni",
