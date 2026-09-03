@@ -6,12 +6,16 @@ import { Header, Footer } from "../_components/site-chrome";
 const TARGET = "COMING SOON";
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!<>-_\\/[]{}=+*^?#$%&";
 
+// ~120ms per step slows the glyph churn; ~9s hold between decrypt passes.
+const STEP_MS = 120;
+const HOLD_STEPS = 75;
+
 type Slot = { char: string; start: number; end: number };
 
 function makeQueue(): Slot[] {
   return [...TARGET].map((char, i) => {
-    const start = Math.floor(i * 2 + Math.random() * 10);
-    return { char, start, end: start + 14 + Math.floor(Math.random() * 26) };
+    const start = Math.floor(i * 2 + Math.random() * 8);
+    return { char, start, end: start + 10 + Math.floor(Math.random() * 16) };
   });
 }
 
@@ -23,12 +27,21 @@ export default function SandboxClient() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
 
-    let raf = 0;
-    let timer = 0;
     let frame = 0;
+    let hold = 0;
     let queue = makeQueue();
 
-    const render = () => {
+    const id = window.setInterval(() => {
+      // paused between passes — sit on the finished word for a while
+      if (hold > 0) {
+        hold -= 1;
+        if (hold === 0) {
+          frame = 0;
+          queue = makeQueue();
+        }
+        return;
+      }
+
       let out = "";
       let done = 0;
       for (const slot of queue) {
@@ -41,7 +54,7 @@ export default function SandboxClient() {
         } else if (frame >= slot.start) {
           out += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
         } else {
-          out += " ";
+          out += " ";
         }
       }
       setText(out);
@@ -49,21 +62,11 @@ export default function SandboxClient() {
 
       if (done === queue.length) {
         setText(TARGET);
-        timer = window.setTimeout(() => {
-          frame = 0;
-          queue = makeQueue();
-          raf = requestAnimationFrame(render);
-        }, 3600);
-        return;
+        hold = HOLD_STEPS;
       }
-      raf = requestAnimationFrame(render);
-    };
+    }, STEP_MS);
 
-    raf = requestAnimationFrame(render);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.clearTimeout(timer);
-    };
+    return () => window.clearInterval(id);
   }, []);
 
   return (
