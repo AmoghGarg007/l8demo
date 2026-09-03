@@ -335,6 +335,11 @@
     animation: shake 0.25s linear;
   }
 
+  /* per-route enter animation (see app/template.tsx) */
+  .route-transition {
+    animation: route-in 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
   /* brand marks — l8-mark.png is black on transparent; invert to white. */
   .brandmark {
     height: 1.4em;
@@ -392,6 +397,11 @@
   0%, 100% { transform: translate(0, 0); }
   25% { transform: translate(-1px, 1px); }
   75% { transform: translate(1px, -1px); }
+}
+
+@keyframes route-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
