@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Header, Footer } from "../_components/site-chrome";
 import {
+  DOMAINS,
   MEMBERS,
   ROSTER,
   counterpartOf,
@@ -356,6 +357,61 @@ export default function AboutClient() {
             <div ref={detailRef} className="scroll-mt-24 lg:sticky lg:top-24">
               <Detail member={member} onSelect={select} />
             </div>
+          </div>
+        </section>
+
+        <div className="wrap">
+          <div className="rule" />
+        </div>
+
+        {/* domain rosters */}
+        <section className="wrap py-12 md:py-16">
+          <span className="tag">domain rosters</span>
+          <h2 className="mt-3 font-display font-bold text-2xl md:text-3xl">
+            Every member, by domain
+          </h2>
+          <p className="mt-2 text-sm text-fg-dim max-w-2xl">
+            The core team is the tip of it. Open a domain for its head,
+            vice-head and the full roster of members.
+          </p>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {DOMAINS.map((d) => {
+              const live = d.slug === "tech";
+              const inner = (
+                <>
+                  <span className="font-mono text-[0.7rem] text-fg-faint">
+                    drwxr-xr-x
+                  </span>
+                  <span className="mt-2 block font-display font-bold text-lg text-fg">
+                    {d.name}
+                  </span>
+                  <span className="mt-1 block text-xs text-fg-dim line-clamp-3">
+                    {d.tagline}
+                  </span>
+                  <span className="mt-3 block font-mono text-xs text-accent">
+                    {live ? "$ cd ~/about/tech" : "// roster coming soon"}
+                  </span>
+                </>
+              );
+              return live ? (
+                <Link
+                  key={d.slug}
+                  href="/about/tech"
+                  className="card text-left flex flex-col transition-colors hover:border-accent"
+                >
+                  {inner}
+                </Link>
+              ) : (
+                <div
+                  key={d.slug}
+                  aria-disabled
+                  className="card text-left flex flex-col opacity-55 cursor-not-allowed"
+                >
+                  {inner}
+                </div>
+              );
+            })}
           </div>
         </section>
 

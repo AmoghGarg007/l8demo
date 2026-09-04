@@ -207,3 +207,44 @@ export function initials(name: string): string {
     .join("")
     .toUpperCase();
 }
+
+export function getDomain(slug: string): Domain | undefined {
+  return DOMAINS.find((d) => d.slug === slug);
+}
+
+/* ------------------------------------------------------------------ */
+/*  full domain rosters (rank-and-file members, not core)             */
+/* ------------------------------------------------------------------ */
+
+export type DomainMember = {
+  name: string;
+  focus: string; // primary lane, e.g. "web", "pwn"
+  year: string;
+};
+
+/**
+ * Members per domain, beyond the head/vice-head. Placeholder names — swap for
+ * the real roster. Only `tech` is populated for now; the other domains render
+ * a "coming soon" placeholder on /about.
+ */
+export const DOMAIN_MEMBERS: Record<string, DomainMember[]> = {
+  tech: [
+    { name: "Quintus Ennius", focus: "web", year: "3rd year" },
+    { name: "Lucius Cornelius", focus: "pwn", year: "3rd year" },
+    { name: "Titus Lucretius", focus: "reversing", year: "2nd year" },
+    { name: "Gaius Valerius", focus: "crypto", year: "2nd year" },
+    { name: "Publius Ovidius", focus: "web", year: "2nd year" },
+    { name: "Sextus Propertius", focus: "infra", year: "2nd year" },
+    { name: "Aulus Gellius", focus: "forensics", year: "1st year" },
+    { name: "Gnaeus Naevius", focus: "pwn", year: "1st year" },
+    { name: "Marcus Terentius", focus: "web", year: "1st year" },
+    { name: "Lucia Caecilia", focus: "crypto", year: "1st year" },
+  ],
+  events: [],
+  media: [],
+  design: [],
+};
+
+export function getDomainMembers(slug: string): DomainMember[] {
+  return DOMAIN_MEMBERS[slug] ?? [];
+}
