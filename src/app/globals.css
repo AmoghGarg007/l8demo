@@ -31,8 +31,10 @@
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
   --color-border: var(--border);
-  --font-mono: var(--font-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
-  --font-display: var(--font-display), var(--font-mono), sans-serif;
+  --font-mono:
+    var(--font-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-display:
+    var(--font-display), var(--font-mono), sans-serif;
 }
 
 /* ---------------------------------------------------------- */
@@ -141,14 +143,20 @@
     background: var(--bg-2);
     color: var(--fg);
     cursor: pointer;
-    transition: border-color 0.18s, color 0.18s, background 0.18s,
-      box-shadow 0.18s, transform 0.18s;
+    transition:
+      border-color 0.18s,
+      color 0.18s,
+      background 0.18s,
+      box-shadow 0.18s,
+      transform 0.18s;
   }
 
   .btn:hover {
     border-color: var(--accent);
     color: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent), 0 0 22px -6px var(--glow);
+    box-shadow:
+      0 0 0 1px var(--accent),
+      0 0 22px -6px var(--glow);
     transform: translateY(-1px);
   }
 
@@ -218,11 +226,18 @@
     background: var(--bg-2);
     border: 1px solid var(--border);
     padding: 1.35rem;
-    transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+    transition:
+      border-color 0.18s,
+      transform 0.18s,
+      box-shadow 0.18s;
   }
 
   .card:hover {
-    border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+    border-color: color-mix(
+      in srgb,
+      var(--accent) 55%,
+      var(--border)
+    );
     transform: translateY(-3px);
     box-shadow: 0 18px 40px -28px var(--glow);
   }
@@ -233,7 +248,8 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--accent);
-    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+    border: 1px solid
+      color-mix(in srgb, var(--accent) 40%, var(--border));
     padding: 0.15rem 0.5rem;
   }
 
@@ -280,6 +296,42 @@
 
   .term-body .muted {
     color: var(--fg-dim);
+  }
+
+  /* interactive terminal additions */
+  .term-interactive .term-body {
+    max-height: 23rem;
+    overflow-y: auto;
+    cursor: text;
+  }
+
+  .term-input-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7ch;
+  }
+
+  .term-input {
+    min-width: 0;
+    flex: 1;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    caret-color: var(--accent);
+  }
+
+  .term-input::selection {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .term-hint {
+    margin-top: 0.35rem;
+    color: var(--fg-faint);
+    font-size: 0.7rem;
   }
 
   .cursor {
@@ -331,7 +383,7 @@
     color: var(--accent);
   }
 
-  /* blog article body — HTML rendered from markdown (see lib/markdown.ts) */
+  /* blog article body — HTML rendered from markdown */
   .article-body > * + * {
     margin-top: 1.15rem;
   }
@@ -419,16 +471,14 @@
     color: var(--fg-dim);
   }
 
-  /* per-route enter animation (see app/template.tsx).
-     z-index keeps this above the fixed vignette/scanline overlays while the
-     animation temporarily makes it its own stacking context. */
+  /* per-route enter animation */
   .route-transition {
     position: relative;
     z-index: 3;
     animation: route-in 0.3s ease-out;
   }
 
-  /* brand marks — l8-mark.png is black on transparent; invert to white. */
+  /* brand marks */
   .brandmark {
     height: 1.4em;
     width: auto;
@@ -436,19 +486,26 @@
     filter: invert(1) drop-shadow(0 0 9px var(--glow));
   }
 
-  /* PES University lockup sits on its own dark chip. */
+  /* PES University lockup */
   .pesu-chip {
     display: inline-flex;
     align-items: center;
     padding: 0.5rem 0.8rem;
-    border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
+    border: 1px solid
+      color-mix(in srgb, var(--fg) 14%, transparent);
     border-radius: 0.6rem;
     background: #0a0e1a;
-    transition: border-color 0.18s, box-shadow 0.18s;
+    transition:
+      border-color 0.18s,
+      box-shadow 0.18s;
   }
 
   .pesu-chip:hover {
-    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    border-color: color-mix(
+      in srgb,
+      var(--accent) 55%,
+      transparent
+    );
     box-shadow: 0 0 22px -8px var(--glow);
   }
 
@@ -468,22 +525,55 @@
 }
 
 @keyframes glitch-a {
-  0%, 92%, 100% { clip-path: inset(0 0 100% 0); }
-  93% { clip-path: inset(12% 0 62% 0); }
-  95% { clip-path: inset(48% 0 30% 0); }
-  97% { clip-path: inset(78% 0 8% 0); }
+  0%,
+  92%,
+  100% {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  93% {
+    clip-path: inset(12% 0 62% 0);
+  }
+
+  95% {
+    clip-path: inset(48% 0 30% 0);
+  }
+
+  97% {
+    clip-path: inset(78% 0 8% 0);
+  }
 }
 
 @keyframes glitch-b {
-  0%, 90%, 100% { clip-path: inset(100% 0 0 0); }
-  91% { clip-path: inset(70% 0 12% 0); }
-  94% { clip-path: inset(30% 0 40% 0); }
-  98% { clip-path: inset(5% 0 80% 0); }
+  0%,
+  90%,
+  100% {
+    clip-path: inset(100% 0 0 0);
+  }
+
+  91% {
+    clip-path: inset(70% 0 12% 0);
+  }
+
+  94% {
+    clip-path: inset(30% 0 40% 0);
+  }
+
+  98% {
+    clip-path: inset(5% 0 80% 0);
+  }
 }
 
 @keyframes route-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -494,6 +584,7 @@
     transition: none !important;
     scroll-behavior: auto !important;
   }
+
   .cursor {
     opacity: 1;
   }

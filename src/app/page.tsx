@@ -1,10 +1,8 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { InteractiveTerminal } from "./_components/interactive-terminal";
 import { Header, Footer } from "./_components/site-chrome";
 
 /* ------------------------------------------------------------------ */
-/*  data                                                                */
+/*  data                                                               */
 /* ------------------------------------------------------------------ */
 
 const STATS = [
@@ -15,120 +13,103 @@ const STATS = [
 ] as const;
 
 const DOMAINS = [
-  ["web", "Web Exploitation", "Auth bypasses, SSRF, injection, request smuggling — the modern app attack surface."],
-  ["pwn", "Binary Exploitation", "Stack and heap corruption, ROP, format strings, exploit dev against real binaries."],
-  ["rev", "Reverse Engineering", "Static and dynamic analysis, unpacking, patching, and reading assembly for sport."],
-  ["crypto", "Cryptography", "Padding oracles, weak PRNGs, RSA math, and the classic 'never roll your own'."],
-  ["forensics", "Forensics", "Disk and memory images, packet captures, log timelines, artifact recovery."],
-  ["stego", "Steganography", "Data hidden in pixels, audio and metadata — spot it, extract it, carve it out."],
-  ["osint", "OSINT", "People, infrastructure and leaks — what the open internet already knows about a target."],
-  ["net", "Network Security", "Protocol abuse, pivoting, traffic analysis and defending the wire."],
+  [
+    "web",
+    "Web Exploitation",
+    "Auth bypasses, SSRF, injection, request smuggling — the modern app attack surface.",
+  ],
+  [
+    "pwn",
+    "Binary Exploitation",
+    "Stack and heap corruption, ROP, format strings, exploit dev against real binaries.",
+  ],
+  [
+    "rev",
+    "Reverse Engineering",
+    "Static and dynamic analysis, unpacking, patching, and reading assembly for sport.",
+  ],
+  [
+    "crypto",
+    "Cryptography",
+    "Padding oracles, weak PRNGs, RSA math, and the classic 'never roll your own'.",
+  ],
+  [
+    "forensics",
+    "Forensics",
+    "Disk and memory images, packet captures, log timelines, artifact recovery.",
+  ],
+  [
+    "stego",
+    "Steganography",
+    "Data hidden in pixels, audio and metadata — spot it, extract it, carve it out.",
+  ],
+  [
+    "osint",
+    "OSINT",
+    "People, infrastructure and leaks — what the open internet already knows about a target.",
+  ],
+  [
+    "net",
+    "Network Security",
+    "Protocol abuse, pivoting, traffic analysis and defending the wire.",
+  ],
 ] as const;
 
-const TERMINAL_SCRIPT = `$ whoami
-layer8@pesu-ecc
-$ cat mission.txt
-teach offense. build defense. capture flags.
-$ ./recruit --status
-[ open ]  domains: web pwn rev crypto forensics osint
-$ _`;
-
 /* ------------------------------------------------------------------ */
-/*  terminal typewriter                                                 */
-/* ------------------------------------------------------------------ */
-
-function Terminal() {
-  const [text, setText] = useState("");
-
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const step = reduce ? TERMINAL_SCRIPT.length : 1;
-    let i = 0;
-    const id = window.setInterval(() => {
-      i += step;
-      setText(TERMINAL_SCRIPT.slice(0, i));
-      if (i >= TERMINAL_SCRIPT.length) window.clearInterval(id);
-    }, 22);
-    return () => window.clearInterval(id);
-  }, []);
-
-  const rendered = text.split("\n").map((line, idx) => {
-    const isPrompt = line.startsWith("$ ");
-    return (
-      <div key={idx}>
-        {isPrompt ? (
-          <>
-            <span className="prompt">$</span>
-            {line.slice(1)}
-          </>
-        ) : line.startsWith("[") ? (
-          <span className="muted">{line}</span>
-        ) : (
-          line
-        )}
-      </div>
-    );
-  });
-
-  return (
-    <div className="term w-full">
-      <div className="term-bar">
-        <span className="term-dot" />
-        <span className="term-dot" />
-        <span className="term-dot" />
-        <span className="ml-2 text-xs text-fg-dim">layer8 — ~/recruit</span>
-      </div>
-      <div className="term-body font-mono">
-        {rendered}
-        <span className="cursor">&nbsp;</span>
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  sections                                                            */
+/*  sections                                                           */
 /* ------------------------------------------------------------------ */
 
 function Hero() {
   return (
-    <section id="top" className="wrap pt-14 pb-16 md:pt-20 md:pb-24">
-      <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
+    <section
+      id="top"
+      className="wrap pt-14 pb-16 md:pt-20 md:pb-24"
+    >
+      <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
-          <p className="kicker mb-5">{"// PES University — Electronic City Campus"}</p>
-          <h1 className="font-display font-bold leading-[0.95] text-[clamp(3rem,11vw,6.5rem)]">
+          <p className="kicker mb-5">
+            {"// PES University — Electronic City Campus"}
+          </p>
+
+          <h1 className="font-display text-[clamp(3rem,11vw,6.5rem)] font-bold leading-[0.95]">
             <span className="glitch" data-text="LAYER8">
               LAYER8
             </span>
           </h1>
-          <p className="mt-6 text-base md:text-lg text-fg-dim max-w-xl">
-            The OSI model stops at seven. The most exploitable layer is the one
-            operating the keyboard — and that is the one we train.
+
+          <p className="mt-6 max-w-xl text-base text-fg-dim md:text-lg">
+            The OSI model stops at seven. The most exploitable layer is
+            the one operating the keyboard — and that is the one we
+            train.
           </p>
-          <p className="mt-4 text-sm text-fg-dim max-w-xl">
-            Layer8 is the cybersecurity club at PES University, ECC. We run weekly
-            CTFs, break and build across web, crypto, reversing and pwn, and turn
-            curiosity into capability.
+
+          <p className="mt-4 max-w-xl text-sm text-fg-dim">
+            Layer8 is the cybersecurity club at PES University, ECC. We
+            run weekly CTFs, break and build across web, crypto,
+            reversing and pwn, and turn curiosity into capability.
           </p>
+
           <div className="mt-8 flex flex-wrap gap-3">
             <button type="button" className="btn btn-solid">
               &gt; weekly_ctfs
             </button>
+
             <button type="button" className="btn">
               &gt; join_layer8
             </button>
           </div>
         </div>
 
-        <Terminal />
+        <InteractiveTerminal />
       </div>
 
-      <div className="mt-16 grid grid-cols-2 md:grid-cols-4 border border-border divide-x divide-border">
-        {STATS.map(([k, v]) => (
-          <div key={k} className="p-4 md:p-5 bg-bg-2">
-            <div className="kicker">{k}</div>
-            <div className="mt-1 font-display font-bold text-xl md:text-2xl text-accent">
-              {v}
+      <div className="mt-16 grid grid-cols-2 divide-x divide-border border border-border md:grid-cols-4">
+        {STATS.map(([key, value]) => (
+          <div key={key} className="bg-bg-2 p-4 md:p-5">
+            <div className="kicker">{key}</div>
+
+            <div className="mt-1 font-display text-xl font-bold text-accent md:text-2xl">
+              {value}
             </div>
           </div>
         ))}
@@ -149,8 +130,14 @@ function SectionHead({
   return (
     <div className="mb-8">
       <span className="tag">{tag}</span>
-      <h2 className="mt-3 font-display font-bold text-2xl md:text-3xl">{title}</h2>
-      <p className="mt-2 text-sm text-fg-dim max-w-2xl">{sub}</p>
+
+      <h2 className="mt-3 font-display text-2xl font-bold md:text-3xl">
+        {title}
+      </h2>
+
+      <p className="mt-2 max-w-2xl text-sm text-fg-dim">
+        {sub}
+      </p>
     </div>
   );
 }
@@ -163,15 +150,22 @@ function Domains() {
         title="What we break, in eight directions"
         sub="Every member picks a lane and goes deep, then cross-trains on the rest during weekly sessions."
       />
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {DOMAINS.map(([slug, name, desc]) => (
+
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {DOMAINS.map(([slug, name, description]) => (
           <article key={slug} className="card">
             <div className="text-xs text-fg-dim">
               <span className="text-accent">~/</span>
               {slug}
             </div>
-            <h3 className="mt-2 font-display font-bold text-lg">{name}</h3>
-            <p className="mt-2 text-[13px] text-fg-dim">{desc}</p>
+
+            <h3 className="mt-2 font-display text-lg font-bold">
+              {name}
+            </h3>
+
+            <p className="mt-2 text-[13px] text-fg-dim">
+              {description}
+            </p>
           </article>
         ))}
       </div>
@@ -182,31 +176,42 @@ function Domains() {
 function CTFStrip() {
   return (
     <section className="wrap py-16 md:py-20">
-      <div className="panel p-8 md:p-12 relative overflow-hidden">
-        <div className="relative z-[1] grid md:grid-cols-[1fr_auto] gap-8 items-center">
+      <div className="panel relative overflow-hidden p-8 md:p-12">
+        <div className="relative z-[1] grid items-center gap-8 md:grid-cols-[1fr_auto]">
           <div>
             <span className="tag">weekly ctfs</span>
-            <h2 className="mt-3 font-display font-bold text-2xl md:text-3xl">
+
+            <h2 className="mt-3 font-display text-2xl font-bold md:text-3xl">
               Every week, a new set of flags.
             </h2>
-            <p className="mt-2 text-sm text-fg-dim max-w-xl">
-              Beginner-friendly challenges, a live scoreboard, and writeups
-              afterwards. Show up with a laptop and a browser — we handle the
-              rest.
+
+            <p className="mt-2 max-w-xl text-sm text-fg-dim">
+              Beginner-friendly challenges, a live scoreboard, and
+              writeups afterwards. Show up with a laptop and a browser —
+              we handle the rest.
             </p>
           </div>
+
           <div className="flex flex-col gap-3">
-            <button type="button" className="btn btn-solid justify-center">
+            <button
+              type="button"
+              className="btn btn-solid justify-center"
+            >
               &gt; view_schedule
             </button>
-            <button type="button" className="btn justify-center">
+
+            <button
+              type="button"
+              className="btn justify-center"
+            >
               &gt; past_writeups
             </button>
           </div>
         </div>
+
         <span
           aria-hidden
-          className="pointer-events-none absolute -right-6 -bottom-10 font-display font-bold text-[9rem] leading-none text-fg opacity-[0.04] select-none"
+          className="pointer-events-none absolute -right-6 -bottom-10 select-none font-display text-[9rem] font-bold leading-none text-fg opacity-[0.04]"
         >
           CTF
         </span>
@@ -216,24 +221,30 @@ function CTFStrip() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  page                                                                */
+/*  page                                                               */
 /* ------------------------------------------------------------------ */
 
 export default function Page() {
   return (
     <>
       <Header />
+
       <main className="flex-1">
         <Hero />
+
         <div className="wrap">
           <div className="rule" />
         </div>
+
         <Domains />
+
         <div className="wrap">
           <div className="rule" />
         </div>
+
         <CTFStrip />
       </main>
+
       <Footer />
     </>
   );

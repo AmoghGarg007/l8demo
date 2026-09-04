@@ -20,7 +20,7 @@ export const NAV = [
 ] as const;
 
 // nav entries that have a real route yet — everything else is still a button.
-const ROUTES: Partial<Record<(typeof NAV)[number], string>> = {
+export const ROUTES: Partial<Record<(typeof NAV)[number], string>> = {
   Blogs: "/blogs",
   Events: "/events",
   Resources: "/resources",
