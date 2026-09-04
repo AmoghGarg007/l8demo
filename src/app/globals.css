@@ -303,6 +303,32 @@
     max-height: 23rem;
     overflow-y: auto;
     cursor: text;
+
+    /* themed scrollbar — Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--accent) 55%, transparent)
+      transparent;
+  }
+
+  /* themed scrollbar — WebKit/Blink */
+  .term-interactive .term-body::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .term-interactive .term-body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .term-interactive .term-body::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 999px;
+  }
+
+  .term-interactive .term-body::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent);
+    background-clip: padding-box;
   }
 
   .term-input-row {
