@@ -251,8 +251,8 @@ const RESOURCE_SCRIPT = `$ ls -1 resources/
 practice/   tooling/   reading/   blue-team/   ai-security/
 $ cat README
 the most exploitable layer is the one operating the keyboard. patch it weekly.
-$ ./join --club layer8 --campus ecc
-see you at the next weekly session`;
+$ ./resources --count
+5 categories indexed`;
 
 /* ------------------------------------------------------------------ */
 /*  page                                                                */

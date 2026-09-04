@@ -14,11 +14,11 @@ const DEFAULT_SCRIPT = `$ whoami
 layer8@pesu-ecc
 $ cat mission.txt
 teach offense. build defense. capture flags.
-$ ./recruit --status
-[ open ]  domains: web pwn rev crypto forensics osint`;
+$ ls domains/
+web pwn rev crypto forensics stego osint network`;
 
 const DEFAULT_HINT = "try: ls · cd resources · help";
-const DEFAULT_BAR_LABEL = "layer8 — ~/recruit";
+const DEFAULT_BAR_LABEL = "layer8 — ~";
 
 const HELP = [
   "help             show available commands",
