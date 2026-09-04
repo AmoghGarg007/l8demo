@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { InteractiveTerminal } from "../_components/interactive-terminal";
 import { Header, Footer } from "../_components/site-chrome";
 
 /* ------------------------------------------------------------------ */
@@ -246,70 +247,12 @@ const FILTERS = [
   ["tooling", "tooling"],
 ] as const;
 
-const RESOURCE_TERM = `$ ls -1 resources/
+const RESOURCE_SCRIPT = `$ ls -1 resources/
 practice/   tooling/   reading/   blue-team/   ai-security/
-
 $ cat README
-the most exploitable layer is the one
-operating the keyboard. patch it weekly.
-
-$ `;
-const RESOURCE_TYPE_LINE = "./join --club layer8 --campus ecc";
-
-/* ------------------------------------------------------------------ */
-/*  terminal                                                            */
-/* ------------------------------------------------------------------ */
-
-function ResourceTerminal() {
-  const [typed, setTyped] = useState("");
-
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const step = reduce ? RESOURCE_TYPE_LINE.length : 1;
-    let i = 0;
-    const id = window.setInterval(() => {
-      i += step;
-      setTyped(RESOURCE_TYPE_LINE.slice(0, i));
-      if (i >= RESOURCE_TYPE_LINE.length) window.clearInterval(id);
-    }, 55);
-    return () => window.clearInterval(id);
-  }, []);
-
-  return (
-    <div className="term w-full" aria-hidden>
-      <div className="term-bar">
-        <span className="term-dot" />
-        <span className="term-dot" />
-        <span className="term-dot" />
-        <span className="ml-2 text-xs text-fg-dim">layer8@pesu — ~/resources</span>
-      </div>
-      <div className="term-body font-mono">
-        {RESOURCE_TERM.split("\n").map((line, idx) => {
-          const isPrompt = line.startsWith("$");
-          if (isPrompt) {
-            return (
-              <div key={idx}>
-                <span className="prompt">$</span>
-                {line.slice(1)}
-                {idx === RESOURCE_TERM.split("\n").length - 1 && (
-                  <>
-                    {typed}
-                    <span className="cursor">&nbsp;</span>
-                  </>
-                )}
-              </div>
-            );
-          }
-          return (
-            <div key={idx}>
-              <span className="muted">{line}</span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+the most exploitable layer is the one operating the keyboard. patch it weekly.
+$ ./join --club layer8 --campus ecc
+see you at the next weekly session`;
 
 /* ------------------------------------------------------------------ */
 /*  page                                                                */
@@ -384,7 +327,11 @@ export default function ResourcesClient() {
               </div>
             </div>
 
-            <ResourceTerminal />
+            <InteractiveTerminal
+              script={RESOURCE_SCRIPT}
+              barLabel="layer8@pesu — ~/resources"
+              hint="try: ls · cd .. · help"
+            />
           </div>
         </section>
 

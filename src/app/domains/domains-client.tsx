@@ -1,54 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { InteractiveTerminal } from "../_components/interactive-terminal";
 import { Header, Footer } from "../_components/site-chrome";
 import { DOMAINS, referenceLink, type Domain } from "./domains-data";
 
-const TERM_TYPE_LINE = "cat ~/domains/*/README.md";
-
-/* ------------------------------------------------------------------ */
-/*  hero terminal                                                       */
-/* ------------------------------------------------------------------ */
-
-function DomainsTerminal() {
-  const [typed, setTyped] = useState("");
-
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const step = reduce ? TERM_TYPE_LINE.length : 1;
-    let i = 0;
-    const id = window.setInterval(() => {
-      i += step;
-      setTyped(TERM_TYPE_LINE.slice(0, i));
-      if (i >= TERM_TYPE_LINE.length) window.clearInterval(id);
-    }, 55);
-    return () => window.clearInterval(id);
-  }, []);
-
-  return (
-    <div className="term w-full" aria-hidden>
-      <div className="term-bar">
-        <span className="term-dot" />
-        <span className="term-dot" />
-        <span className="term-dot" />
-        <span className="ml-2 text-xs text-fg-dim">layer8@pesu — ~/domains</span>
-      </div>
-      <div className="term-body font-mono">
-        <div>
-          <span className="prompt">$</span> ls ~/domains
-        </div>
-        <div className="muted">
-          web pwn rev crypto forensics stego osint network
-        </div>
-        <div>
-          <span className="prompt">$</span> {typed}
-          <span className="cursor">&nbsp;</span>
-        </div>
-      </div>
-    </div>
-  );
-}
+const DOMAINS_SCRIPT = `$ ls ~/domains
+web pwn rev crypto forensics stego osint network
+$ cat ~/domains/*/README.md
+${DOMAINS.length} fields · pick one, go deep`;
 
 /* ------------------------------------------------------------------ */
 /*  detail                                                              */
@@ -215,7 +176,11 @@ export default function DomainsClient() {
               </p>
             </div>
 
-            <DomainsTerminal />
+            <InteractiveTerminal
+              script={DOMAINS_SCRIPT}
+              barLabel="layer8@pesu — ~/domains"
+              hint="try: ls · cd .. · help"
+            />
           </div>
         </section>
 

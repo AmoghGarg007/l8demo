@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { InteractiveTerminal } from "../_components/interactive-terminal";
 import { Header, Footer } from "../_components/site-chrome";
 import {
   EVENTS,
@@ -11,50 +12,10 @@ import {
   type L8Event,
 } from "./events-data";
 
-const TERM_TYPE_LINE = "./events --list --sort date";
-
-/* ------------------------------------------------------------------ */
-/*  hero terminal                                                       */
-/* ------------------------------------------------------------------ */
-
-function EventsTerminal() {
-  const [typed, setTyped] = useState("");
-
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const step = reduce ? TERM_TYPE_LINE.length : 1;
-    let i = 0;
-    const id = window.setInterval(() => {
-      i += step;
-      setTyped(TERM_TYPE_LINE.slice(0, i));
-      if (i >= TERM_TYPE_LINE.length) window.clearInterval(id);
-    }, 55);
-    return () => window.clearInterval(id);
-  }, []);
-
-  return (
-    <div className="term w-full" aria-hidden>
-      <div className="term-bar">
-        <span className="term-dot" />
-        <span className="term-dot" />
-        <span className="term-dot" />
-        <span className="ml-2 text-xs text-fg-dim">layer8@pesu — ~/events</span>
-      </div>
-      <div className="term-body font-mono">
-        <div>
-          <span className="prompt">$</span> ls ~/events
-        </div>
-        <div className="muted">
-          live: 1 · pending: 2 · archived: 3
-        </div>
-        <div>
-          <span className="prompt">$</span> {typed}
-          <span className="cursor">&nbsp;</span>
-        </div>
-      </div>
-    </div>
-  );
-}
+const EVENTS_SCRIPT = `$ ls ~/events
+live: 1 · pending: 2 · archived: 3
+$ ./events --list --sort date
+${EVENTS.length} records loaded`;
 
 /* ------------------------------------------------------------------ */
 /*  detail                                                              */
@@ -198,7 +159,11 @@ export default function EventsClient() {
               </p>
             </div>
 
-            <EventsTerminal />
+            <InteractiveTerminal
+              script={EVENTS_SCRIPT}
+              barLabel="layer8@pesu — ~/events"
+              hint="try: ls · cd .. · help"
+            />
           </div>
         </section>
 

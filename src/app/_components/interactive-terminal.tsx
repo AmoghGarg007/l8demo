@@ -10,12 +10,15 @@ import {
 import { useRouter } from "next/navigation";
 import { NAV, ROUTES } from "./site-chrome";
 
-const INTRO_SCRIPT = `$ whoami
+const DEFAULT_SCRIPT = `$ whoami
 layer8@pesu-ecc
 $ cat mission.txt
 teach offense. build defense. capture flags.
 $ ./recruit --status
 [ open ]  domains: web pwn rev crypto forensics osint`;
+
+const DEFAULT_HINT = "try: ls · cd resources · help";
+const DEFAULT_BAR_LABEL = "layer8 — ~/recruit";
 
 const HELP = [
   "help             show available commands",
@@ -80,7 +83,18 @@ function TerminalLine({ line }: { line: string }) {
   );
 }
 
-export function InteractiveTerminal() {
+export function InteractiveTerminal({
+  script = DEFAULT_SCRIPT,
+  hint = DEFAULT_HINT,
+  barLabel = DEFAULT_BAR_LABEL,
+}: {
+  /** Page-specific intro text, typed out before the live prompt appears. */
+  script?: string;
+  /** Hint line shown once the prompt is live. */
+  hint?: string;
+  /** Label in the terminal's title bar, e.g. "layer8 — ~/events". */
+  barLabel?: string;
+} = {}) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -99,7 +113,7 @@ export function InteractiveTerminal() {
 
     if (reducedMotion) {
       const timeout = window.setTimeout(() => {
-        setIntro(INTRO_SCRIPT);
+        setIntro(script);
         setReady(true);
       }, 0);
 
@@ -110,16 +124,16 @@ export function InteractiveTerminal() {
 
     const interval = window.setInterval(() => {
       index += 1;
-      setIntro(INTRO_SCRIPT.slice(0, index));
+      setIntro(script.slice(0, index));
 
-      if (index >= INTRO_SCRIPT.length) {
+      if (index >= script.length) {
         window.clearInterval(interval);
         setReady(true);
       }
     }, 22);
 
     return () => window.clearInterval(interval);
-  }, []);
+  }, [script]);
 
   useEffect(() => {
     if (bodyRef.current) {
@@ -267,9 +281,7 @@ export function InteractiveTerminal() {
         <span className="term-dot" />
         <span className="term-dot" />
         <span className="term-dot" />
-        <span className="ml-2 text-xs text-fg-dim">
-          layer8 — ~/recruit
-        </span>
+        <span className="ml-2 text-xs text-fg-dim">{barLabel}</span>
       </div>
 
       <div
@@ -317,9 +329,7 @@ export function InteractiveTerminal() {
               />
             </form>
 
-            <div className="term-hint">
-              try: ls · cd resources · help
-            </div>
+            <div className="term-hint">{hint}</div>
           </>
         )}
 

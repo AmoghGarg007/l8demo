@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { InteractiveTerminal } from "../_components/interactive-terminal";
 import { Header, Footer } from "../_components/site-chrome";
 import { POSTS, CATEGORIES, formatDate } from "./blogs";
 
@@ -9,67 +10,12 @@ import { POSTS, CATEGORIES, formatDate } from "./blogs";
 /*  terminal                                                            */
 /* ------------------------------------------------------------------ */
 
-const BLOG_TERM = `$ ls -1 content/blogs/
+const BLOG_SCRIPT = `$ ls -1 content/blogs/
 pwn/   web/   crypto/   reversing/   career/
-
 $ cat README
-field notes from the people who
-broke things this week.
-
-$ `;
-const BLOG_TYPE_LINE = "./read --latest";
-
-function BlogTerminal() {
-  const [typed, setTyped] = useState("");
-
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const step = reduce ? BLOG_TYPE_LINE.length : 1;
-    let i = 0;
-    const id = window.setInterval(() => {
-      i += step;
-      setTyped(BLOG_TYPE_LINE.slice(0, i));
-      if (i >= BLOG_TYPE_LINE.length) window.clearInterval(id);
-    }, 55);
-    return () => window.clearInterval(id);
-  }, []);
-
-  const rows = BLOG_TERM.split("\n");
-
-  return (
-    <div className="term w-full" aria-hidden>
-      <div className="term-bar">
-        <span className="term-dot" />
-        <span className="term-dot" />
-        <span className="term-dot" />
-        <span className="ml-2 text-xs text-fg-dim">layer8@pesu — ~/blogs</span>
-      </div>
-      <div className="term-body font-mono">
-        {rows.map((line, idx) => {
-          if (line.startsWith("$")) {
-            return (
-              <div key={idx}>
-                <span className="prompt">$</span>
-                {line.slice(1)}
-                {idx === rows.length - 1 && (
-                  <>
-                    {typed}
-                    <span className="cursor">&nbsp;</span>
-                  </>
-                )}
-              </div>
-            );
-          }
-          return (
-            <div key={idx}>
-              <span className="muted">{line}</span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+field notes from the people who broke things this week.
+$ ./read --latest
+${POSTS.length} posts indexed · newest first below`;
 
 /* ------------------------------------------------------------------ */
 /*  page                                                                */
@@ -141,7 +87,11 @@ export default function BlogsClient() {
               </div>
             </div>
 
-            <BlogTerminal />
+            <InteractiveTerminal
+              script={BLOG_SCRIPT}
+              barLabel="layer8@pesu — ~/blogs"
+              hint="try: ls · cd .. · help"
+            />
           </div>
         </section>
 
