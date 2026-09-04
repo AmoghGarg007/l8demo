@@ -8,7 +8,7 @@ on:
 # Never run two production deploys at once.
 concurrency:
   group: vercel-production
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   # Not secrets — safe to commit. l8demo Vercel project (separate from the
