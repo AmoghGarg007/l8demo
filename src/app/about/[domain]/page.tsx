@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Header, Footer } from "../../_components/site-chrome";
 import {
+  DOMAINS,
   getDomain,
   getDomainMembers,
   getMember,
@@ -10,10 +11,8 @@ import {
   type Member,
 } from "../about-data";
 
-/* only Tech has a functional page for now — the rest 404 until their rosters
-   land. The /about page shows them as disabled placeholders. */
 export function generateStaticParams() {
-  return [{ domain: "tech" }];
+  return DOMAINS.map((d) => ({ domain: d.slug }));
 }
 export const dynamicParams = false;
 
@@ -181,8 +180,13 @@ export default async function DomainPage({ params }: Params) {
                     {initials(m.name)}
                   </span>
                   <span className="min-w-0">
-                    <span className="block font-display font-bold text-sm text-fg leading-tight truncate">
-                      {m.name}
+                    <span className="flex items-center gap-2">
+                      <span className="block font-display font-bold text-sm text-fg leading-tight truncate">
+                        {m.name}
+                      </span>
+                      {m.role && (
+                        <span className="tag shrink-0">{m.role}</span>
+                      )}
                     </span>
                     <span className="block text-[0.62rem] tracking-[0.14em] uppercase text-fg-faint">
                       {m.focus} · {m.year}

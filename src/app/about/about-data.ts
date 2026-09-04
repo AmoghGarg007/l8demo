@@ -220,15 +220,17 @@ export type DomainMember = {
   name: string;
   focus: string; // primary lane, e.g. "web", "pwn"
   year: string;
+  role?: string; // special title alongside focus/year, e.g. "Webmaster"
 };
 
 /**
  * Members per domain, beyond the head/vice-head. Placeholder names — swap for
  * the real roster. Only `tech` is populated for now; the other domains render
- * a "coming soon" placeholder on /about.
+ * a "roster being finalised" placeholder until members are added.
  */
 export const DOMAIN_MEMBERS: Record<string, DomainMember[]> = {
   tech: [
+    { name: "Marcus Livius", focus: "web", year: "3rd year", role: "Webmaster" },
     { name: "Quintus Ennius", focus: "web", year: "3rd year" },
     { name: "Lucius Cornelius", focus: "pwn", year: "3rd year" },
     { name: "Titus Lucretius", focus: "reversing", year: "2nd year" },

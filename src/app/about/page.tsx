@@ -373,42 +373,26 @@ export default function AboutPage() {
             </p>
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {DOMAINS.map((d) => {
-                const live = d.slug === "tech";
-                const inner = (
-                  <>
-                    <span className="font-mono text-[0.7rem] text-fg-faint">
-                      drwxr-xr-x
-                    </span>
-                    <span className="mt-2 block font-display font-bold text-lg text-fg">
-                      {d.name}
-                    </span>
-                    <span className="mt-1 block text-xs text-fg-dim line-clamp-3">
-                      {d.tagline}
-                    </span>
-                    <span className="mt-3 block font-mono text-xs text-accent">
-                      {live ? "$ cd ~/about/tech" : "// roster coming soon"}
-                    </span>
-                  </>
-                );
-                return live ? (
-                  <Link
-                    key={d.slug}
-                    href="/about/tech"
-                    className="card text-left flex flex-col transition-colors hover:border-accent"
-                  >
-                    {inner}
-                  </Link>
-                ) : (
-                  <div
-                    key={d.slug}
-                    aria-disabled
-                    className="card text-left flex flex-col opacity-55 cursor-not-allowed"
-                  >
-                    {inner}
-                  </div>
-                );
-              })}
+              {DOMAINS.map((d) => (
+                <Link
+                  key={d.slug}
+                  href={`/about/${d.slug}`}
+                  className="card text-left flex flex-col transition-colors hover:border-accent"
+                >
+                  <span className="font-mono text-[0.7rem] text-fg-faint">
+                    drwxr-xr-x
+                  </span>
+                  <span className="mt-2 block font-display font-bold text-lg text-fg">
+                    {d.name}
+                  </span>
+                  <span className="mt-1 block text-xs text-fg-dim line-clamp-3">
+                    {d.tagline}
+                  </span>
+                  <span className="mt-3 block font-mono text-xs text-accent">
+                    {`$ cd ~/about/${d.slug}`}
+                  </span>
+                </Link>
+              ))}
             </div>
           </div>
         </section>
