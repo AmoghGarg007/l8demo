@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!<>-_\\/[]{}=+*^?#$%&";
 
-const DECRYPT_STEP_MS = 120; // speed of the one-time reveal
+const DEFAULT_DECRYPT_STEP_MS = 120; // default speed of the one-time reveal
 const GLITCH_FLICKER_MS = 90; // how long a single glitched letter shows
 
 type Slot = { char: string; start: number; end: number };
@@ -31,10 +31,13 @@ function randomGlyph(): string {
 
 export function ScrambleText({
   text,
+  decryptStepMs = DEFAULT_DECRYPT_STEP_MS,
   minGlitchMs = 1500,
   maxGlitchMs = 6000,
 }: {
   text: string;
+  /** ms per glyph-churn step during the one-time reveal — lower is faster */
+  decryptStepMs?: number;
   /** randomised gap between single-letter glitches, in ms */
   minGlitchMs?: number;
   maxGlitchMs?: number;
@@ -105,14 +108,14 @@ export function ScrambleText({
         setOut(text);
         scheduleGlitch();
       }
-    }, DECRYPT_STEP_MS);
+    }, decryptStepMs);
 
     return () => {
       cancelled = true;
       if (decryptId !== undefined) window.clearInterval(decryptId);
       if (glitchTimeoutId !== undefined) window.clearTimeout(glitchTimeoutId);
     };
-  }, [text, minGlitchMs, maxGlitchMs]);
+  }, [text, decryptStepMs, minGlitchMs, maxGlitchMs]);
 
   return (
     <>
