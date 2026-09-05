@@ -7,7 +7,7 @@ import { Header, Footer } from "../_components/site-chrome";
 import { DOMAINS, referenceLink, type Domain } from "./domains-data";
 
 const DOMAINS_SCRIPT = `$ ls ~/domains
-web pwn rev crypto forensics stego osint network
+${DOMAINS.map((d) => d.id).join(" ")}
 $ cat ~/domains/*/README.md
 ${DOMAINS.length} fields · pick one, go deep`;
 

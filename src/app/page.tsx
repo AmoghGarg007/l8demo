@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { InteractiveTerminal } from "./_components/interactive-terminal";
 import { Header, Footer } from "./_components/site-chrome";
 
@@ -90,9 +91,9 @@ function Hero() {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <button type="button" className="btn btn-solid">
+            <Link href="/weekly-ctfs" className="btn btn-solid">
               &gt; weekly_ctfs
-            </button>
+            </Link>
 
             <button type="button" className="btn">
               &gt; join_layer8

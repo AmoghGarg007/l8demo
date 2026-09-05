@@ -12,8 +12,12 @@ import {
   type L8Event,
 } from "./events-data";
 
+const LIVE_COUNT = EVENTS.filter((e) => e.status === "LIVE").length;
+const PENDING_COUNT = EVENTS.filter((e) => e.status === "PENDING").length;
+const ARCHIVED_COUNT = EVENTS.filter((e) => e.status === "ARCHIVED").length;
+
 const EVENTS_SCRIPT = `$ ls ~/events
-live: 1 · pending: 2 · archived: 3
+live: ${LIVE_COUNT} · pending: ${PENDING_COUNT} · archived: ${ARCHIVED_COUNT}
 $ ./events --list --sort date
 ${EVENTS.length} records loaded`;
 

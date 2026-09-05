@@ -486,7 +486,7 @@ export default function AboutPage() {
             <Link href="/#top" className="btn btn-solid">
               &gt; join_layer8
             </Link>
-            <Link href="/#top" className="btn">
+            <Link href="/weekly-ctfs" className="btn">
               &gt; weekly_ctfs
             </Link>
           </div>
@@ -504,7 +504,7 @@ export default function AboutPage() {
               href="https://research.pes.edu/centre/centre-for-computer-networks-and-cyber-security-cc/"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-3 rounded-xl border border-border bg-bg-2 px-4 py-2.5 transition-colors transition-transform hover:-translate-y-0.5 hover:border-accent"
+              className="inline-flex items-center gap-3 rounded-xl border border-border bg-bg-2 px-4 py-2.5 transition hover:-translate-y-0.5 hover:border-accent"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

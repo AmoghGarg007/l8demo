@@ -130,8 +130,9 @@ export default async function DomainPage({ params }: Params) {
             {d.tagline}
           </p>
           <p className="mt-4 font-mono text-xs text-fg-faint">
-            {members.length + (head ? 1 : 0) + (vice ? 1 : 0)} members · 1 head ·
-            1 vice-head
+            {members.length + (head ? 1 : 0) + (vice ? 1 : 0)} members
+            {head ? " · 1 head" : ""}
+            {vice ? " · 1 vice-head" : ""}
           </p>
         </section>
 
