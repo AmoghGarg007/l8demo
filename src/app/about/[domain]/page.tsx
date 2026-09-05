@@ -119,7 +119,7 @@ export default async function DomainPage({ params }: Params) {
         <section className="wrap pt-12 pb-10 md:pt-16 md:pb-12">
           <p className="kicker mb-5">{`// layer8 / about / ${d.slug}`}</p>
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <h1 className="font-display font-bold leading-[0.95] text-[clamp(2.75rem,10vw,5.5rem)]">
+            <h1 className="font-display font-bold leading-[0.95] text-[clamp(3rem,11vw,6.5rem)]">
               {d.name}
             </h1>
             <Link href="/about" className="link-ghost text-sm">

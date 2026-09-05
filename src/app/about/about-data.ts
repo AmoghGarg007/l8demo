@@ -1,8 +1,7 @@
 /**
- * Core team roster for the /about page.
- *
- * Names, bios and social handles are placeholders — swap them for the real
- * roster. Slugs are stable ids used for the master–detail selection.
+ * Domain heads/vice-heads (and each domain's full roster) for /about and
+ * /about/[domain]. Names, bios and social handles are placeholders — swap
+ * them for the real roster. Slugs are stable ids used to look members up.
  */
 
 export type Member = {
@@ -162,41 +161,8 @@ export const DOMAINS: Domain[] = [
   },
 ];
 
-export const LEADERSHIP: Member[] = MEMBERS.filter((m) => m.group === "Club");
-
-/** The roster grouped for display: leadership first, then each domain. */
-export type RosterGroup = {
-  label: string;
-  hint?: string;
-  members: Member[];
-};
-
-export const ROSTER: RosterGroup[] = [
-  { label: "leadership", members: LEADERSHIP },
-  ...DOMAINS.map((d) => ({
-    label: `~/${d.slug}`,
-    hint: d.tagline,
-    members: [d.headSlug, d.viceSlug]
-      .map((s) => MEMBERS.find((m) => m.slug === s))
-      .filter((m): m is Member => Boolean(m)),
-  })),
-];
-
 export function getMember(slug: string): Member | undefined {
   return MEMBERS.find((m) => m.slug === slug);
-}
-
-/** The other half of a member's pair — domain co-lead, or the other club lead. */
-export function counterpartOf(slug: string): Member | undefined {
-  const d = DOMAINS.find((x) => x.headSlug === slug || x.viceSlug === slug);
-  if (d) {
-    return getMember(d.headSlug === slug ? d.viceSlug : d.headSlug);
-  }
-  const m = getMember(slug);
-  if (m?.group === "Club") {
-    return MEMBERS.find((x) => x.group === "Club" && x.slug !== slug);
-  }
-  return undefined;
 }
 
 export function initials(name: string): string {

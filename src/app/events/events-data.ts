@@ -132,13 +132,17 @@ export function matchesFilter(
   }
 }
 
-/** Tailwind classes for a status badge — semantic, kept subtle. */
+/**
+ * Tailwind classes for a status badge. Kept on the site's single-accent
+ * palette (no green/amber) — LIVE is full accent, PENDING a dimmer accent,
+ * ARCHIVED fades to the neutral faint/border pair.
+ */
 export function statusClasses(status: EventStatus): string {
   switch (status) {
     case "LIVE":
-      return "text-[#4ade80] border-[#4ade80]/40";
+      return "text-accent border-accent/40";
     case "PENDING":
-      return "text-[#fbbf24] border-[#fbbf24]/40";
+      return "text-accent/70 border-accent/25";
     case "ARCHIVED":
       return "text-fg-faint border-border";
   }
