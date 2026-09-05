@@ -199,6 +199,21 @@ export default function AboutPage() {
               </article>
             ))}
           </div>
+
+          <div className="mt-10 pt-8 border-t border-border flex flex-wrap items-center gap-3">
+            <span className="kicker">in association with</span>
+            <a
+              href="https://research.pes.edu/centre/centre-for-computer-networks-and-cyber-security-cc/"
+              target="_blank"
+              rel="noreferrer"
+              className="btn"
+            >
+              &gt; ccncs
+            </a>
+            <a href="mailto:ccncs@pes.edu" className="btn">
+              &gt; ccncs@pes.edu
+            </a>
+          </div>
         </section>
 
         {/* who we are */}
