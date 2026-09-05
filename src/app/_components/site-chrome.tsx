@@ -199,13 +199,31 @@ export function Footer({ current }: { current?: string }) {
           <div>
             <div className="kicker mb-2.5">elsewhere</div>
             <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-[13px]">
-              {["Instagram", "Discord", "GitHub", "LinkedIn", "Email"].map((s) => (
-                <li key={s}>
-                  <button type="button" className="link-ghost">
-                    {s}
-                  </button>
-                </li>
-              ))}
+              <li>
+                <a
+                  href="https://www.instagram.com/layer8.pesu/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="link-ghost"
+                >
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <button type="button" className="link-ghost">
+                  GitHub
+                </button>
+              </li>
+              <li>
+                <button type="button" className="link-ghost">
+                  LinkedIn
+                </button>
+              </li>
+              <li>
+                <a href="mailto:layer8.ecc@pes.edu" className="link-ghost">
+                  Email
+                </a>
+              </li>
             </ul>
           </div>
         </div>
