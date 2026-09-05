@@ -504,7 +504,7 @@ export default function AboutPage() {
               href="https://research.pes.edu/centre/centre-for-computer-networks-and-cyber-security-cc/"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-3 rounded-xl border border-border bg-white px-4 py-2.5 transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center gap-3 rounded-xl border border-border bg-bg-2 px-4 py-2.5 transition-colors transition-transform hover:-translate-y-0.5 hover:border-accent"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -513,7 +513,7 @@ export default function AboutPage() {
                 aria-hidden
                 className="h-10 w-10 rounded-full"
               />
-              <span className="font-display font-bold text-base tracking-tight text-[#0b1120]">
+              <span className="font-display font-bold text-base tracking-tight text-fg">
                 CCNCS
               </span>
             </a>
