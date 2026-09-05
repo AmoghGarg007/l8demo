@@ -199,30 +199,6 @@ export default function AboutPage() {
               </article>
             ))}
           </div>
-
-          <div className="mt-10 pt-8 border-t border-border flex flex-wrap items-center gap-4">
-            <span className="kicker">in association with</span>
-            <a
-              href="https://research.pes.edu/centre/centre-for-computer-networks-and-cyber-security-cc/"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2.5 rounded-[0.6rem] border border-border bg-white px-3 py-1.5 transition-transform hover:-translate-y-0.5"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/brand/ccncs.jpg"
-                alt=""
-                aria-hidden
-                className="h-6 w-6 rounded-full"
-              />
-              <span className="font-display font-bold text-sm tracking-tight text-[#0b1120]">
-                CCNCS
-              </span>
-            </a>
-            <a href="mailto:ccncs@pes.edu" className="btn">
-              &gt; ccncs@pes.edu
-            </a>
-          </div>
         </section>
 
         {/* who we are */}
@@ -513,6 +489,37 @@ export default function AboutPage() {
             <Link href="/#top" className="btn">
               &gt; weekly_ctfs
             </Link>
+          </div>
+        </section>
+
+        <div className="wrap">
+          <div className="rule" />
+        </div>
+
+        {/* in association with */}
+        <section className="wrap py-10 md:py-12">
+          <div className="flex flex-wrap items-center gap-5">
+            <span className="kicker">in association with</span>
+            <a
+              href="https://research.pes.edu/centre/centre-for-computer-networks-and-cyber-security-cc/"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-3 rounded-xl border border-border bg-white px-4 py-2.5 transition-transform hover:-translate-y-0.5"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/brand/ccncs.jpg"
+                alt=""
+                aria-hidden
+                className="h-10 w-10 rounded-full"
+              />
+              <span className="font-display font-bold text-base tracking-tight text-[#0b1120]">
+                CCNCS
+              </span>
+            </a>
+            <a href="mailto:ccncs@pes.edu" className="btn">
+              &gt; ccncs@pes.edu
+            </a>
           </div>
         </section>
       </main>
