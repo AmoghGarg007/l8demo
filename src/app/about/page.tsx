@@ -511,7 +511,7 @@ export default function AboutPage() {
                 src="/brand/ccncs.jpg"
                 alt=""
                 aria-hidden
-                className="h-10 w-10 rounded-full"
+                className="h-10 w-10"
               />
               <span className="font-display font-bold text-base tracking-tight text-fg">
                 CCNCS
