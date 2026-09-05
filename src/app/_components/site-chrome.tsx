@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /* ------------------------------------------------------------------ */
 /*  shared nav data                                                    */
@@ -53,6 +53,17 @@ export function Wordmark({ className = "" }: { className?: string }) {
 /*  header                                                             */
 /* ------------------------------------------------------------------ */
 
+// Desktop: these sit inline in the bar; everything else lives in the
+// "menu" dropdown so the header doesn't overflow with ten tabs.
+const PRIMARY: readonly (typeof NAV)[number][] = [
+  "Blogs",
+  "Events",
+  "Domains",
+  "Recruitments",
+  "About Us",
+];
+const SECONDARY = NAV.filter((item) => !PRIMARY.includes(item));
+
 function NavItem({
   item,
   current,
@@ -90,6 +101,31 @@ function NavItem({
 
 export function Header({ current }: { current?: string }) {
   const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // close the desktop "menu" dropdown on outside click / Escape
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onPointer(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
+  const currentInMenu =
+    current !== undefined &&
+    (SECONDARY as readonly string[]).includes(current);
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] border-b border-border">
@@ -99,19 +135,48 @@ export function Header({ current }: { current?: string }) {
             <Wordmark />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-x-6 gap-y-2 flex-wrap justify-end">
-            {NAV.map((item) => (
-              <NavItem
-                key={item}
-                item={item}
-                current={current}
-                className={
-                  item === "About Us"
-                    ? "lg:ml-1 lg:pl-5 lg:border-l lg:border-border"
-                    : ""
-                }
-              />
+          <nav className="hidden lg:flex items-center gap-x-6">
+            {PRIMARY.map((item) => (
+              <NavItem key={item} item={item} current={current} />
             ))}
+
+            <div ref={menuRef} className="relative">
+              <button
+                type="button"
+                className="navlink flex items-center gap-1.5"
+                aria-haspopup="menu"
+                aria-expanded={menuOpen}
+                data-current={currentInMenu || undefined}
+                onClick={() => setMenuOpen((v) => !v)}
+              >
+                menu
+                <span
+                  aria-hidden
+                  className={`text-[0.6em] transition-transform ${
+                    menuOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  ▼
+                </span>
+              </button>
+
+              {menuOpen && (
+                <div
+                  role="menu"
+                  className="absolute right-0 top-full mt-3 min-w-[13rem] border border-border bg-bg-2 p-1.5 shadow-[0_18px_40px_-28px_var(--glow)]"
+                >
+                  {SECONDARY.map((item) => (
+                    <NavItem
+                      key={item}
+                      item={item}
+                      current={current}
+                      className="block px-3 py-1.5"
+                      onNavigate={() => setMenuOpen(false)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </nav>
 
           <button
