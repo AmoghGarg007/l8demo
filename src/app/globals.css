@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ============================================================
-   LAYER8 — single theme (club colours: navy, black & white)
+    LAYER8 — single theme (club colours: navy, black & white)
    ============================================================ */
 
 :root {
@@ -27,10 +27,14 @@
   --color-bg-3: var(--bg-3);
   --color-fg: var(--fg);
   --color-fg-dim: var(--fg-dim);
+  --color-fg-faint: var(--fg-faint);
   --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
   --color-border: var(--border);
-  --font-mono: var(--font-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
-  --font-display: var(--font-display), var(--font-mono), sans-serif;
+  --font-mono:
+    var(--font-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-display:
+    var(--font-display), var(--font-mono), sans-serif;
 }
 
 /* ---------------------------------------------------------- */
@@ -139,14 +143,20 @@
     background: var(--bg-2);
     color: var(--fg);
     cursor: pointer;
-    transition: border-color 0.18s, color 0.18s, background 0.18s,
-      box-shadow 0.18s, transform 0.18s;
+    transition:
+      border-color 0.18s,
+      color 0.18s,
+      background 0.18s,
+      box-shadow 0.18s,
+      transform 0.18s;
   }
 
   .btn:hover {
     border-color: var(--accent);
     color: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent), 0 0 22px -6px var(--glow);
+    box-shadow:
+      0 0 0 1px var(--accent),
+      0 0 22px -6px var(--glow);
     transform: translateY(-1px);
   }
 
@@ -198,6 +208,14 @@
     width: 100%;
   }
 
+  .navlink[data-current="true"] {
+    color: var(--fg);
+  }
+
+  .navlink[data-current="true"]::after {
+    width: 100%;
+  }
+
   /* panels / cards */
   .panel {
     background: var(--bg-2);
@@ -208,11 +226,18 @@
     background: var(--bg-2);
     border: 1px solid var(--border);
     padding: 1.35rem;
-    transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+    transition:
+      border-color 0.18s,
+      transform 0.18s,
+      box-shadow 0.18s;
   }
 
   .card:hover {
-    border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+    border-color: color-mix(
+      in srgb,
+      var(--accent) 55%,
+      var(--border)
+    );
     transform: translateY(-3px);
     box-shadow: 0 18px 40px -28px var(--glow);
   }
@@ -223,7 +248,8 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--accent);
-    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+    border: 1px solid
+      color-mix(in srgb, var(--accent) 40%, var(--border));
     padding: 0.15rem 0.5rem;
   }
 
@@ -270,6 +296,68 @@
 
   .term-body .muted {
     color: var(--fg-dim);
+  }
+
+  /* interactive terminal additions */
+  .term-interactive .term-body {
+    max-height: 23rem;
+    overflow-y: auto;
+    cursor: text;
+
+    /* themed scrollbar — Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--accent) 55%, transparent)
+      transparent;
+  }
+
+  /* themed scrollbar — WebKit/Blink */
+  .term-interactive .term-body::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .term-interactive .term-body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .term-interactive .term-body::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 999px;
+  }
+
+  .term-interactive .term-body::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent);
+    background-clip: padding-box;
+  }
+
+  .term-input-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7ch;
+  }
+
+  .term-input {
+    min-width: 0;
+    flex: 1;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    caret-color: var(--accent);
+  }
+
+  .term-input::selection {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .term-hint {
+    margin-top: 0.35rem;
+    color: var(--fg-faint);
+    font-size: 0.7rem;
   }
 
   .cursor {
@@ -321,7 +409,102 @@
     color: var(--accent);
   }
 
-  /* brand marks — l8-mark.png is black on transparent; invert to white. */
+  /* blog article body — HTML rendered from markdown */
+  .article-body > * + * {
+    margin-top: 1.15rem;
+  }
+
+  .article-body p,
+  .article-body li {
+    font-size: 0.95rem;
+    color: var(--fg-dim);
+    max-width: 68ch;
+  }
+
+  .article-body h2 {
+    font-family: var(--font-display), var(--font-mono), sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--fg);
+    margin-top: 2.6rem;
+  }
+
+  .article-body h3 {
+    font-family: var(--font-display), var(--font-mono), sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--fg);
+    margin-top: 2rem;
+  }
+
+  .article-body ul,
+  .article-body ol {
+    padding-left: 1.3rem;
+    max-width: 68ch;
+  }
+
+  .article-body ul {
+    list-style: disc;
+  }
+
+  .article-body ol {
+    list-style: decimal;
+  }
+
+  .article-body li {
+    margin-top: 0.4rem;
+  }
+
+  .article-body li::marker {
+    color: var(--fg-faint);
+  }
+
+  .article-body a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .article-body strong {
+    color: var(--fg);
+  }
+
+  .article-body code {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.85em;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    padding: 0.05rem 0.35rem;
+  }
+
+  .article-body .code-block {
+    background: color-mix(in srgb, var(--bg-2) 88%, black);
+    border: 1px solid var(--border);
+    padding: 1rem 1.2rem;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.8rem;
+    line-height: 1.8;
+    overflow-x: auto;
+    white-space: pre;
+    color: var(--fg-dim);
+  }
+
+  .article-body .callout {
+    border-left: 2px solid var(--accent);
+    padding: 0.2rem 0 0.2rem 1rem;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--fg-dim);
+  }
+
+  /* per-route enter animation */
+  .route-transition {
+    position: relative;
+    z-index: 3;
+    animation: route-in 0.3s ease-out;
+  }
+
+  /* brand marks */
   .brandmark {
     height: 1.4em;
     width: auto;
@@ -329,19 +512,26 @@
     filter: invert(1) drop-shadow(0 0 9px var(--glow));
   }
 
-  /* PES University lockup sits on its own dark chip. */
+  /* PES University lockup */
   .pesu-chip {
     display: inline-flex;
     align-items: center;
     padding: 0.5rem 0.8rem;
-    border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
+    border: 1px solid
+      color-mix(in srgb, var(--fg) 14%, transparent);
     border-radius: 0.6rem;
     background: #0a0e1a;
-    transition: border-color 0.18s, box-shadow 0.18s;
+    transition:
+      border-color 0.18s,
+      box-shadow 0.18s;
   }
 
   .pesu-chip:hover {
-    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    border-color: color-mix(
+      in srgb,
+      var(--accent) 55%,
+      transparent
+    );
     box-shadow: 0 0 22px -8px var(--glow);
   }
 
@@ -361,17 +551,55 @@
 }
 
 @keyframes glitch-a {
-  0%, 92%, 100% { clip-path: inset(0 0 100% 0); }
-  93% { clip-path: inset(12% 0 62% 0); }
-  95% { clip-path: inset(48% 0 30% 0); }
-  97% { clip-path: inset(78% 0 8% 0); }
+  0%,
+  92%,
+  100% {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  93% {
+    clip-path: inset(12% 0 62% 0);
+  }
+
+  95% {
+    clip-path: inset(48% 0 30% 0);
+  }
+
+  97% {
+    clip-path: inset(78% 0 8% 0);
+  }
 }
 
 @keyframes glitch-b {
-  0%, 90%, 100% { clip-path: inset(100% 0 0 0); }
-  91% { clip-path: inset(70% 0 12% 0); }
-  94% { clip-path: inset(30% 0 40% 0); }
-  98% { clip-path: inset(5% 0 80% 0); }
+  0%,
+  90%,
+  100% {
+    clip-path: inset(100% 0 0 0);
+  }
+
+  91% {
+    clip-path: inset(70% 0 12% 0);
+  }
+
+  94% {
+    clip-path: inset(30% 0 40% 0);
+  }
+
+  98% {
+    clip-path: inset(5% 0 80% 0);
+  }
+}
+
+@keyframes route-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -382,6 +610,7 @@
     transition: none !important;
     scroll-behavior: auto !important;
   }
+
   .cursor {
     opacity: 1;
   }
