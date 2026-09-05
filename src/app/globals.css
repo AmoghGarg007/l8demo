@@ -96,6 +96,14 @@
 }
 
 @layer components {
+
+  .ccncs-mark {
+    display: block;
+    width: auto;
+    height: 3.5rem;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px var(--glow));
+  } 
   .font-display {
     font-family: var(--font-display), var(--font-mono), sans-serif;
   }
