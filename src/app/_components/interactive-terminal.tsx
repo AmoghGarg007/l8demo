@@ -187,7 +187,9 @@ export function InteractiveTerminal({
           break;
         }
 
-        const route = LIVE_ROUTES[argument];
+        const route = Object.hasOwn(LIVE_ROUTES, argument)
+          ? LIVE_ROUTES[argument]
+          : undefined;
 
         if (route) {
           response = [`opening ${route}...`];

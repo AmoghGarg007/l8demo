@@ -11,6 +11,23 @@
 const escapeHtml = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+/**
+ * Sanitise a markdown link target before it goes into an href.
+ * `&`, `<`, `>` are already entity-escaped by escapeHtml upstream; here we
+ * (1) reject dangerous schemes (javascript:/data:/vbscript:/file:), collapsing
+ * whitespace first so a scheme can't be obfuscated ("java\tscript:"), and
+ * (2) entity-escape the quote chars so a URL can't break out of href="...".
+ */
+function sanitizeUrl(url: string): string {
+  const trimmed = url.trim();
+  const scheme = trimmed.replace(/\s+/g, "").toLowerCase();
+  if (/^(javascript|data|vbscript|file):/.test(scheme)) return "#";
+  return trimmed
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/`/g, "%60");
+}
+
 function inlineFormat(text: string): string {
   return escapeHtml(text)
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
@@ -18,7 +35,8 @@ function inlineFormat(text: string): string {
     .replace(/`([^`]+?)`/g, "<code>$1</code>")
     .replace(
       /\[([^\]]+)\]\(([^)]+)\)/g,
-      '<a href="$2" target="_blank" rel="noreferrer">$1</a>',
+      (_m, label: string, url: string) =>
+        `<a href="${sanitizeUrl(url)}" target="_blank" rel="noreferrer">${label}</a>`,
     );
 }
 
