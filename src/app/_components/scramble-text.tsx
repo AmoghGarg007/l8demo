@@ -3,14 +3,18 @@
 import { useEffect, useState } from "react";
 
 /**
- * Decrypt-style scramble: renders `text`, but on mount it churns through
- * random glyphs per-character before resolving, then does it again after a
- * randomised pause — so re-scrambles don't land on a predictable beat. Used
- * by /sandbox and /weekly-ctfs' "coming soon" headings.
+ * Decrypt-style reveal: on mount, `text` churns in from random glyphs,
+ * per-character, then resolves and holds. It does NOT repeat the full
+ * decrypt — once resolved, only a single random (non-space) letter
+ * glitches to a random glyph and back, at a randomised interval, so it
+ * reads as "alive" without redoing the whole reveal. Used by /sandbox and
+ * /weekly-ctfs' "coming soon" headings.
  */
 
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!<>-_\\/[]{}=+*^?#$%&";
-const STEP_MS = 120;
+
+const DECRYPT_STEP_MS = 120; // speed of the one-time reveal
+const GLITCH_FLICKER_MS = 90; // how long a single glitched letter shows
 
 type Slot = { char: string; start: number; end: number };
 
@@ -21,47 +25,65 @@ function makeQueue(text: string): Slot[] {
   });
 }
 
-function randomHoldSteps(minSteps: number, maxSteps: number) {
-  return minSteps + Math.floor(Math.random() * (maxSteps - minSteps + 1));
+function randomGlyph(): string {
+  return GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
 }
 
 export function ScrambleText({
   text,
-  minHoldMs = 4000,
-  maxHoldMs = 16000,
+  minGlitchMs = 1500,
+  maxGlitchMs = 6000,
 }: {
   text: string;
-  /** randomised pause range between decrypt passes, in ms */
-  minHoldMs?: number;
-  maxHoldMs?: number;
+  /** randomised gap between single-letter glitches, in ms */
+  minGlitchMs?: number;
+  maxGlitchMs?: number;
 }) {
-  // SSR + first paint show the final text; the scramble takes over on mount.
+  // SSR + first paint show the final text; the reveal takes over on mount.
   const [out, setOut] = useState(text);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
 
-    const minSteps = Math.round(minHoldMs / STEP_MS);
-    const maxSteps = Math.round(maxHoldMs / STEP_MS);
+    let cancelled = false;
+    let glitchTimeoutId: number | undefined;
 
-    let frame = 0;
-    let hold = 0;
-    let queue = makeQueue(text);
+    function scheduleGlitch() {
+      if (cancelled) return;
+      const delay = minGlitchMs + Math.random() * (maxGlitchMs - minGlitchMs);
 
-    const id = window.setInterval(() => {
-      // paused between passes — sit on the finished word for a random while
-      if (hold > 0) {
-        hold -= 1;
-        if (hold === 0) {
-          frame = 0;
-          queue = makeQueue(text);
+      glitchTimeoutId = window.setTimeout(() => {
+        if (cancelled) return;
+
+        const letterIndexes = [...text]
+          .map((char, i) => (char === " " ? -1 : i))
+          .filter((i) => i >= 0);
+
+        if (letterIndexes.length === 0) {
+          scheduleGlitch();
+          return;
         }
-        return;
-      }
 
+        const i = letterIndexes[Math.floor(Math.random() * letterIndexes.length)];
+        setOut(text.slice(0, i) + randomGlyph() + text.slice(i + 1));
+
+        window.setTimeout(() => {
+          if (cancelled) return;
+          setOut(text);
+          scheduleGlitch();
+        }, GLITCH_FLICKER_MS);
+      }, delay);
+    }
+
+    // one-time decrypt-in, then hand off to the occasional single-letter glitch
+    let frame = 0;
+    const queue = makeQueue(text);
+
+    const decryptId = window.setInterval(() => {
       let rendered = "";
       let done = 0;
+
       for (const slot of queue) {
         if (slot.char === " ") {
           rendered += " ";
@@ -70,7 +92,7 @@ export function ScrambleText({
           rendered += slot.char;
           done += 1;
         } else if (frame >= slot.start) {
-          rendered += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+          rendered += randomGlyph();
         } else {
           rendered += " ";
         }
@@ -79,13 +101,18 @@ export function ScrambleText({
       frame += 1;
 
       if (done === queue.length) {
+        window.clearInterval(decryptId);
         setOut(text);
-        hold = randomHoldSteps(minSteps, maxSteps);
+        scheduleGlitch();
       }
-    }, STEP_MS);
+    }, DECRYPT_STEP_MS);
 
-    return () => window.clearInterval(id);
-  }, [text, minHoldMs, maxHoldMs]);
+    return () => {
+      cancelled = true;
+      if (decryptId !== undefined) window.clearInterval(decryptId);
+      if (glitchTimeoutId !== undefined) window.clearTimeout(glitchTimeoutId);
+    };
+  }, [text, minGlitchMs, maxGlitchMs]);
 
   return (
     <>
