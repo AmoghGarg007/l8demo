@@ -508,11 +508,11 @@ export default function AboutPage() {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/brand/ccncs.jpg"
+                src="/brand/ccncs-transparent.png"
                 alt=""
                 aria-hidden
-                className="h-10 w-10"
-              />
+                className="ccncs-mark"
+                />
               <span className="font-display font-bold text-base tracking-tight text-fg">
                 CCNCS
               </span>
