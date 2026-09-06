@@ -50,11 +50,23 @@ const DOMAINS = [
     "People, infrastructure and leaks — what the open internet already knows about a target.",
   ],
   [
-    "net",
+    "network",
     "Network Security",
     "Protocol abuse, pivoting, traffic analysis and defending the wire.",
   ],
 ] as const;
+
+const TERMINAL_FS = {
+  dir: "domains",
+  entries: DOMAINS.map(([slug]) => slug),
+  files: Object.fromEntries(
+    DOMAINS.flatMap(([slug, , desc]) => [
+      [slug, desc],
+      [`${slug}/readme.md`, desc],
+      [`domains/${slug}/readme.md`, desc],
+    ]),
+  ),
+} as const;
 
 /* ------------------------------------------------------------------ */
 /*  sections                                                           */
@@ -101,7 +113,7 @@ function Hero() {
           </div>
         </div>
 
-        <InteractiveTerminal />
+        <InteractiveTerminal fs={TERMINAL_FS} hint="try: ls domains · cd blogs · help" />
       </div>
 
       <div className="mt-16 grid grid-cols-2 divide-x divide-border border border-border md:grid-cols-4">

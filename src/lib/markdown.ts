@@ -5,39 +5,60 @@
  * subset used in content/blogs: ATX headings, fenced code blocks, blockquotes
  * (rendered as .callout), unordered + ordered lists, and inline bold / italic /
  * code / links. The markdown is first-party content committed to this repo, so
- * the result is rendered with dangerouslySetInnerHTML.
+ * the result is rendered with dangerouslySetInnerHTML — but link targets are
+ * still sanitised so a post can't inject script.
  */
 
 const escapeHtml = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 /**
- * Sanitise a markdown link target before it goes into an href.
- * `&`, `<`, `>` are already entity-escaped by escapeHtml upstream; here we
- * (1) reject dangerous schemes (javascript:/data:/vbscript:/file:), collapsing
- * whitespace first so a scheme can't be obfuscated ("java\tscript:"), and
- * (2) entity-escape the quote chars so a URL can't break out of href="...".
+ * Allowlist a link target. Only http(s), mailto, in-page anchors and
+ * root-relative paths become real hrefs; everything else (javascript:,
+ * data:, vbscript:, blob:, …) collapses to "#". Whitespace is stripped
+ * before the scheme test so it can't be obfuscated ("java\tscript:"), and
+ * quote chars are entity-escaped so the value can't break out of href="…".
  */
 function sanitizeUrl(url: string): string {
-  const trimmed = url.trim();
-  const scheme = trimmed.replace(/\s+/g, "").toLowerCase();
-  if (/^(javascript|data|vbscript|file):/.test(scheme)) return "#";
-  return trimmed
+  const probe = url.replace(/\s+/g, "").toLowerCase();
+  const ok =
+    probe.startsWith("http://") ||
+    probe.startsWith("https://") ||
+    probe.startsWith("mailto:") ||
+    probe.startsWith("#") ||
+    probe.startsWith("/");
+  if (!ok) return "#";
+  return url
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;")
     .replace(/`/g, "%60");
 }
 
-function inlineFormat(text: string): string {
-  return escapeHtml(text)
+function formatSegment(seg: string): string {
+  return seg
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, "<em>$1</em>")
-    .replace(/`([^`]+?)`/g, "<code>$1</code>")
     .replace(
-      /\[([^\]]+)\]\(([^)]+)\)/g,
-      (_m, label: string, url: string) =>
-        `<a href="${sanitizeUrl(url)}" target="_blank" rel="noreferrer">${label}</a>`,
+      // URL: <...> autolink form, or a space-free target with balanced ()
+      /\[([^\]]+)\]\((<[^>]*>|[^()\s]*(?:\([^()]*\)[^()\s]*)*)\)/g,
+      (_m, label: string, rawUrl: string) => {
+        const target = rawUrl.replace(/^<([\s\S]*)>$/, "$1").trim();
+        const external = /^https?:\/\//i.test(target);
+        const attrs = external ? ' target="_blank" rel="noreferrer"' : "";
+        return `<a href="${sanitizeUrl(target)}"${attrs}>${label}</a>`;
+      },
     );
+}
+
+function inlineFormat(text: string): string {
+  // Split on inline-code spans (kept via the capture group) so the
+  // bold/italic/link passes never run inside `code`.
+  return escapeHtml(text)
+    .split(/(`[^`]+?`)/g)
+    .map((part, i) =>
+      i % 2 === 1 ? `<code>${part.slice(1, -1)}</code>` : formatSegment(part),
+    )
+    .join("");
 }
 
 export function renderMarkdown(md: string): string {

@@ -6,10 +6,22 @@ import { InteractiveTerminal } from "../_components/interactive-terminal";
 import { Header, Footer } from "../_components/site-chrome";
 import { DOMAINS, referenceLink, type Domain } from "./domains-data";
 
-const DOMAINS_SCRIPT = `$ ls ~/domains
-${DOMAINS.map((d) => d.id).join(" ")}
-$ cat ~/domains/*/README.md
-${DOMAINS.length} fields · pick one, go deep`;
+const DOMAINS_SCRIPT = `$ ls domains/
+${DOMAINS.map((d) => d.id).join("  ")}
+$ cat domains/${DOMAINS[0].id}/readme.md
+${DOMAINS[0].overview}`;
+
+const DOMAINS_FS = {
+  dir: "domains",
+  entries: DOMAINS.map((d) => d.id),
+  files: Object.fromEntries(
+    DOMAINS.flatMap((d) => [
+      [d.id, d.overview],
+      [`${d.id}/readme.md`, d.overview],
+      [`domains/${d.id}/readme.md`, d.overview],
+    ]),
+  ),
+} as const;
 
 /* ------------------------------------------------------------------ */
 /*  detail                                                              */
@@ -179,7 +191,8 @@ export default function DomainsClient() {
             <InteractiveTerminal
               script={DOMAINS_SCRIPT}
               barLabel="layer8@pesu — ~/domains"
-              hint="try: ls · cd .. · help"
+              hint="try: ls domains · cat domains/web/readme.md · help"
+              fs={DOMAINS_FS}
             />
           </div>
         </section>

@@ -7,26 +7,39 @@ import {
   useRef,
   useState,
 } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { NAV, ROUTES } from "./site-chrome";
+
+/**
+ * A tiny read-only "filesystem" a page can hand the terminal so `ls`/`cat`
+ * respond with that page's real data instead of canned output.
+ */
+export type TerminalFS = {
+  /** logical dir this page represents, e.g. "domains" — `ls domains` lists it */
+  dir: string;
+  /** names inside `dir`, printed by `ls <dir>` / `ls .` */
+  entries: string[];
+  /** `cat <key>` -> contents; key generously aliased by the page */
+  files: Record<string, string>;
+};
 
 const DEFAULT_SCRIPT = `$ whoami
 layer8@pesu-ecc
 $ cat mission.txt
 teach offense. build defense. capture flags.
 $ ls domains/
-web pwn rev crypto forensics stego osint network`;
+web  pwn  rev  crypto  forensics  stego  osint  network`;
 
 const DEFAULT_HINT = "try: ls · cd resources · help";
 const DEFAULT_BAR_LABEL = "layer8 — ~";
 
 const HELP = [
   "help             show available commands",
-  "ls               list website sections",
+  "ls [dir]         list sections, or a dir's contents",
   "cd <section>     open a website section",
+  "cat <file>       print a file (try: ls, then cat one)",
   "pwd              print the current location",
   "whoami           identify the current user",
-  "cat mission.txt  print the Layer8 mission",
   "clear            clear terminal output",
 ];
 
@@ -66,6 +79,16 @@ function normaliseSection(value: string) {
     .replace(/\s+/g, "-");
 }
 
+// lighter than normaliseSection — keeps "/" so file paths survive
+function normalisePath(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/^~\/?/, "")
+    .replace(/^\.\//, "")
+    .replace(/\/+$/, "");
+}
+
 function TerminalLine({ line }: { line: string }) {
   const isPrompt = line.startsWith("$ ");
 
@@ -87,6 +110,7 @@ export function InteractiveTerminal({
   script = DEFAULT_SCRIPT,
   hint = DEFAULT_HINT,
   barLabel = DEFAULT_BAR_LABEL,
+  fs,
 }: {
   /** Page-specific intro text, typed out before the live prompt appears. */
   script?: string;
@@ -94,8 +118,11 @@ export function InteractiveTerminal({
   hint?: string;
   /** Label in the terminal's title bar, e.g. "layer8 — ~/events". */
   barLabel?: string;
+  /** Real page data for `ls`/`cat` to read. */
+  fs?: TerminalFS;
 } = {}) {
   const router = useRouter();
+  const pathname = usePathname();
   const inputRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
 
@@ -155,30 +182,40 @@ export function InteractiveTerminal({
         response = ["available commands:", ...HELP];
         break;
 
-      case "ls":
-        response = [
-          NAV_ENTRIES.map((entry) => `${entry.slug}/`).join("  "),
-        ];
+      case "ls": {
+        const target = normalisePath(rawArgument);
+        const sections = NAV_ENTRIES.map((e) => `${e.slug}/`).join("  ");
+        if (target === "" || target === "~" || target === "/") {
+          response = [sections];
+        } else if (fs && (target === "." || target === fs.dir)) {
+          response = [fs.entries.join("  ")];
+        } else {
+          response = [`ls: ${rawArgument}: no such directory`];
+        }
         break;
+      }
 
       case "pwd":
-        response = ["/home/layer8"];
+        response = [pathname || "/"];
         break;
 
       case "whoami":
-        response = ["visitor@layer8"];
+        response = ["layer8@pesu-ecc"];
         break;
 
-      case "cat":
-        response =
-          argument === "mission.txt"
-            ? ["teach offense. build defense. capture flags."]
-            : [
-                `cat: ${
-                  rawArgument || "missing file operand"
-                }: no such file`,
-              ];
+      case "cat": {
+        const key = normalisePath(rawArgument);
+        if (key === "mission.txt") {
+          response = ["teach offense. build defense. capture flags."];
+        } else if (fs && Object.hasOwn(fs.files, key)) {
+          response = fs.files[key].split("\n");
+        } else {
+          response = [
+            `cat: ${rawArgument || "missing file operand"}: no such file`,
+          ];
+        }
         break;
+      }
 
       case "cd": {
         if (!argument || argument === "..") {

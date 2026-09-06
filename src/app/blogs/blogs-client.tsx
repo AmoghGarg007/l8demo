@@ -10,12 +10,22 @@ import { POSTS, CATEGORIES, formatDate } from "./blogs";
 /*  terminal                                                            */
 /* ------------------------------------------------------------------ */
 
-const BLOG_SCRIPT = `$ ls -1 content/blogs/
-pwn/   web/   crypto/   reversing/   career/
-$ cat README
-field notes from the people who broke things this week.
-$ ./read --latest
-${POSTS.length} posts indexed · newest first below`;
+const BLOG_SCRIPT = `$ ls blogs/
+${POSTS.map((p) => p.slug).join("  ")}
+$ cat blogs/${POSTS[0].slug}.md
+${POSTS[0].excerpt}`;
+
+const BLOG_FS = {
+  dir: "blogs",
+  entries: POSTS.map((p) => p.slug),
+  files: Object.fromEntries(
+    POSTS.flatMap((p) => [
+      [p.slug, p.excerpt],
+      [`${p.slug}.md`, p.excerpt],
+      [`blogs/${p.slug}.md`, p.excerpt],
+    ]),
+  ),
+} as const;
 
 /* ------------------------------------------------------------------ */
 /*  page                                                                */
@@ -90,7 +100,8 @@ export default function BlogsClient() {
             <InteractiveTerminal
               script={BLOG_SCRIPT}
               barLabel="layer8@pesu — ~/blogs"
-              hint="try: ls · cd .. · help"
+              hint={`try: ls blogs · cat blogs/${POSTS[0].slug}.md · help`}
+              fs={BLOG_FS}
             />
           </div>
         </section>

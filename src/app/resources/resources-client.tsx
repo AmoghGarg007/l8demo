@@ -247,12 +247,29 @@ const FILTERS = [
   ["tooling", "tooling"],
 ] as const;
 
-const RESOURCE_SCRIPT = `$ ls -1 resources/
-practice/   tooling/   reading/   blue-team/   ai-security/
-$ cat README
-the most exploitable layer is the one operating the keyboard. patch it weekly.
-$ ./resources --count
-5 categories indexed`;
+const RESOURCE_CATEGORIES = [
+  "practice",
+  "tooling",
+  "reading",
+  "blue-team",
+  "ai-security",
+];
+
+const RESOURCE_SCRIPT = `$ ls resources/
+${RESOURCE_CATEGORIES.join("  ")}
+$ cat resources/readme.md
+the most exploitable layer is the one operating the keyboard. patch it weekly.`;
+
+const RESOURCE_FS = {
+  dir: "resources",
+  entries: RESOURCE_CATEGORIES,
+  files: {
+    "readme.md":
+      "the most exploitable layer is the one operating the keyboard. patch it weekly.",
+    "resources/readme.md":
+      "the most exploitable layer is the one operating the keyboard. patch it weekly.",
+  } as Record<string, string>,
+} as const;
 
 /* ------------------------------------------------------------------ */
 /*  page                                                                */
@@ -330,7 +347,8 @@ export default function ResourcesClient() {
             <InteractiveTerminal
               script={RESOURCE_SCRIPT}
               barLabel="layer8@pesu — ~/resources"
-              hint="try: ls · cd .. · help"
+              hint="try: ls resources · cat resources/readme.md · help"
+              fs={RESOURCE_FS}
             />
           </div>
         </section>

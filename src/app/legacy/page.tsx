@@ -17,11 +17,6 @@ export const metadata: Metadata = {
     "Layer8's history since 2019 and the alumni network still active — commits, nodes, founders and the numbers behind seven years running.",
 };
 
-const LEGACY_SCRIPT = `$ git log --oneline --reverse layer8 | head -1
-a1f00c2 2019 — root commit: layer8 registered
-$ layer8 --scan --target=alumni --status
-6 nodes found · uptime: every batch since 2019`;
-
 const HISTORY_LOG = [
   ["a1f00c2", "2019 — root commit: layer8 registered, first CTF lab stood up"],
   ["d3e7b81", "2020 — patch: hosted first inter-college jeopardy CTF, 40 teams"],
@@ -41,6 +36,25 @@ const ALUMNI = [
   { batch: "2023", id: "alumni_05", role: "soc-analyst" },
   { batch: "2024", id: "alumni_06", role: "appsec-eng" },
 ] as const;
+
+const LEGACY_SCRIPT = `$ ls alumni/
+${ALUMNI.map((a) => a.id).join("  ")}
+$ cat alumni/${ALUMNI[0].id}
+${ALUMNI[0].role} · batch ${ALUMNI[0].batch} · [UP]`;
+
+const LEGACY_FS = {
+  dir: "alumni",
+  entries: ALUMNI.map((a) => a.id),
+  files: Object.fromEntries(
+    ALUMNI.flatMap((a) => {
+      const body = `${a.role} · batch ${a.batch} · [UP]`;
+      return [
+        [a.id, body],
+        [`alumni/${a.id}`, body],
+      ];
+    }),
+  ),
+} as const;
 
 const FOUNDERS = [
   {
@@ -87,7 +101,8 @@ export default function LegacyPage() {
             <InteractiveTerminal
               script={LEGACY_SCRIPT}
               barLabel="layer8@pesu — ~/legacy"
-              hint="try: ls · cd .. · help"
+              hint={`try: ls alumni · cat alumni/${ALUMNI[0].id} · help`}
+              fs={LEGACY_FS}
             />
           </div>
         </section>

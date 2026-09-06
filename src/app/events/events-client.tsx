@@ -12,14 +12,25 @@ import {
   type L8Event,
 } from "./events-data";
 
-const LIVE_COUNT = EVENTS.filter((e) => e.status === "LIVE").length;
-const PENDING_COUNT = EVENTS.filter((e) => e.status === "PENDING").length;
-const ARCHIVED_COUNT = EVENTS.filter((e) => e.status === "ARCHIVED").length;
+const EVENTS_SCRIPT = `$ ls events/
+${EVENTS.map((e) => e.id).join("  ")}
+$ cat events/${EVENTS[0].id}.md
+${EVENTS[0].desc}`;
 
-const EVENTS_SCRIPT = `$ ls ~/events
-live: ${LIVE_COUNT} · pending: ${PENDING_COUNT} · archived: ${ARCHIVED_COUNT}
-$ ./events --list --sort date
-${EVENTS.length} records loaded`;
+const EVENTS_FS = {
+  dir: "events",
+  entries: EVENTS.map((e) => e.id),
+  files: Object.fromEntries(
+    EVENTS.flatMap((e) => {
+      const body = `${e.title}\n${e.date} · ${e.venue}\n${e.desc}`;
+      return [
+        [e.id, body],
+        [`${e.id}.md`, body],
+        [`events/${e.id}.md`, body],
+      ];
+    }),
+  ),
+} as const;
 
 /* ------------------------------------------------------------------ */
 /*  detail                                                              */
@@ -166,7 +177,8 @@ export default function EventsClient() {
             <InteractiveTerminal
               script={EVENTS_SCRIPT}
               barLabel="layer8@pesu — ~/events"
-              hint="try: ls · cd .. · help"
+              hint={`try: ls events · cat events/${EVENTS[0].id}.md · help`}
+              fs={EVENTS_FS}
             />
           </div>
         </section>
