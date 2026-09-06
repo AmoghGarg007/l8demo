@@ -123,45 +123,35 @@ function MemberCard({
 }) {
   const href = profileHref(m);
   return (
-    <article className="card p-0 overflow-hidden flex flex-col">
-      <div className="relative aspect-square border-b border-border bg-bg-3">
-        <MemberAvatar
-          member={m}
-          className="absolute inset-0 w-full h-full text-3xl !border-0"
-        />
-        <span className="absolute left-2 top-2 bg-bg-2/85 px-1.5 py-0.5 font-mono text-[0.58rem] text-fg-faint">
-          {String(idx).padStart(2, "0")}
-        </span>
-        {core && (
-          <span className="absolute right-2 top-2 bg-bg-2/85 px-1.5 py-0.5 font-mono text-[0.55rem] tracking-[0.1em] uppercase text-accent">
-            core
-          </span>
-        )}
-      </div>
+    <article className="card flex gap-3.5 p-4">
+      <MemberAvatar
+        member={m}
+        className={
+          core ? "w-16 h-16 text-lg self-start" : "w-12 h-12 text-sm self-start"
+        }
+      />
 
-      <div className="flex flex-1 flex-col gap-1.5 p-4">
-        <div className="flex items-center justify-between gap-2">
-          <span className="truncate text-[0.58rem] tracking-[0.12em] uppercase text-accent">
-            {m.role}
-          </span>
-          <span className="shrink-0 text-[0.55rem] tracking-[0.1em] uppercase text-fg-faint">
-            {m.status === "alumni" ? "alum" : "active"}
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex items-center justify-between gap-2 text-[0.55rem] tracking-[0.12em] uppercase">
+          <span className="truncate text-accent">{m.role}</span>
+          <span className="shrink-0 text-fg-faint">
+            {core ? "core" : String(idx).padStart(2, "0")}
           </span>
         </div>
 
-        <h4 className="font-display font-bold text-[0.95rem] leading-tight text-fg">
+        <h4 className="font-display font-bold text-[0.92rem] leading-tight text-fg">
           {m.name}
         </h4>
 
-        {m.alias && (
-          <span className="font-mono text-[0.66rem] text-fg-faint">
-            @{m.alias}
-          </span>
-        )}
-
-        <div className="flex flex-wrap items-center gap-x-1.5 text-[0.58rem] tracking-[0.08em] uppercase text-fg-faint">
+        <div className="flex flex-wrap items-center gap-x-1.5 text-[0.57rem] tracking-[0.08em] uppercase text-fg-faint">
+          {m.alias && (
+            <>
+              <span>@{m.alias}</span>
+              <span className="text-fg-faint/50">·</span>
+            </>
+          )}
           <span>{m.group}</span>
-          <span className="text-fg-faint/60">/</span>
+          <span className="text-fg-faint/50">·</span>
           <span>{m.year ?? "—"}</span>
         </div>
 
@@ -176,7 +166,7 @@ function MemberCard({
             href={href}
             target="_blank"
             rel="noreferrer"
-            className="mt-auto pt-2 text-[0.68rem] text-accent hover:underline"
+            className="mt-auto pt-1.5 text-[0.66rem] text-accent hover:underline"
           >
             &gt; profile
           </a>
@@ -333,7 +323,7 @@ export default function AboutPage() {
               label="00 / core"
               desc="people keeping the machine running"
             />
-            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {CORE_MEMBERS.map((m, i) => (
                 <MemberCard key={m.slug} m={m} idx={i + 1} core />
               ))}
@@ -342,7 +332,7 @@ export default function AboutPage() {
             {/* community */}
             <div className="mt-14">
               <GroupHeading label="01 / members" desc="the rest of the layer" />
-              <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {COMMUNITY_MEMBERS.map((m, i) => (
                   <MemberCard
                     key={m.slug}
