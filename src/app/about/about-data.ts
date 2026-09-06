@@ -598,17 +598,18 @@ export function getMember(slug: string): Member | undefined {
 
 /** Core group on /about — head / vice-head / webmaster / architect people. */
 export const CORE_SLUGS: string[] = [
-  "sriya-chandu",
+  // head then vice-head, per domain
+  "sriya-chandu", // Club
   "archita-agrawal",
-  "shubhika-pradeep",
-  "blason-raj",
-  "sohan-mr",
-  "riddhima-agarwal",
-  "arnav-deva",
-  "saakshi-mohanty",
+  "shubhika-pradeep", // Tech
   "amogh-garg",
+  "blason-raj", // Events
+  "saakshi-mohanty",
+  "sohan-mr", // Media
   "krithika-swaminathan",
-  "shreya-ajith",
+  "shreya-ajith", // Design
+  "riddhima-agarwal",
+  "arnav-deva", // Webmaster (Tech)
 ];
 
 export const CORE_MEMBERS: Member[] = CORE_SLUGS.map(
