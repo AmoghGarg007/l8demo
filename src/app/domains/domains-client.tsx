@@ -191,7 +191,6 @@ export default function DomainsClient() {
             <InteractiveTerminal
               script={DOMAINS_SCRIPT}
               barLabel="layer8@pesu — ~/domains"
-              hint="try: ls domains · cat domains/web/readme.md · help"
               fs={DOMAINS_FS}
             />
           </div>

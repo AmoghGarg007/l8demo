@@ -177,7 +177,6 @@ export default function EventsClient() {
             <InteractiveTerminal
               script={EVENTS_SCRIPT}
               barLabel="layer8@pesu — ~/events"
-              hint={`try: ls events · cat events/${EVENTS[0].id}.md · help`}
               fs={EVENTS_FS}
             />
           </div>

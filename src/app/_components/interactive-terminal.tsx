@@ -30,12 +30,11 @@ teach offense. build defense. capture flags.
 $ ls domains/
 web  pwn  rev  crypto  forensics  stego  osint  network`;
 
-const DEFAULT_HINT = "try: ls · cd resources · help";
 const DEFAULT_BAR_LABEL = "layer8 — ~";
 
 const HELP = [
   "help             show available commands",
-  "ls [dir]         list sections, or a dir's contents",
+  "ls [dir]         list this page, or ~ for all sections",
   "cd <section>     open a website section",
   "cat <file>       print a file (try: ls, then cat one)",
   "pwd              print the current location",
@@ -108,14 +107,11 @@ function TerminalLine({ line }: { line: string }) {
 
 export function InteractiveTerminal({
   script = DEFAULT_SCRIPT,
-  hint = DEFAULT_HINT,
   barLabel = DEFAULT_BAR_LABEL,
   fs,
 }: {
   /** Page-specific intro text, typed out before the live prompt appears. */
   script?: string;
-  /** Hint line shown once the prompt is live. */
-  hint?: string;
   /** Label in the terminal's title bar, e.g. "layer8 — ~/events". */
   barLabel?: string;
   /** Real page data for `ls`/`cat` to read. */
@@ -185,10 +181,16 @@ export function InteractiveTerminal({
       case "ls": {
         const target = normalisePath(rawArgument);
         const sections = NAV_ENTRIES.map((e) => `${e.slug}/`).join("  ");
-        if (target === "" || target === "~" || target === "/") {
+        if (target === "~" || target === "/") {
           response = [sections];
-        } else if (fs && (target === "." || target === fs.dir)) {
+        } else if (
+          fs &&
+          (target === "" || target === "." || target === fs.dir)
+        ) {
+          // bare `ls` on a page shows that page's own directory
           response = [fs.entries.join("  ")];
+        } else if (target === "") {
+          response = [sections];
         } else {
           response = [`ls: ${rawArgument}: no such directory`];
         }
@@ -367,8 +369,6 @@ export function InteractiveTerminal({
                 aria-label="Layer8 terminal command"
               />
             </form>
-
-            <div className="term-hint">{hint}</div>
           </>
         )}
 

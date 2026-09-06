@@ -101,7 +101,6 @@ export default function LegacyPage() {
             <InteractiveTerminal
               script={LEGACY_SCRIPT}
               barLabel="layer8@pesu — ~/legacy"
-              hint={`try: ls alumni · cat alumni/${ALUMNI[0].id} · help`}
               fs={LEGACY_FS}
             />
           </div>

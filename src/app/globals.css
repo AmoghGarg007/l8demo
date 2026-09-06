@@ -362,12 +362,6 @@
     color: var(--bg);
   }
 
-  .term-hint {
-    margin-top: 0.35rem;
-    color: var(--fg-faint);
-    font-size: 0.7rem;
-  }
-
   .cursor {
     display: inline-block;
     width: 0.6ch;

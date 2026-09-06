@@ -100,7 +100,6 @@ export default function BlogsClient() {
             <InteractiveTerminal
               script={BLOG_SCRIPT}
               barLabel="layer8@pesu — ~/blogs"
-              hint={`try: ls blogs · cat blogs/${POSTS[0].slug}.md · help`}
               fs={BLOG_FS}
             />
           </div>

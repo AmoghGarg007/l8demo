@@ -347,7 +347,6 @@ export default function ResourcesClient() {
             <InteractiveTerminal
               script={RESOURCE_SCRIPT}
               barLabel="layer8@pesu — ~/resources"
-              hint="try: ls resources · cat resources/readme.md · help"
               fs={RESOURCE_FS}
             />
           </div>

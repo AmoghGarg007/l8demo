@@ -113,7 +113,7 @@ function Hero() {
           </div>
         </div>
 
-        <InteractiveTerminal fs={TERMINAL_FS} hint="try: ls domains · cd blogs · help" />
+        <InteractiveTerminal fs={TERMINAL_FS} />
       </div>
 
       <div className="mt-16 grid grid-cols-2 divide-x divide-border border border-border md:grid-cols-4">
