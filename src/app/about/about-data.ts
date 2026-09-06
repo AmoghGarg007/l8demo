@@ -134,10 +134,19 @@ export const MEMBERS: Member[] = [
     email: "rithvik0605@gmail.com",
   },
   {
-    slug: "shreya-ajith",
-    name: "Shreya Ajith",
+    slug: "sriya-chandu",
+    name: "Sriya Chandu",
     role: "Club Head",
     group: "Club",
+    bio: "",
+    status: "current",
+    email: "",
+  },
+  {
+    slug: "shreya-ajith",
+    name: "Shreya Ajith",
+    role: "Design Head",
+    group: "Design",
     bio: "",
     status: "current",
     email: "",
@@ -442,7 +451,7 @@ export const DOMAINS: Domain[] = [
     group: "Design",
     tagline:
       "Brand, posters, slides and the site. Makes the rest of it look deliberate.",
-    headSlug: "",
+    headSlug: "shreya-ajith",
     viceSlug: "riddhima-agarwal",
   },
 ];
@@ -478,11 +487,11 @@ export const ALUMNI: Member[] = MEMBERS.filter(
  * `slug: null` leaves the seat visibly empty (that head hasn't filled the form).
  */
 export const CORE_LEADS: { role: string; slug: string | null }[] = [
-  { role: "Club Head", slug: "shreya-ajith" },
+  { role: "Club Head", slug: "sriya-chandu" },
   { role: "Tech Head", slug: "shubhika-pradeep" },
   { role: "Events Head", slug: "blason-raj" },
   { role: "Media Head", slug: "sohan-mr" },
-  { role: "Design Head", slug: null },
+  { role: "Design Head", slug: "shreya-ajith" },
 ];
 
 /** Slugs that have a photo at /members/<slug>.webp (from the form uploads). */
