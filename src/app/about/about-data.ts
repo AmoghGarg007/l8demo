@@ -320,7 +320,7 @@ export const MEMBERS: Member[] = [
     slug: "riddhima-agarwal",
     name: "Riddhima Agarwal",
     alias: "Riddhi",
-    role: "Design Vice Head",
+    role: "Design Head",
     group: "Design",
     year: "2nd year, CSE",
     bio: "I m going to bed.",
@@ -442,8 +442,8 @@ export const DOMAINS: Domain[] = [
     group: "Design",
     tagline:
       "Brand, posters, slides and the site. Makes the rest of it look deliberate.",
-    headSlug: "",
-    viceSlug: "riddhima-agarwal",
+    headSlug: "riddhima-agarwal",
+    viceSlug: "",
   },
 ];
 
@@ -473,13 +473,13 @@ export const ALUMNI: Member[] = MEMBERS.filter(
   (m) => m.status === "alumni",
 ).sort((a, b) => a.name.localeCompare(b.name));
 
-/** The club-level leads shown on /about's "core" grid — Sriya replaces Archi at the top. */
+/** The five heads shown on /about's "core" grid — club + one per domain. */
 export const CORE_SLUGS = [
   "sriya",
-  "archita-agrawal",
   "shubhika-pradeep",
   "blason-raj",
   "sohan-mr",
+  "riddhima-agarwal",
 ] as const;
 
 export function initials(name: string): string {
