@@ -485,6 +485,43 @@ export const CORE_LEADS: { role: string; slug: string | null }[] = [
   { role: "Design Head", slug: null },
 ];
 
+/** Slugs that have a photo at /members/<slug>.webp (from the form uploads). */
+const PHOTO_SLUGS = new Set([
+  "achyuth-jois-m",
+  "aks-raj-singh",
+  "amogh-garg",
+  "ankit-bembalgi",
+  "ann-gracia-s",
+  "archita-agrawal",
+  "arnav-deva",
+  "blason-raj",
+  "chatresh-ramasai-gudi",
+  "himani-nune",
+  "hiranmayi-b",
+  "ianna-elizabeth-reni",
+  "isha-desai",
+  "jyeshta-j",
+  "krisha-varma-k",
+  "krishnaja-jinka",
+  "krithika-swaminathan",
+  "nandana-shyam",
+  "p-mahema-sai",
+  "prajwal-m",
+  "riddhima-agarwal",
+  "rishil-abhijit-jalisatgi",
+  "rithvik-a-m",
+  "rithvik-deepak",
+  "saakshi-mohanty",
+  "shreehari-b-deshpande",
+  "sohan-mr",
+  "srivaibhav-n",
+  "sriya",
+]);
+
+export function photoUrl(slug: string): string | undefined {
+  return PHOTO_SLUGS.has(slug) ? `/members/${slug}.webp` : undefined;
+}
+
 export function initials(name: string): string {
   return name
     .split(/\s+/)

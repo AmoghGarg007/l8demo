@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Header, Footer } from "../_components/site-chrome";
 import { CORE_LEADS, DOMAINS, MEMBERS, getMember } from "./about-data";
+import { MemberAvatar } from "./member-avatar";
 
 export const metadata: Metadata = {
   title: "About Us · Layer8 — PES University, ECC",
@@ -17,7 +18,9 @@ const CORE_MEMBERS = CORE_LEADS.map((lead, i) => {
   const m = lead.slug ? getMember(lead.slug) : undefined;
   return {
     number: String(i + 1).padStart(2, "0"),
+    member: m,
     name: m?.name ?? null,
+    alias: m?.alias ?? null,
     role: m?.role ?? lead.role,
     bio: m?.bio ?? "",
     link: m?.github
@@ -252,7 +255,13 @@ export default function AboutPage() {
                     </span>
                   </div>
 
-                  <div className="mt-10">
+                  <div className="mt-6">
+                    {m.member && (
+                      <MemberAvatar
+                        member={m.member}
+                        className="w-16 h-16 text-lg mb-3"
+                      />
+                    )}
                     <h4 className="font-display font-bold text-[1.05rem] leading-tight">
                       {m.name ?? (
                         <span className="text-fg-faint">not yet listed</span>
@@ -261,8 +270,13 @@ export default function AboutPage() {
                     <span className="mt-1.5 block text-accent text-[0.62rem] tracking-[0.12em] uppercase">
                       {m.role}
                     </span>
+                    {m.alias && (
+                      <span className="mt-0.5 block font-mono text-[0.66rem] text-fg-faint">
+                        @{m.alias}
+                      </span>
+                    )}
                     {m.bio && (
-                      <p className="mt-4 text-fg-dim text-[0.76rem] leading-[1.7]">
+                      <p className="mt-3 text-fg-dim text-[0.76rem] leading-[1.7]">
                         {m.bio}
                       </p>
                     )}

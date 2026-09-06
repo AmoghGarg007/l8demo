@@ -7,9 +7,9 @@ import {
   getDomain,
   getDomainMembers,
   getMember,
-  initials,
   type Member,
 } from "../about-data";
+import { MemberAvatar } from "../member-avatar";
 
 export function generateStaticParams() {
   return DOMAINS.map((d) => ({ domain: d.slug }));
@@ -59,14 +59,10 @@ function LeadCard({ member, lead }: { member: Member; lead: boolean }) {
   return (
     <div className="card p-6 flex flex-col h-full">
       <div className="flex items-start gap-4">
-        <span
-          className={`grid place-items-center shrink-0 border border-border bg-bg-3 font-display font-bold text-accent select-none ${
-            lead ? "w-20 h-20 text-2xl" : "w-16 h-16 text-xl"
-          }`}
-          aria-hidden
-        >
-          {initials(member.name)}
-        </span>
+        <MemberAvatar
+          member={member}
+          className={lead ? "w-24 h-24 text-2xl" : "w-20 h-20 text-xl"}
+        />
         <div className="min-w-0">
           <span className="tag">{lead ? "domain head" : "vice-head"}</span>
           <h3
@@ -187,29 +183,30 @@ export default async function DomainPage({ params }: Params) {
               {members.map((m) => {
                 const badge = rosterBadge(m);
                 return (
-                  <div
-                    key={m.slug}
-                    className="card flex items-center gap-3 p-4"
-                  >
-                    <span
-                      className="grid place-items-center w-11 h-11 shrink-0 border border-border bg-bg-3 font-display font-bold text-xs text-accent select-none"
-                      aria-hidden
-                    >
-                      {initials(m.name)}
-                    </span>
-                    <span className="min-w-0">
-                      <span className="flex items-center gap-2">
+                  <div key={m.slug} className="card flex gap-3 p-4">
+                    <MemberAvatar
+                      member={m}
+                      className="w-12 h-12 text-xs"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
                         <span className="block font-display font-bold text-sm text-fg leading-tight truncate">
                           {m.name}
                         </span>
                         {badge && (
                           <span className="tag shrink-0">{badge}</span>
                         )}
-                      </span>
-                      <span className="block text-[0.62rem] tracking-[0.14em] uppercase text-fg-faint">
-                        {m.year ?? m.role}
-                      </span>
-                    </span>
+                      </div>
+                      <div className="mt-0.5 text-[0.62rem] tracking-[0.12em] uppercase text-fg-faint">
+                        {m.alias ? `@${m.alias}` : m.role}
+                        {m.year ? ` · ${m.year}` : ""}
+                      </div>
+                      {m.bio && (
+                        <p className="mt-1.5 text-[0.72rem] text-fg-dim leading-snug line-clamp-2">
+                          {m.bio}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 );
               })}
