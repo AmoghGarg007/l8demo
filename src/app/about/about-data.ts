@@ -443,18 +443,23 @@ export function getDomain(slug: string): Domain | undefined {
   return DOMAINS.find((d) => d.slug === slug);
 }
 
-/** A domain's roster: everyone in that group who isn't its head or vice-head. */
+/**
+ * A domain's roster: the *current* members in that group who aren't its head
+ * or vice-head. Alumni are listed on /legacy instead (see ALUMNI).
+ */
 export function getDomainMembers(domainSlug: string): Member[] {
   const d = getDomain(domainSlug);
   if (!d) return [];
   const leads = new Set([d.headSlug, d.viceSlug]);
   return MEMBERS.filter(
-    (m) => m.group === d.group && !leads.has(m.slug),
-  ).sort((a, b) => {
-    if (a.status !== b.status) return a.status === "current" ? -1 : 1;
-    return a.name.localeCompare(b.name);
-  });
+    (m) => m.group === d.group && m.status === "current" && !leads.has(m.slug),
+  ).sort((a, b) => a.name.localeCompare(b.name));
 }
+
+/** Everyone who's moved on — shown on /legacy, not the domain rosters. */
+export const ALUMNI: Member[] = MEMBERS.filter(
+  (m) => m.status === "alumni",
+).sort((a, b) => a.name.localeCompare(b.name));
 
 /** The club-level leads shown on /about's "core" grid. */
 export const CORE_SLUGS = [

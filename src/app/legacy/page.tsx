@@ -2,20 +2,49 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { InteractiveTerminal } from "../_components/interactive-terminal";
 import { Header, Footer } from "../_components/site-chrome";
+import { ALUMNI } from "../about/about-data";
 
 /**
- * Ported from anish20126-collab/layer8legacy (a static index.html). Same
- * design tokens/class names as this site already, so it's a straight
- * translation to shared Header/Footer + Tailwind, with the hero's static
- * terminal swapped for the site's InteractiveTerminal. Names/numbers are
- * placeholders — swap for the real history when it's ready.
+ * Ported from anish20126-collab/layer8legacy. The club-history bits
+ * (commit log, founding crew, headline numbers) are still placeholder
+ * flavour; the alumni directory is real — everyone in MEMBERS whose
+ * status is "alumni".
  */
 
 export const metadata: Metadata = {
   title: "Legacy & Alumni · Layer8 — PES University, ECC",
   description:
-    "Layer8's history since 2019 and the alumni network still active — commits, nodes, founders and the numbers behind seven years running.",
+    "Layer8's history and the alumni still on the network — the people who moved on but kept the door open.",
 };
+
+const alumniLink = (a: (typeof ALUMNI)[number]) =>
+  a.portfolio ??
+  (a.github ? `https://github.com/${a.github}` : undefined) ??
+  (a.linkedin ? `https://www.linkedin.com/in/${a.linkedin}` : undefined);
+
+const yearTag = (year?: string) => (year ?? "alum").split(",")[0].trim();
+
+const LEGACY_SCRIPT = ALUMNI.length
+  ? `$ ls alumni/
+${ALUMNI.map((a) => a.slug).join("  ")}
+$ cat alumni/${ALUMNI[0].slug}
+${ALUMNI[0].name} · ${ALUMNI[0].role}`
+  : `$ ls alumni/
+(directory empty)`;
+
+const LEGACY_FS = {
+  dir: "alumni",
+  entries: ALUMNI.map((a) => a.slug),
+  files: Object.fromEntries(
+    ALUMNI.flatMap((a) => {
+      const body = `${a.name} · ${a.role} · ${a.year ?? "—"}`;
+      return [
+        [a.slug, body],
+        [`alumni/${a.slug}`, body],
+      ];
+    }),
+  ),
+} as const;
 
 const HISTORY_LOG = [
   ["a1f00c2", "2019 — root commit: layer8 registered, first CTF lab stood up"],
@@ -27,34 +56,6 @@ const HISTORY_LOG = [
   ["0e2f77d", "2024 — release: layer8 hosts its first on-campus red-vs-blue CTF"],
   ["55a19b0", "2025 — feat: alumni network formalised as a standing resource"],
 ] as const;
-
-const ALUMNI = [
-  { batch: "2020", id: "alumni_01", role: "security-eng@cloud-infra" },
-  { batch: "2021", id: "alumni_02", role: "red-teamer@independent" },
-  { batch: "2022", id: "alumni_03", role: "detection-eng@product-sec" },
-  { batch: "2022", id: "alumni_04", role: "vuln-researcher" },
-  { batch: "2023", id: "alumni_05", role: "soc-analyst" },
-  { batch: "2024", id: "alumni_06", role: "appsec-eng" },
-] as const;
-
-const LEGACY_SCRIPT = `$ ls alumni/
-${ALUMNI.map((a) => a.id).join("  ")}
-$ cat alumni/${ALUMNI[0].id}
-${ALUMNI[0].role} · batch ${ALUMNI[0].batch} · [UP]`;
-
-const LEGACY_FS = {
-  dir: "alumni",
-  entries: ALUMNI.map((a) => a.id),
-  files: Object.fromEntries(
-    ALUMNI.flatMap((a) => {
-      const body = `${a.role} · batch ${a.batch} · [UP]`;
-      return [
-        [a.id, body],
-        [`alumni/${a.id}`, body],
-      ];
-    }),
-  ),
-} as const;
 
 const FOUNDERS = [
   {
@@ -71,7 +72,7 @@ const STATS = [
   ["7", "years running without a break"],
   ["150+", "weekly CTFs hosted"],
   ["300+", "members trained through the club"],
-  ["6", "alumni active in the network"],
+  [String(ALUMNI.length), "alumni on the network"],
 ] as const;
 
 export default function LegacyPage() {
@@ -174,24 +175,40 @@ export default function LegacyPage() {
                 --target=alumni --status
               </div>
               <div className="mt-3 text-fg-dim">
-                scanning network... {ALUMNI.length} nodes found
+                scanning network... {ALUMNI.length}{" "}
+                {ALUMNI.length === 1 ? "node" : "nodes"} found
               </div>
               <div className="mt-3 space-y-1.5">
-                {ALUMNI.map((a) => (
-                  <div
-                    key={a.id}
-                    className="flex flex-wrap items-baseline gap-x-2"
-                  >
-                    <span className="prompt">[batch:{a.batch}]</span>
-                    <span className="text-fg-dim">{a.id}</span>
-                    <span className="text-fg-faint">::</span>
-                    <span className="text-fg-dim">{a.role}</span>
-                    <span className="ml-auto text-accent text-xs">[UP]</span>
-                  </div>
-                ))}
+                {ALUMNI.map((a) => {
+                  const href = alumniLink(a);
+                  const name = href ? (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-fg-dim hover:text-accent transition-colors"
+                    >
+                      {a.name}
+                    </a>
+                  ) : (
+                    <span className="text-fg-dim">{a.name}</span>
+                  );
+                  return (
+                    <div
+                      key={a.slug}
+                      className="flex flex-wrap items-baseline gap-x-2"
+                    >
+                      <span className="prompt">[{yearTag(a.year)}]</span>
+                      {name}
+                      <span className="text-fg-faint">::</span>
+                      <span className="text-fg-dim">{a.role}</span>
+                      <span className="ml-auto text-accent text-xs">[UP]</span>
+                    </div>
+                  );
+                })}
               </div>
               <div className="mt-3 text-fg-dim">
-                uptime: every batch since 2019. no node has gone dark.
+                uptime: still reachable. no node has gone dark.
                 <span className="cursor">&nbsp;</span>
               </div>
             </div>

@@ -57,15 +57,11 @@ function LeadCard({ member, lead }: { member: Member; lead: boolean }) {
   ].filter((c): c is { label: string; href: string } => Boolean(c));
 
   return (
-    <div
-      className={`card ${
-        lead ? "p-6 md:p-8 md:col-span-2" : "p-5 md:p-6"
-      }`}
-    >
+    <div className="card p-6">
       <div className="flex items-start gap-4">
         <span
           className={`grid place-items-center shrink-0 border border-border bg-bg-3 font-display font-bold text-accent select-none ${
-            lead ? "w-24 h-24 text-3xl" : "w-16 h-16 text-xl"
+            lead ? "w-20 h-20 text-2xl" : "w-16 h-16 text-xl"
           }`}
           aria-hidden
         >
@@ -75,7 +71,7 @@ function LeadCard({ member, lead }: { member: Member; lead: boolean }) {
           <span className="tag">{lead ? "domain head" : "vice-head"}</span>
           <h3
             className={`mt-2 font-display font-bold leading-tight ${
-              lead ? "text-2xl md:text-3xl" : "text-xl"
+              lead ? "text-2xl" : "text-xl"
             }`}
           >
             {member.name}
@@ -163,7 +159,7 @@ export default async function DomainPage({ params }: Params) {
             Head &amp; vice-head
           </h2>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-3 items-start">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 items-start">
             {head && <LeadCard member={head} lead />}
             {vice && <LeadCard member={vice} lead={false} />}
           </div>
