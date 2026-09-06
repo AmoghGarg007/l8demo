@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Header, Footer } from "../_components/site-chrome";
-import { CORE_LEADS, DOMAINS, MEMBERS, getMember } from "./about-data";
+import {
+  COMMUNITY_MEMBERS,
+  CORE_MEMBERS,
+  MEMBERS,
+  type Member,
+} from "./about-data";
 import { MemberAvatar } from "./member-avatar";
 
 export const metadata: Metadata = {
@@ -13,23 +18,6 @@ export const metadata: Metadata = {
 /* ------------------------------------------------------------------ */
 /*  content                                                            */
 /* ------------------------------------------------------------------ */
-
-const CORE_MEMBERS = CORE_LEADS.map((lead, i) => {
-  const m = lead.slug ? getMember(lead.slug) : undefined;
-  return {
-    number: String(i + 1).padStart(2, "0"),
-    member: m,
-    name: m?.name ?? null,
-    alias: m?.alias ?? null,
-    role: m?.role ?? lead.role,
-    bio: m?.bio ?? "",
-    link: m?.github
-      ? `https://github.com/${m.github}`
-      : (m?.portfolio ??
-        (m?.linkedin ? `https://www.linkedin.com/in/${m.linkedin}` : null)),
-    linkLabel: m?.github ? "github" : m?.portfolio ? "portfolio" : "linkedin",
-  };
-});
 
 const WHAT_WE_DO = [
   {
@@ -81,6 +69,8 @@ const PHILOSOPHY = [
   },
 ];
 
+const CURRENT_COUNT = MEMBERS.filter((m) => m.status === "current").length;
+
 /* ------------------------------------------------------------------ */
 /*  small pieces                                                       */
 /* ------------------------------------------------------------------ */
@@ -113,6 +103,108 @@ const bigText =
   "max-w-xl font-display font-medium text-fg leading-[1.25] tracking-[-0.025em] text-[clamp(1.45rem,3vw,2.15rem)]";
 const bodyCopy =
   "max-w-xl text-fg-dim font-mono text-[0.87rem] leading-[1.85] space-y-5";
+
+function profileHref(m: Member): string | undefined {
+  if (m.portfolio) return m.portfolio;
+  if (m.github) return `https://github.com/${m.github}`;
+  if (m.linkedin) return `https://www.linkedin.com/in/${m.linkedin}`;
+  if (m.email) return `mailto:${m.email}`;
+  return undefined;
+}
+
+function MemberCard({
+  m,
+  idx,
+  core,
+}: {
+  m: Member;
+  idx: number;
+  core?: boolean;
+}) {
+  const href = profileHref(m);
+  return (
+    <article className="card p-0 overflow-hidden flex flex-col">
+      <div className="relative aspect-square border-b border-border bg-bg-3">
+        <MemberAvatar
+          member={m}
+          className="absolute inset-0 w-full h-full text-3xl !border-0"
+        />
+        <span className="absolute left-2 top-2 bg-bg-2/85 px-1.5 py-0.5 font-mono text-[0.58rem] text-fg-faint">
+          {String(idx).padStart(2, "0")}
+        </span>
+        {core && (
+          <span className="absolute right-2 top-2 bg-bg-2/85 px-1.5 py-0.5 font-mono text-[0.55rem] tracking-[0.1em] uppercase text-accent">
+            core
+          </span>
+        )}
+      </div>
+
+      <div className="flex flex-1 flex-col gap-1.5 p-4">
+        <div className="flex items-center justify-between gap-2">
+          <span className="truncate text-[0.58rem] tracking-[0.12em] uppercase text-accent">
+            {m.role}
+          </span>
+          <span className="shrink-0 text-[0.55rem] tracking-[0.1em] uppercase text-fg-faint">
+            {m.status === "alumni" ? "alum" : "active"}
+          </span>
+        </div>
+
+        <h4 className="font-display font-bold text-[0.95rem] leading-tight text-fg">
+          {m.name}
+        </h4>
+
+        {m.alias && (
+          <span className="font-mono text-[0.66rem] text-fg-faint">
+            @{m.alias}
+          </span>
+        )}
+
+        <div className="flex flex-wrap items-center gap-x-1.5 text-[0.58rem] tracking-[0.08em] uppercase text-fg-faint">
+          <span>{m.group}</span>
+          <span className="text-fg-faint/60">/</span>
+          <span>{m.year ?? "—"}</span>
+        </div>
+
+        {m.bio && (
+          <p className="mt-0.5 line-clamp-2 text-[0.72rem] leading-snug text-fg-dim">
+            &ldquo;{m.bio}&rdquo;
+          </p>
+        )}
+
+        {href && (
+          <a
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-auto pt-2 text-[0.68rem] text-accent hover:underline"
+          >
+            &gt; profile
+          </a>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function GroupHeading({
+  label,
+  desc,
+}: {
+  label: string;
+  desc: string;
+}) {
+  return (
+    <div className="mb-6 flex items-center gap-4">
+      <span className="shrink-0 font-mono text-[0.7rem] tracking-[0.12em] uppercase text-fg-faint">
+        {label}
+      </span>
+      <span className="h-px flex-1 bg-border" />
+      <span className="shrink-0 text-[0.62rem] tracking-[0.1em] uppercase text-fg-faint max-sm:hidden">
+        {desc}
+      </span>
+    </div>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /*  page                                                               */
@@ -162,13 +254,12 @@ export default function AboutPage() {
             </p>
             <div className={bodyCopy}>
               <p>
-                We bring together students interested in cybersecurity, from
-                people taking their first steps to those already deep into
-                security research and competitive CTFs.
+                We bring together students with different interests, experience
+                levels and ways of approaching security.
               </p>
               <p>
-                Through CTFs, workshops, projects, research and competitions, we
-                create an environment where members can explore security outside
+                Through CTFs, workshops, projects, research and competitions,
+                Layer8 gives students a place to explore cybersecurity outside
                 the classroom.
               </p>
               <p>There is no prerequisite for curiosity.</p>
@@ -206,159 +297,69 @@ export default function AboutPage() {
             </p>
             <div className={bodyCopy}>
               <p>
-                Layer8 is made up of students with different interests, different
-                levels of experience and different ways of approaching security.
-              </p>
-              <p>
                 Some of us break web applications. Some reverse binaries. Some
                 build tools. Some are still figuring out what a buffer overflow
                 is.
               </p>
               <p>That&apos;s exactly how it should be.</p>
+              <p>
+                Layer8 is built around people teaching people, sharing what they
+                discover and giving each other room to get better.
+              </p>
             </div>
           </div>
 
-          {/* core */}
-          <div className="mt-16 md:mt-24" id="core">
-            <div className="mb-7 flex items-end justify-between">
-              <div>
-                <p className="kicker">{"// core"}</p>
-                <h3 className="mt-2.5 font-display font-bold text-[1.35rem]">
-                  People keeping the machine running.
-                </h3>
-              </div>
-              <span className="shrink-0 pl-4 text-fg-faint text-[0.65rem] tracking-[0.1em] uppercase max-sm:hidden">
-                [ core_team ]
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-px bg-border border border-border">
-              {CORE_MEMBERS.map((m) => (
-                <article
-                  key={m.number}
-                  className={`flex flex-col p-[1.4rem] bg-bg-2 min-h-[16rem] ${
-                    m.name ? "" : "opacity-55"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-fg-faint text-[0.7rem]">
-                      {m.number}
-                    </span>
-                    <span className="text-fg-faint text-[0.6rem] tracking-[0.08em] uppercase">
-                      {m.name ? (
-                        <>
-                          <span className="text-accent">&#9679;</span> active
-                        </>
-                      ) : (
-                        <>&#9675; open</>
-                      )}
-                    </span>
-                  </div>
-
-                  <div className="mt-6">
-                    {m.member && (
-                      <MemberAvatar
-                        member={m.member}
-                        className="w-16 h-16 text-lg mb-3"
-                      />
-                    )}
-                    <h4 className="font-display font-bold text-[1.05rem] leading-tight">
-                      {m.name ?? (
-                        <span className="text-fg-faint">not yet listed</span>
-                      )}
-                    </h4>
-                    <span className="mt-1.5 block text-accent text-[0.62rem] tracking-[0.12em] uppercase">
-                      {m.role}
-                    </span>
-                    {m.alias && (
-                      <span className="mt-0.5 block font-mono text-[0.66rem] text-fg-faint">
-                        @{m.alias}
-                      </span>
-                    )}
-                    {m.bio && (
-                      <p className="mt-3 text-fg-dim text-[0.76rem] leading-[1.7]">
-                        {m.bio}
-                      </p>
-                    )}
-                  </div>
-
-                  {m.link && (
-                    <a
-                      href={m.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-auto pt-6 text-fg text-[0.72rem] hover:text-accent transition-colors"
-                    >
-                      &gt; {m.linkLabel}
-                    </a>
-                  )}
-                </article>
-              ))}
-            </div>
-          </div>
-
-          {/* members */}
-          <div className="mt-16 md:mt-20">
+          {/* members — core + community */}
+          <div className="mt-16 md:mt-24" id="members">
             <div className="mb-7 flex items-end justify-between">
               <div>
                 <p className="kicker">{"// members"}</p>
                 <h3 className="mt-2.5 font-display font-bold text-[1.35rem]">
-                  The rest of the layer.
+                  The people behind Layer8.
                 </h3>
               </div>
               <span className="shrink-0 pl-4 text-fg-faint text-[0.65rem] tracking-[0.1em] uppercase max-sm:hidden">
-                [ community ]
+                [ core + community ]
               </span>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 lg:gap-24 items-center">
-              <div className={bodyCopy}>
-                <p>
-                  The core might keep things moving, but Layer8 is everyone who
-                  shows up, asks questions, solves challenges and shares what they
-                  learned afterwards.
-                </p>
-                <p>
-                  You don&apos;t have to be an expert to contribute. You just
-                  have to be willing to learn and help someone else learn too.
-                </p>
-              </div>
+            <p className="mb-10 max-w-2xl text-fg-dim font-mono text-[0.87rem] leading-[1.85]">
+              The people running the machine, the people building it, and
+              everyone who keeps the layer alive.
+            </p>
 
-              <div className="term w-full">
-                <div className="term-bar">
-                  <span className="term-dot" />
-                  <span className="term-dot" />
-                  <span className="term-dot" />
-                  <span className="ml-2 text-xs text-fg-dim">
-                    layer8 — ~/members
-                  </span>
-                </div>
-                <div className="term-body font-mono">
-                  <div>
-                    <span className="prompt">$</span> members --count
-                  </div>
-                  <div className="text-fg font-medium">{MEMBERS.length}</div>
-                  <div className="mt-3">
-                    <span className="prompt">$</span> experience --range
-                  </div>
-                  <div className="text-fg font-medium">beginner &rarr; expert</div>
-                  <div className="mt-3">
-                    <span className="prompt">$</span> status
-                  </div>
-                  <div className="text-fg font-medium">growing</div>
-                </div>
+            {/* core */}
+            <GroupHeading
+              label="00 / core"
+              desc="people keeping the machine running"
+            />
+            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {CORE_MEMBERS.map((m, i) => (
+                <MemberCard key={m.slug} m={m} idx={i + 1} core />
+              ))}
+            </div>
+
+            {/* community */}
+            <div className="mt-14">
+              <GroupHeading label="01 / members" desc="the rest of the layer" />
+              <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {COMMUNITY_MEMBERS.map((m, i) => (
+                  <MemberCard
+                    key={m.slug}
+                    m={m}
+                    idx={CORE_MEMBERS.length + i + 1}
+                  />
+                ))}
               </div>
             </div>
 
-            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
+            {/* stats */}
+            <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
               {[
-                [`${MEMBERS.length}`, "members"],
-                ["04", "domains"],
-                ["08", "focus areas"],
-                [
-                  `${MEMBERS.filter((m) => m.status === "alumni").length}`,
-                  "alumni",
-                ],
+                [`${CURRENT_COUNT}`, "current members"],
+                [`${CORE_MEMBERS.length}`, "core roles"],
+                ["08", "security domains"],
+                ["∞", "rabbit holes"],
               ].map(([value, label]) => (
                 <div key={label} className="flex flex-col p-6 bg-bg">
                   <strong className="text-accent font-display font-bold text-[1.6rem]">
@@ -368,49 +369,6 @@ export default function AboutPage() {
                     {label}
                   </span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* domains — full roster per domain */}
-          <div className="mt-16 md:mt-20" id="domains">
-            <div className="mb-7 flex items-end justify-between">
-              <div>
-                <p className="kicker">{"// domains"}</p>
-                <h3 className="mt-2.5 font-display font-bold text-[1.35rem]">
-                  Where the work happens.
-                </h3>
-              </div>
-              <span className="shrink-0 pl-4 text-fg-faint text-[0.65rem] tracking-[0.1em] uppercase max-sm:hidden">
-                [ rosters ]
-              </span>
-            </div>
-
-            <p className="mb-6 max-w-2xl text-fg-dim font-mono text-[0.87rem] leading-[1.85]">
-              Each domain has a head and a vice-head, and a roster of members
-              behind them. Open one for the full list.
-            </p>
-
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {DOMAINS.map((d) => (
-                <Link
-                  key={d.slug}
-                  href={`/about/${d.slug}`}
-                  className="card text-left flex flex-col transition-colors hover:border-accent"
-                >
-                  <span className="font-mono text-[0.7rem] text-fg-faint">
-                    drwxr-xr-x
-                  </span>
-                  <span className="mt-2 block font-display font-bold text-lg text-fg">
-                    {d.name}
-                  </span>
-                  <span className="mt-1 block text-xs text-fg-dim line-clamp-3">
-                    {d.tagline}
-                  </span>
-                  <span className="mt-3 block font-mono text-xs text-accent">
-                    {`$ cd ~/about/${d.slug}`}
-                  </span>
-                </Link>
               ))}
             </div>
           </div>
@@ -531,7 +489,7 @@ export default function AboutPage() {
                 alt=""
                 aria-hidden
                 className="ccncs-mark"
-                />
+              />
               <span className="font-display font-bold text-base tracking-tight text-fg">
                 CCNCS
               </span>
