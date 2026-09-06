@@ -31,19 +31,30 @@ export async function generateMetadata({
   };
 }
 
+/** small label next to a roster name — alumni, or a lead/webmaster role */
+function rosterBadge(m: Member): string | null {
+  if (m.status === "alumni") return "alumni";
+  if (/head|vice|lead|webmaster/i.test(m.role)) return m.role;
+  return null;
+}
+
 /* ------------------------------------------------------------------ */
 /*  lead card — head is rendered bigger than the vice-head             */
 /* ------------------------------------------------------------------ */
 
 function LeadCard({ member, lead }: { member: Member; lead: boolean }) {
   const contacts = [
-    { label: "github", href: `https://github.com/${member.github}` },
-    {
+    member.github && {
+      label: "github",
+      href: `https://github.com/${member.github}`,
+    },
+    member.linkedin && {
       label: "linkedin",
       href: `https://www.linkedin.com/in/${member.linkedin}`,
     },
+    member.portfolio && { label: "portfolio", href: member.portfolio },
     { label: "email", href: `mailto:${member.email}` },
-  ];
+  ].filter((c): c is { label: string; href: string } => Boolean(c));
 
   return (
     <div
@@ -72,13 +83,15 @@ function LeadCard({ member, lead }: { member: Member; lead: boolean }) {
           <p className="mt-0.5 text-[0.7rem] tracking-[0.14em] uppercase text-fg-faint">
             {member.role}
           </p>
-          <p className="mt-0.5 font-mono text-xs text-fg-faint">
-            @{member.github}
-          </p>
+          {member.alias && (
+            <p className="mt-0.5 font-mono text-xs text-fg-faint">
+              @{member.alias}
+            </p>
+          )}
         </div>
       </div>
 
-      <p className="mt-4 text-sm text-fg-dim">{member.bio}</p>
+      {member.bio && <p className="mt-4 text-sm text-fg-dim">{member.bio}</p>}
 
       <div className="mt-5 flex flex-wrap gap-2.5">
         {contacts.map((c) => (
@@ -130,7 +143,10 @@ export default async function DomainPage({ params }: Params) {
             {d.tagline}
           </p>
           <p className="mt-4 font-mono text-xs text-fg-faint">
-            {members.length + (head ? 1 : 0) + (vice ? 1 : 0)} members
+            {(() => {
+              const n = members.length + (head ? 1 : 0) + (vice ? 1 : 0);
+              return `${n} ${n === 1 ? "person" : "people"}`;
+            })()}
             {head ? " · 1 head" : ""}
             {vice ? " · 1 vice-head" : ""}
           </p>
@@ -172,29 +188,35 @@ export default async function DomainPage({ params }: Params) {
 
           {members.length > 0 ? (
             <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {members.map((m) => (
-                <div key={m.name} className="card flex items-center gap-3 p-4">
-                  <span
-                    className="grid place-items-center w-11 h-11 shrink-0 border border-border bg-bg-3 font-display font-bold text-xs text-accent select-none"
-                    aria-hidden
+              {members.map((m) => {
+                const badge = rosterBadge(m);
+                return (
+                  <div
+                    key={m.slug}
+                    className="card flex items-center gap-3 p-4"
                   >
-                    {initials(m.name)}
-                  </span>
-                  <span className="min-w-0">
-                    <span className="flex items-center gap-2">
-                      <span className="block font-display font-bold text-sm text-fg leading-tight truncate">
-                        {m.name}
+                    <span
+                      className="grid place-items-center w-11 h-11 shrink-0 border border-border bg-bg-3 font-display font-bold text-xs text-accent select-none"
+                      aria-hidden
+                    >
+                      {initials(m.name)}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="flex items-center gap-2">
+                        <span className="block font-display font-bold text-sm text-fg leading-tight truncate">
+                          {m.name}
+                        </span>
+                        {badge && (
+                          <span className="tag shrink-0">{badge}</span>
+                        )}
                       </span>
-                      {m.role && (
-                        <span className="tag shrink-0">{m.role}</span>
-                      )}
+                      <span className="block text-[0.62rem] tracking-[0.14em] uppercase text-fg-faint">
+                        {m.year ?? m.role}
+                      </span>
                     </span>
-                    <span className="block text-[0.62rem] tracking-[0.14em] uppercase text-fg-faint">
-                      {m.focus} · {m.year}
-                    </span>
-                  </span>
-                </div>
-              ))}
+                  </div>
+                );
+              })}
             </div>
           ) : (
             <p className="mt-8 p-6 border border-dashed border-border text-sm text-fg-dim">

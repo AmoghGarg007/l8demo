@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Header, Footer } from "../_components/site-chrome";
-import { DOMAINS } from "./about-data";
+import { CORE_SLUGS, DOMAINS, MEMBERS, getMember } from "./about-data";
 
 export const metadata: Metadata = {
   title: "About Us · Layer8 — PES University, ECC",
@@ -13,32 +13,20 @@ export const metadata: Metadata = {
 /*  content                                                            */
 /* ------------------------------------------------------------------ */
 
-const CORE_MEMBERS = [
-  {
-    number: "01",
-    name: "Alex Johnson",
-    role: "President",
-    bio: "Offensive security, CTFs and making unnecessarily complicated security projects.",
-  },
-  {
-    number: "02",
-    name: "Rohan Sharma",
-    role: "Vice President",
-    bio: "Reverse engineering, binary exploitation and whatever rabbit hole comes next.",
-  },
-  {
-    number: "03",
-    name: "Sarah Thomas",
-    role: "Technical Lead",
-    bio: "Security tooling, research and breaking APIs for educational purposes.",
-  },
-  {
-    number: "04",
-    name: "Arjun Mehta",
-    role: "CTF Lead",
-    bio: "Challenges, competitions and making sure the flags are actually where they should be.",
-  },
-];
+const CORE_MEMBERS = CORE_SLUGS.map((slug, i) => {
+  const m = getMember(slug)!;
+  return {
+    number: String(i + 1).padStart(2, "0"),
+    name: m.name,
+    role: m.role,
+    bio: m.bio,
+    link: m.github
+      ? `https://github.com/${m.github}`
+      : (m.portfolio ??
+        (m.linkedin ? `https://www.linkedin.com/in/${m.linkedin}` : null)),
+    linkLabel: m.github ? "github" : m.portfolio ? "portfolio" : "linkedin",
+  };
+});
 
 const WHAT_WE_DO = [
   {
@@ -268,14 +256,16 @@ export default function AboutPage() {
                     </p>
                   </div>
 
-                  <a
-                    href="https://github.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-auto pt-6 text-fg text-[0.72rem] hover:text-accent transition-colors"
-                  >
-                    &gt; github
-                  </a>
+                  {m.link && (
+                    <a
+                      href={m.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-auto pt-6 text-fg text-[0.72rem] hover:text-accent transition-colors"
+                    >
+                      &gt; {m.linkLabel}
+                    </a>
+                  )}
                 </article>
               ))}
             </div>
@@ -321,7 +311,7 @@ export default function AboutPage() {
                   <div>
                     <span className="prompt">$</span> members --count
                   </div>
-                  <div className="text-fg font-medium">100+</div>
+                  <div className="text-fg font-medium">{MEMBERS.length}</div>
                   <div className="mt-3">
                     <span className="prompt">$</span> experience --range
                   </div>
@@ -336,10 +326,13 @@ export default function AboutPage() {
 
             <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
               {[
-                ["100+", "members"],
-                ["08", "domains"],
-                ["50+", "CTF challenges"],
-                ["20+", "projects"],
+                [`${MEMBERS.length}`, "members"],
+                ["04", "domains"],
+                ["08", "focus areas"],
+                [
+                  `${MEMBERS.filter((m) => m.status === "alumni").length}`,
+                  "alumni",
+                ],
               ].map(([value, label]) => (
                 <div key={label} className="flex flex-col p-6 bg-bg">
                   <strong className="text-accent font-display font-bold text-[1.6rem]">
