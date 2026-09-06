@@ -229,11 +229,11 @@ export default function AboutPage() {
               </span>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border border border-border">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-px bg-border border border-border">
               {CORE_MEMBERS.map((m) => (
                 <article
                   key={m.number}
-                  className="flex flex-col p-[1.4rem] bg-bg-2 min-h-[18rem]"
+                  className="flex flex-col p-[1.4rem] bg-bg-2 min-h-[16rem]"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-fg-faint text-[0.7rem]">
@@ -244,16 +244,18 @@ export default function AboutPage() {
                     </span>
                   </div>
 
-                  <div className="mt-14">
-                    <h4 className="font-display font-bold text-[1.15rem]">
+                  <div className="mt-10">
+                    <h4 className="font-display font-bold text-[1.05rem] leading-tight">
                       {m.name}
                     </h4>
-                    <span className="mt-1.5 block text-accent text-[0.65rem] tracking-[0.12em] uppercase">
+                    <span className="mt-1.5 block text-accent text-[0.62rem] tracking-[0.12em] uppercase">
                       {m.role}
                     </span>
-                    <p className="mt-5 text-fg-dim text-[0.78rem] leading-[1.7]">
-                      {m.bio}
-                    </p>
+                    {m.bio && (
+                      <p className="mt-4 text-fg-dim text-[0.76rem] leading-[1.7]">
+                        {m.bio}
+                      </p>
+                    )}
                   </div>
 
                   {m.link && (

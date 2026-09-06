@@ -1,9 +1,11 @@
 /**
  * Layer8 member roster for /about and /about/[domain].
  *
- * Sourced from the "Club Members (Responses)" form — every entry here is a
- * member who consented to being listed publicly. `getDomainMembers()` derives
- * each domain page's roster from `MEMBERS` (minus that domain's head/vice).
+ * Sourced from the "Club Members (Responses)" form — every entry here consented
+ * to being listed publicly. Role labels are normalised to
+ * "<Unit> Head / Vice Head" / "<Group> Member". `getDomainMembers()` derives
+ * each domain page's roster from `MEMBERS` (minus that domain's head/vice, and
+ * minus alumni — alumni live on /legacy via `ALUMNI`).
  */
 
 export type MemberGroup = "Club" | "Tech" | "Events" | "Media" | "Design";
@@ -14,13 +16,13 @@ export type Member = {
   alias?: string;
   role: string;
   group: MemberGroup;
-  year?: string; // year & branch, as given
+  year?: string;
   bio: string; // their tagline
   status: "current" | "alumni";
-  github?: string; // github.com/<github>
-  linkedin?: string; // linkedin.com/in/<linkedin>
-  portfolio?: string; // full url
-  email: string;
+  github?: string;
+  linkedin?: string;
+  portfolio?: string;
+  email: string; // may be "" when not provided
 };
 
 export const MEMBERS: Member[] = [
@@ -28,9 +30,9 @@ export const MEMBERS: Member[] = [
     slug: "jyeshta-j",
     name: "Jyeshta J",
     alias: "jyeshta",
-    role: "EveOps Member",
+    role: "Events Member",
     group: "Events",
-    year: "2028, CSE",
+    year: "3rd year, CSE",
     bio: "See you Space Cowboy",
     status: "current",
     linkedin: "jyeshta-j-839500309",
@@ -40,9 +42,9 @@ export const MEMBERS: Member[] = [
     slug: "ann-gracia-s",
     name: "Ann Gracia S",
     alias: "ann",
-    role: "Member",
+    role: "Events Member",
     group: "Events",
-    year: "2025 CSE",
+    year: "4th year, CSE",
     bio: "That's all it is, Miles. A leap of faith",
     status: "current",
     linkedin: "ann-gracia-s-567a54356",
@@ -54,7 +56,7 @@ export const MEMBERS: Member[] = [
     alias: "Redslayer112",
     role: "Tech Member",
     group: "Tech",
-    year: "2028, CSE",
+    year: "3rd year, CSE",
     bio: "",
     status: "current",
     email: "vaibhav.tolearn@gmail.com",
@@ -63,9 +65,9 @@ export const MEMBERS: Member[] = [
     slug: "achyuth-jois-m",
     name: "Achyuth Jois M",
     alias: "Shankar Nag",
-    role: "Technical Member",
+    role: "Tech Member",
     group: "Tech",
-    year: "2029, CSE",
+    year: "2nd year, CSE",
     bio: "Seek God In Humans ;)",
     status: "current",
     github: "jois-code",
@@ -90,7 +92,7 @@ export const MEMBERS: Member[] = [
     name: "Aks Raj Singh",
     role: "Media Member",
     group: "Media",
-    year: "2024-28, CSE",
+    year: "CSE",
     bio: "FERGIE TIME",
     status: "current",
     email: "aksvardhan2000@gmail.com",
@@ -99,9 +101,9 @@ export const MEMBERS: Member[] = [
     slug: "arnav-deva",
     name: "Arnav Deva",
     alias: "Cola",
-    role: "Webmaster 26-27",
+    role: "Webmaster",
     group: "Tech",
-    year: "2nd year, CSE-AIML",
+    year: "2nd year, CSE (AIML)",
     bio: "Lore in progress ;)",
     status: "current",
     portfolio: "https://deva-arnav.vercel.app",
@@ -111,9 +113,9 @@ export const MEMBERS: Member[] = [
     slug: "krishnaja-jinka",
     name: "Krishnaja Jinka",
     alias: "acrylicgecko",
-    role: "Events & Ops Member",
+    role: "Events Member",
     group: "Events",
-    year: "2029, CSE",
+    year: "2nd year, CSE",
     bio: "Always down for a new project, a spontaneous idea, or a mocha.",
     status: "current",
     email: "krish30.j@gmail.com",
@@ -122,9 +124,9 @@ export const MEMBERS: Member[] = [
     slug: "rithvik-deepak",
     name: "Rithvik Deepak",
     alias: "DPES",
-    role: "Marketing Head 25-26",
+    role: "Marketing Head (25-26)",
     group: "Media",
-    year: "4th year, CSE (AI&ML)",
+    year: "4th year, CSE (AIML)",
     bio: "Turning curiosity into impact, one challenge at a time.",
     status: "current",
     github: "rithvikd0605",
@@ -132,10 +134,19 @@ export const MEMBERS: Member[] = [
     email: "rithvik0605@gmail.com",
   },
   {
+    slug: "sriya",
+    name: "Sriya",
+    role: "Club Head",
+    group: "Club",
+    bio: "",
+    status: "current",
+    email: "",
+  },
+  {
     slug: "archita-agrawal",
     name: "Archita Agrawal",
     alias: "Archi",
-    role: "Vice Club Head 26-27",
+    role: "Vice Club Head",
     group: "Club",
     year: "2nd year, CSE",
     bio: "Rage-baiting CTF players since 2025",
@@ -149,7 +160,7 @@ export const MEMBERS: Member[] = [
     alias: "Hiran",
     role: "Events Member",
     group: "Events",
-    year: "2nd year, AIML",
+    year: "2nd year, CSE (AIML)",
     bio: "",
     status: "current",
     linkedin: "hiranmayi-b-1426493bb",
@@ -159,9 +170,9 @@ export const MEMBERS: Member[] = [
     slug: "nandana-shyam",
     name: "Nandana Shyam",
     alias: "nandu",
-    role: "Social Media & Marketing Member",
+    role: "Media Member",
     group: "Media",
-    year: "2nd year, AIML",
+    year: "2nd year, CSE (AIML)",
     bio: "kya tum mantally challenged ho my bwoy",
     status: "current",
     linkedin: "nandana-shyam-644248380",
@@ -170,9 +181,9 @@ export const MEMBERS: Member[] = [
   {
     slug: "shreehari-b-deshpande",
     name: "Shreehari B Deshpande",
-    role: "Tech Head 25-26",
+    role: "Tech Head (25-26)",
     group: "Tech",
-    year: "2027, CSE",
+    year: "4th year, CSE",
     bio: "I am exactly what I yearn to be.",
     status: "alumni",
     linkedin: "shreehari-b-deshpande",
@@ -182,9 +193,9 @@ export const MEMBERS: Member[] = [
     slug: "heth-mehul-shah",
     name: "Heth Mehul Shah",
     alias: "H8",
-    role: "Tech Head 25-26",
+    role: "Tech Head (25-26)",
     group: "Tech",
-    year: "2023, CSE",
+    year: "4th year, CSE",
     bio: "Put something good",
     status: "alumni",
     linkedin: "heth-shah-634848244",
@@ -194,9 +205,9 @@ export const MEMBERS: Member[] = [
     slug: "saakshi-mohanty",
     name: "Saakshi Mohanty",
     alias: "Saki",
-    role: "Events & Ops Vice Head",
+    role: "Events Vice Head",
     group: "Events",
-    year: "2nd year, CS-AIML",
+    year: "CSE (AIML)",
     bio: "when life gets harder, i get harder",
     status: "current",
     linkedin: "saakshi-mohanty-417285252",
@@ -206,9 +217,9 @@ export const MEMBERS: Member[] = [
     slug: "amogh-garg",
     name: "Amogh Garg",
     alias: "Tomato Tomahto",
-    role: "Tech Vice Head 26-27",
+    role: "Tech Vice Head",
     group: "Tech",
-    year: "2029, BTech",
+    year: "2nd year",
     bio: "Here by talent. Mostly luck. Let's not investigate further.",
     status: "current",
     github: "AmoghGarg007",
@@ -229,7 +240,7 @@ export const MEMBERS: Member[] = [
   {
     slug: "himani-nune",
     name: "Himani Nune",
-    role: "Events & Ops Member 26-27",
+    role: "Events Member",
     group: "Events",
     year: "3rd year, CSE",
     bio: "Gimme food-",
@@ -241,9 +252,9 @@ export const MEMBERS: Member[] = [
     slug: "krithika-swaminathan",
     name: "Krithika Swaminathan",
     alias: "Valkyrie",
-    role: "Media & Marketing Vice Head 25-26",
+    role: "Media Vice Head",
     group: "Media",
-    year: "2029, CSE",
+    year: "2nd year, CSE",
     bio: "Somewhere between a plan and a plot twist",
     status: "current",
     linkedin: "krithika-swaminathan247",
@@ -252,9 +263,9 @@ export const MEMBERS: Member[] = [
   {
     slug: "krisha-varma-k",
     name: "Krisha Varma K",
-    role: "Event Management Member 26-27",
+    role: "Events Member",
     group: "Events",
-    year: "2nd year, CSE",
+    year: "CSE",
     bio: "Debugging my life since forever.",
     status: "current",
     linkedin: "krisha-varma-konduru-4103aa426",
@@ -263,9 +274,9 @@ export const MEMBERS: Member[] = [
   {
     slug: "rishil-abhijit-jalisatgi",
     name: "Rishil Abhijit Jalisatgi",
-    role: "Technical Member 25-26",
+    role: "Tech Member",
     group: "Tech",
-    year: "2027, CSE",
+    year: "4th year, CSE",
     bio: "For those who come after.",
     status: "alumni",
     linkedin: "rishil-jalisatgi",
@@ -277,7 +288,7 @@ export const MEMBERS: Member[] = [
     alias: "PixelAlgorithm",
     role: "Tech Member",
     group: "Tech",
-    year: "2028, CSE",
+    year: "3rd year, CSE",
     bio: "Be the exploit !",
     status: "current",
     linkedin: "prajwal-m-",
@@ -289,7 +300,7 @@ export const MEMBERS: Member[] = [
     alias: "Ankit",
     role: "Tech Member",
     group: "Tech",
-    year: "2024-28, AIML",
+    year: "4th year, CSE (AIML)",
     bio: "",
     status: "current",
     portfolio: "https://ankitbembalgi.vercel.app",
@@ -298,9 +309,9 @@ export const MEMBERS: Member[] = [
   {
     slug: "sohan-mr",
     name: "Sohan MR",
-    role: "Media & Marketing Head",
+    role: "Media Head",
     group: "Media",
-    year: "2028, CSE",
+    year: "3rd year",
     bio: "Think like a hacker to stop one",
     status: "current",
     email: "sohan.rajannavar3646@gmail.com",
@@ -309,7 +320,7 @@ export const MEMBERS: Member[] = [
     slug: "riddhima-agarwal",
     name: "Riddhima Agarwal",
     alias: "Riddhi",
-    role: "Design Vice Head 26-27",
+    role: "Design Vice Head",
     group: "Design",
     year: "2nd year, CSE",
     bio: "I m going to bed.",
@@ -319,8 +330,8 @@ export const MEMBERS: Member[] = [
   {
     slug: "p-mahema-sai",
     name: "P Mahema Sai",
-    alias: "Mahé",
-    role: "Events Team Member",
+    alias: "Mahe",
+    role: "Events Member",
     group: "Events",
     year: "3rd year, CSE (AIML)",
     bio: "If the plot's good, I'm staying.",
@@ -332,7 +343,7 @@ export const MEMBERS: Member[] = [
     slug: "sai-sudeshna",
     name: "Sai Sudeshna",
     alias: "Sudeshna",
-    role: "Marketing Member",
+    role: "Media Member",
     group: "Media",
     year: "3rd year, CSE",
     bio: "With great password comes great security",
@@ -343,7 +354,7 @@ export const MEMBERS: Member[] = [
     slug: "rithvik-a-m",
     name: "Rithvik A M",
     alias: "Rithrizz",
-    role: "Member",
+    role: "Tech Member",
     group: "Tech",
     year: "3rd year, ECE",
     bio: "Many interests. One direction: forward.",
@@ -355,9 +366,9 @@ export const MEMBERS: Member[] = [
     slug: "blason-raj",
     name: "Blason Raj",
     alias: "Blason",
-    role: "Head of Events 2026-27",
+    role: "Events Head",
     group: "Events",
-    year: "2028, CSE",
+    year: "3rd year, CSE",
     bio: "We are free",
     status: "current",
     github: "blason2108",
@@ -367,9 +378,9 @@ export const MEMBERS: Member[] = [
   {
     slug: "isha-desai",
     name: "Isha Desai",
-    role: "Media & Marketing Member",
+    role: "Media Member",
     group: "Media",
-    year: "2029, CSE",
+    year: "2nd year, CSE",
     bio: "Designing behind the firewall.",
     status: "current",
     email: "ishasd2308@gmail.com",
@@ -378,9 +389,9 @@ export const MEMBERS: Member[] = [
     slug: "shubhika-pradeep",
     name: "Shubhika Pradeep",
     alias: "Bee",
-    role: "Tech Head 26-27",
+    role: "Tech Head",
     group: "Tech",
-    year: "2028, CSE (AI&ML)",
+    year: "3rd year, CSE (AIML)",
     bio: "You know who I am",
     status: "current",
     portfolio: "https://sosportfolio.vercel.app",
@@ -429,7 +440,8 @@ export const DOMAINS: Domain[] = [
     slug: "design",
     name: "Design",
     group: "Design",
-    tagline: "Brand, posters, slides and the site. Makes the rest of it look deliberate.",
+    tagline:
+      "Brand, posters, slides and the site. Makes the rest of it look deliberate.",
     headSlug: "",
     viceSlug: "riddhima-agarwal",
   },
@@ -461,8 +473,9 @@ export const ALUMNI: Member[] = MEMBERS.filter(
   (m) => m.status === "alumni",
 ).sort((a, b) => a.name.localeCompare(b.name));
 
-/** The club-level leads shown on /about's "core" grid. */
+/** The club-level leads shown on /about's "core" grid — Sriya replaces Archi at the top. */
 export const CORE_SLUGS = [
+  "sriya",
   "archita-agrawal",
   "shubhika-pradeep",
   "blason-raj",

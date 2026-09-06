@@ -53,11 +53,11 @@ function LeadCard({ member, lead }: { member: Member; lead: boolean }) {
       href: `https://www.linkedin.com/in/${member.linkedin}`,
     },
     member.portfolio && { label: "portfolio", href: member.portfolio },
-    { label: "email", href: `mailto:${member.email}` },
+    member.email && { label: "email", href: `mailto:${member.email}` },
   ].filter((c): c is { label: string; href: string } => Boolean(c));
 
   return (
-    <div className="card p-6">
+    <div className="card p-6 flex flex-col h-full">
       <div className="flex items-start gap-4">
         <span
           className={`grid place-items-center shrink-0 border border-border bg-bg-3 font-display font-bold text-accent select-none ${
@@ -89,7 +89,7 @@ function LeadCard({ member, lead }: { member: Member; lead: boolean }) {
 
       {member.bio && <p className="mt-4 text-sm text-fg-dim">{member.bio}</p>}
 
-      <div className="mt-5 flex flex-wrap gap-2.5">
+      <div className="mt-auto pt-5 flex flex-wrap gap-2.5">
         {contacts.map((c) => (
           <a
             key={c.label}
@@ -159,7 +159,7 @@ export default async function DomainPage({ params }: Params) {
             Head &amp; vice-head
           </h2>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 items-start">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 items-stretch">
             {head && <LeadCard member={head} lead />}
             {vice && <LeadCard member={vice} lead={false} />}
           </div>
