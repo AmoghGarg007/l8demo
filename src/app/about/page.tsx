@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Header, Footer } from "../_components/site-chrome";
-import { CORE_SLUGS, DOMAINS, MEMBERS, getMember } from "./about-data";
+import { CORE_LEADS, DOMAINS, MEMBERS, getMember } from "./about-data";
 
 export const metadata: Metadata = {
   title: "About Us · Layer8 — PES University, ECC",
@@ -13,18 +13,18 @@ export const metadata: Metadata = {
 /*  content                                                            */
 /* ------------------------------------------------------------------ */
 
-const CORE_MEMBERS = CORE_SLUGS.map((slug, i) => {
-  const m = getMember(slug)!;
+const CORE_MEMBERS = CORE_LEADS.map((lead, i) => {
+  const m = lead.slug ? getMember(lead.slug) : undefined;
   return {
     number: String(i + 1).padStart(2, "0"),
-    name: m.name,
-    role: m.role,
-    bio: m.bio,
-    link: m.github
+    name: m?.name ?? null,
+    role: m?.role ?? lead.role,
+    bio: m?.bio ?? "",
+    link: m?.github
       ? `https://github.com/${m.github}`
-      : (m.portfolio ??
-        (m.linkedin ? `https://www.linkedin.com/in/${m.linkedin}` : null)),
-    linkLabel: m.github ? "github" : m.portfolio ? "portfolio" : "linkedin",
+      : (m?.portfolio ??
+        (m?.linkedin ? `https://www.linkedin.com/in/${m.linkedin}` : null)),
+    linkLabel: m?.github ? "github" : m?.portfolio ? "portfolio" : "linkedin",
   };
 });
 
@@ -233,20 +233,30 @@ export default function AboutPage() {
               {CORE_MEMBERS.map((m) => (
                 <article
                   key={m.number}
-                  className="flex flex-col p-[1.4rem] bg-bg-2 min-h-[16rem]"
+                  className={`flex flex-col p-[1.4rem] bg-bg-2 min-h-[16rem] ${
+                    m.name ? "" : "opacity-55"
+                  }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-fg-faint text-[0.7rem]">
                       {m.number}
                     </span>
                     <span className="text-fg-faint text-[0.6rem] tracking-[0.08em] uppercase">
-                      <span className="text-accent">&#9679;</span> active
+                      {m.name ? (
+                        <>
+                          <span className="text-accent">&#9679;</span> active
+                        </>
+                      ) : (
+                        <>&#9675; open</>
+                      )}
                     </span>
                   </div>
 
                   <div className="mt-10">
                     <h4 className="font-display font-bold text-[1.05rem] leading-tight">
-                      {m.name}
+                      {m.name ?? (
+                        <span className="text-fg-faint">not yet listed</span>
+                      )}
                     </h4>
                     <span className="mt-1.5 block text-accent text-[0.62rem] tracking-[0.12em] uppercase">
                       {m.role}

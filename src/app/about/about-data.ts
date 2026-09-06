@@ -320,7 +320,7 @@ export const MEMBERS: Member[] = [
     slug: "riddhima-agarwal",
     name: "Riddhima Agarwal",
     alias: "Riddhi",
-    role: "Design Head",
+    role: "Design Vice Head",
     group: "Design",
     year: "2nd year, CSE",
     bio: "I m going to bed.",
@@ -442,8 +442,8 @@ export const DOMAINS: Domain[] = [
     group: "Design",
     tagline:
       "Brand, posters, slides and the site. Makes the rest of it look deliberate.",
-    headSlug: "riddhima-agarwal",
-    viceSlug: "",
+    headSlug: "",
+    viceSlug: "riddhima-agarwal",
   },
 ];
 
@@ -473,14 +473,17 @@ export const ALUMNI: Member[] = MEMBERS.filter(
   (m) => m.status === "alumni",
 ).sort((a, b) => a.name.localeCompare(b.name));
 
-/** The five heads shown on /about's "core" grid — club + one per domain. */
-export const CORE_SLUGS = [
-  "sriya",
-  "shubhika-pradeep",
-  "blason-raj",
-  "sohan-mr",
-  "riddhima-agarwal",
-] as const;
+/**
+ * The five heads shown on /about's "core" grid — club + one per domain.
+ * `slug: null` leaves the seat visibly empty (that head hasn't filled the form).
+ */
+export const CORE_LEADS: { role: string; slug: string | null }[] = [
+  { role: "Club Head", slug: "sriya" },
+  { role: "Tech Head", slug: "shubhika-pradeep" },
+  { role: "Events Head", slug: "blason-raj" },
+  { role: "Media Head", slug: "sohan-mr" },
+  { role: "Design Head", slug: null },
+];
 
 export function initials(name: string): string {
   return name
