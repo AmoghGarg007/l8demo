@@ -134,8 +134,8 @@ export const MEMBERS: Member[] = [
     email: "rithvik0605@gmail.com",
   },
   {
-    slug: "sriya",
-    name: "Sriya",
+    slug: "shreya-ajith",
+    name: "Shreya Ajith",
     role: "Club Head",
     group: "Club",
     bio: "",
@@ -478,7 +478,7 @@ export const ALUMNI: Member[] = MEMBERS.filter(
  * `slug: null` leaves the seat visibly empty (that head hasn't filled the form).
  */
 export const CORE_LEADS: { role: string; slug: string | null }[] = [
-  { role: "Club Head", slug: "sriya" },
+  { role: "Club Head", slug: "shreya-ajith" },
   { role: "Tech Head", slug: "shubhika-pradeep" },
   { role: "Events Head", slug: "blason-raj" },
   { role: "Media Head", slug: "sohan-mr" },
@@ -515,7 +515,7 @@ const PHOTO_SLUGS = new Set([
   "shreehari-b-deshpande",
   "sohan-mr",
   "srivaibhav-n",
-  "sriya",
+  "shreya-ajith",
 ]);
 
 export function photoUrl(slug: string): string | undefined {
