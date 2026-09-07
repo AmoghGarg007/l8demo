@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "ctf:provision-user": "node scripts/provision-ctf-user.mjs",
-    "ctf:reset-password": "node scripts/reset-ctf-password.mjs"
+    "ctf:reset-password": "node scripts/reset-ctf-password.mjs",
+    "ctf:verify-backend": "node scripts/verify-ctf-backend.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.6",

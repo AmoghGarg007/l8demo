@@ -10,7 +10,7 @@ The Weekly CTF uses Supabase for PostgreSQL, password authentication, and privat
 - Challenge secrets are isolated from public challenge metadata and accessible only through the service role.
 - RLS limits students to their own profile, submissions, and solves.
 - Submission validation, rate limiting, scoring, and solve creation run atomically in PostgreSQL using server timestamps.
-- Concurrent attempts for the same user and challenge are serialized before the rate limit is evaluated.
+- All concurrent attempts from the same account are serialized before the rate limit is evaluated, including attempts against different challenges. Different students are not blocked by one another.
 - The service-role key is server-only. Never prefix it with `NEXT_PUBLIC_`.
 - Host mutations are authorized against the stored profile role and recorded in `ctf_audit_log`.
 
@@ -21,10 +21,12 @@ The Weekly CTF uses Supabase for PostgreSQL, password authentication, and privat
 3. In the SQL editor, run the migrations in order:
    - `supabase/migrations/202609060001_weekly_ctf.sql`
    - `supabase/migrations/202609070001_ctf_backend_hardening.sql`
+   - `supabase/migrations/202609070002_ctf_submission_concurrency.sql`
 4. Optionally run `supabase/seed.sql` for one demo challenge. Replace its flag before production.
 5. Copy `.env.example` to `.env.local` and add the project URL, publishable key, and service-role key.
-6. Add the same three variables to the Vercel project. Keep the service-role value secret.
-7. Run `npm run dev` and open `/weekly-ctfs`.
+6. Run `npm run ctf:verify-backend` to confirm the tables, leaderboard function, and private bucket are reachable.
+7. Add the same three variables to the Vercel project. Keep the service-role value secret.
+8. Run `npm run dev` and open `/weekly-ctfs`.
 
 ## Provision an account
 
