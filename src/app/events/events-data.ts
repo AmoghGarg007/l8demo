@@ -2,7 +2,7 @@
  * Events catalog, ported from ChatreshGudi/L8-Website-Events
  * (src/data/eventsData.js). The source's non-functional registration form was
  * dropped; PENDING events link to the weekly sessions, ARCHIVED ones show an
- * archive note — and the two with podium records link across to /hall-of-fame.
+ * archive note.
  */
 
 export type EventStatus = "LIVE" | "PENDING" | "ARCHIVED";
@@ -20,8 +20,6 @@ export type L8Event = {
   flags: string;
   actionText: string;
   tags: string[];
-  /** slug on /hall-of-fame, when this event has podium records */
-  hofSlug?: string;
 };
 
 export const EVENTS: L8Event[] = [
@@ -52,7 +50,6 @@ export const EVENTS: L8Event[] = [
       "57 teams (209 participants) competed across 4 progressive waves on a custom CTF platform with live leaderboard.",
     actionText: "view_logs",
     tags: ["ctf", "jeopardy", "web", "crypto", "osint", "sudorm"],
-    hofSlug: "sudo-rm",
   },
   {
     id: "escape-the-matrix",
@@ -75,7 +72,6 @@ export const EVENTS: L8Event[] = [
       "puzzle",
       "murder-mystery",
     ],
-    hofSlug: "escape-matrix",
   },
 ];
 

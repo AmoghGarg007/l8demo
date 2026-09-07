@@ -111,7 +111,7 @@ function TeamCard({ team }: { team: HofTeam }) {
 
 function EventBlock({ ev }: { ev: HofEvent }) {
   return (
-    <section id={ev.slug} className="wrap py-12 md:py-16 scroll-mt-24">
+    <section className="wrap py-12 md:py-16">
       <span className="tag">{ev.slug.replace(/-/g, "_")}</span>
       <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <h2 className="font-display font-bold text-2xl md:text-3xl">

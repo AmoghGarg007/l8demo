@@ -86,21 +86,11 @@ function Detail({ event }: { event: L8Event }) {
 
       <div className="mt-6 pt-5 border-t border-border">
         {event.status === "ARCHIVED" ? (
-          <div className="space-y-3">
-            <p className="text-xs text-fg-faint font-mono">
-              {
-                "// this operation has concluded — slides and writeups live in the Layer8 GitHub archives."
-              }
-            </p>
-            {event.hofSlug && (
-              <Link
-                href={`/hall-of-fame#${event.hofSlug}`}
-                className="btn"
-              >
-                &gt; view_podium
-              </Link>
-            )}
-          </div>
+          <p className="text-xs text-fg-faint font-mono">
+            {
+              "// this operation has concluded — slides and writeups live in the Layer8 GitHub archives."
+            }
+          </p>
         ) : (
           <Link href="/#top" className="btn btn-solid">
             &gt; {event.actionText}
