@@ -5,21 +5,60 @@
  * subset used in content/blogs: ATX headings, fenced code blocks, blockquotes
  * (rendered as .callout), unordered + ordered lists, and inline bold / italic /
  * code / links. The markdown is first-party content committed to this repo, so
- * the result is rendered with dangerouslySetInnerHTML.
+ * the result is rendered with dangerouslySetInnerHTML — but link targets are
+ * still sanitised so a post can't inject script.
  */
 
 const escapeHtml = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-function inlineFormat(text: string): string {
-  return escapeHtml(text)
+/**
+ * Allowlist a link target. Only http(s), mailto, in-page anchors and
+ * root-relative paths become real hrefs; everything else (javascript:,
+ * data:, vbscript:, blob:, …) collapses to "#". Whitespace is stripped
+ * before the scheme test so it can't be obfuscated ("java\tscript:"), and
+ * quote chars are entity-escaped so the value can't break out of href="…".
+ */
+function sanitizeUrl(url: string): string {
+  const probe = url.replace(/\s+/g, "").toLowerCase();
+  const ok =
+    probe.startsWith("http://") ||
+    probe.startsWith("https://") ||
+    probe.startsWith("mailto:") ||
+    probe.startsWith("#") ||
+    probe.startsWith("/");
+  if (!ok) return "#";
+  return url
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/`/g, "%60");
+}
+
+function formatSegment(seg: string): string {
+  return seg
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, "<em>$1</em>")
-    .replace(/`([^`]+?)`/g, "<code>$1</code>")
     .replace(
-      /\[([^\]]+)\]\(([^)]+)\)/g,
-      '<a href="$2" target="_blank" rel="noreferrer">$1</a>',
+      // URL: <...> autolink form, or a space-free target with balanced ()
+      /\[([^\]]+)\]\((<[^>]*>|[^()\s]*(?:\([^()]*\)[^()\s]*)*)\)/g,
+      (_m, label: string, rawUrl: string) => {
+        const target = rawUrl.replace(/^<([\s\S]*)>$/, "$1").trim();
+        const external = /^https?:\/\//i.test(target);
+        const attrs = external ? ' target="_blank" rel="noreferrer"' : "";
+        return `<a href="${sanitizeUrl(target)}"${attrs}>${label}</a>`;
+      },
     );
+}
+
+function inlineFormat(text: string): string {
+  // Split on inline-code spans (kept via the capture group) so the
+  // bold/italic/link passes never run inside `code`.
+  return escapeHtml(text)
+    .split(/(`[^`]+?`)/g)
+    .map((part, i) =>
+      i % 2 === 1 ? `<code>${part.slice(1, -1)}</code>` : formatSegment(part),
+    )
+    .join("");
 }
 
 export function renderMarkdown(md: string): string {

@@ -1,126 +1,623 @@
 /**
- * Domain heads/vice-heads (and each domain's full roster) for /about and
- * /about/[domain]. Names, bios and social handles are placeholders — swap
- * them for the real roster. Slugs are stable ids used to look members up.
+ * Layer8 member roster for /about and /legacy.
+ *
+ * Updated from the AboutLateL8 member sheet — all current members plus the
+ * four alumni kept for /legacy. Roles/domains are as given on the sheet.
+ * `core: true` marks the club head / vice-head and each domain's head /
+ * vice-head — the people shown as large cards on /about.
  */
+
+export type MemberGroup = "Club" | "Tech" | "Events" | "Media" | "Design";
 
 export type Member = {
   slug: string;
   name: string;
+  alias?: string;
   role: string;
-  group: "Club" | "Tech" | "Events" | "Media" | "Design";
+  group: MemberGroup;
+  year?: string;
   bio: string;
-  github: string; // github.com/<github>
-  linkedin: string; // linkedin.com/in/<linkedin>
+  status: "current" | "alumni";
+  core?: boolean;
+  github?: string;
+  linkedin?: string;
+  portfolio?: string;
   email: string;
 };
 
 export const MEMBERS: Member[] = [
   {
-    slug: "marcus-antonius",
-    name: "Marcus Antonius",
+    slug: "sriya-chandu",
+    name: "Sriya Chandu",
     role: "Club Head",
     group: "Club",
-    bio: "Runs Layer8 end to end — the calendar, the department relationship, and whatever is on fire that week. Plays web and does most of the challenge review before a CTF ships.",
-    github: "marcusantonius",
-    linkedin: "marcus-antonius",
-    email: "marcus.antonius@pesu.pes.edu",
+    bio: "",
+    status: "current",
+    core: true,
+    email: "",
   },
   {
-    slug: "livia-drusilla",
-    name: "Livia Drusilla",
-    role: "Club Vice-Head",
+    slug: "archita-agrawal",
+    name: "Archita Agrawal",
+    alias: "Archi",
+    role: "Vice Club Head 26-27",
     group: "Club",
-    bio: "Second point of contact for everything, and the person who keeps the four domains talking to each other. Background in forensics and incident write-ups.",
-    github: "liviadrusilla",
-    linkedin: "livia-drusilla",
-    email: "livia.drusilla@pesu.pes.edu",
+    year: "2nd year CSE",
+    bio: "Rage-baiting CTF players since 2025 ",
+    status: "current",
+    core: true,
+    github: "architaagr",
+    email: "architaagrawal2007@gmail.com",
   },
   {
-    slug: "gaius-plinius",
-    name: "Gaius Plinius",
-    role: "Tech Head",
+    slug: "shubhika-pradeep",
+    name: "Shubhika Pradeep",
+    alias: "Bee",
+    role: "Tech Head 26-27",
     group: "Tech",
-    bio: "Owns the CTF infrastructure and the challenge pipeline. Writes pwn and reversing challenges and maintains the scoreboard deploy.",
-    github: "gaiusplinius",
-    linkedin: "gaius-plinius",
-    email: "gaius.plinius@pesu.pes.edu",
+    year: "2028, CSE(AI&ML)",
+    bio: "You know who I am",
+    status: "current",
+    core: true,
+    portfolio: "https://sosportfolio.vercel.app",
+    email: "shubhikaiyer@gmail.com",
   },
   {
-    slug: "aulus-persius",
-    name: "Aulus Persius",
-    role: "Tech Vice-Head",
+    slug: "blason-raj",
+    name: "Blason Raj",
+    alias: "Blason",
+    role: "Head of Events 2026-27",
+    group: "Events",
+    year: "CSE 2028",
+    bio: "We are free",
+    status: "current",
+    core: true,
+    github: "blason2108",
+    linkedin: "blason-raj",
+    email: "blasonrimmanuel311@gmail.com",
+  },
+  {
+    slug: "sohan-mr",
+    name: "Sohan MR",
+    role: "Media & Marketing Head",
+    group: "Media",
+    year: "2028 CSE",
+    bio: "Think like a hacker to stop one",
+    status: "current",
+    core: true,
+    email: "sohan.rajannavar3646@gmail.com",
+  },
+  {
+    slug: "riddhima-agarwal",
+    name: "Riddhima Agarwal",
+    alias: "Riddhi",
+    role: "Design Vice Head 26-27",
+    group: "Design",
+    year: "2nd year (3rd sem) CS",
+    bio: "I m going to bed.",
+    status: "current",
+    core: true,
+    linkedin: "rriddhima-agarwal2004",
+    email: "rriddhima.agarwal2004@gmail.com",
+  },
+  {
+    slug: "arnav-deva",
+    name: "Arnav Deva",
+    alias: "Deva / Cola",
+    role: "Webmaster 26-27",
     group: "Tech",
-    bio: "Runs the weekly sessions and onboards new members onto the tooling. Crypto is his lane; automating the boring parts is his hobby.",
-    github: "aoluspersius",
-    linkedin: "aulus-persius",
-    email: "aulus.persius@pesu.pes.edu",
+    year: "2nd Year CSE-AIML",
+    bio: "Lore in progress",
+    status: "current",
+    core: true,
+    portfolio: "https://deva-arnav.vercel.app",
+    email: "arnavdeva007@gmail.com",
   },
   {
-    slug: "fulvia-flacca",
-    name: "Fulvia Flacca",
-    role: "Events Head",
+    slug: "saakshi-mohanty",
+    name: "Saakshi Mohanty",
+    alias: "Saki",
+    role: "Vice Head of E&O",
     group: "Events",
-    bio: "Plans the calendar — CTFs, workshops, talks and inter-college events. If it has a date and a room booking, it went through her.",
-    github: "fulviaflacca",
-    linkedin: "fulvia-flacca",
-    email: "fulvia.flacca@pesu.pes.edu",
+    year: "2nd, CS-AIML",
+    bio: "when life gets harder, i get harder",
+    status: "current",
+    core: true,
+    linkedin: "saakshi-mohanty-417285252",
+    email: "saakshi.mohanty@gmail.com",
   },
   {
-    slug: "decimus-brutus",
-    name: "Decimus Brutus",
-    role: "Events Vice-Head",
+    slug: "amogh-garg",
+    name: "Amogh Garg",
+    alias: "Tomato Tomahto",
+    role: "Tech Vice Head 26-27",
+    group: "Tech",
+    year: "2029 BTech",
+    bio: "Here by talent. Mostly luck. Let's not investigate further.",
+    status: "current",
+    core: true,
+    github: "AmoghGarg007",
+    linkedin: "amogh-garg-2k7",
+    email: "amoghgarg2007@gmail.com",
+  },
+  {
+    slug: "krithika-swaminathan",
+    name: "Krithika Swaminathan",
+    alias: "Valkyrie",
+    role: "Media and Marketing Vice Head 25-26",
+    group: "Media",
+    year: "2029 CSE",
+    bio: "Somewhere between a plan and a plot twist",
+    status: "current",
+    core: true,
+    linkedin: "krithikaswaminathan247",
+    email: "krithikaswaminathan247@gmail.com",
+  },
+  {
+    slug: "shreya-ajith",
+    name: "Shreya Ajith",
+    alias: "Ajith",
+    role: "Design Head 26-27",
+    group: "Design",
+    year: "2028 CSE",
+    bio: "pink <3",
+    status: "current",
+    core: true,
+    email: "",
+  },
+  {
+    slug: "avrit-sharma",
+    name: "Avrit Sharma",
+    alias: "dukeavi",
+    role: "Analyst",
+    group: "Tech",
+    year: "CSE-2028",
+    bio: "++++++++++[>+>+++>+++++++>++++++++++<<<<-]>>>>+++.++++++++..-----------.--.+++++++++++++++++++++++.--------------------.",
+    status: "current",
+    linkedin: "avrit",
+    email: "",
+  },
+  {
+    slug: "jyeshta-j",
+    name: "Jyeshta J",
+    alias: "jyeshta",
+    role: "EveOps Member",
     group: "Events",
-    bio: "Logistics and sponsor coordination for the bigger events. Steps in as MC and keeps the run-of-show honest on the day.",
-    github: "decimusbrutus",
-    linkedin: "decimus-brutus",
-    email: "decimus.brutus@pesu.pes.edu",
+    year: "2028, CSE",
+    bio: "See you Space Cowboy",
+    status: "current",
+    linkedin: "jyeshta-j-839500309",
+    email: "jyeshtaj2006@gmail.com",
   },
   {
-    slug: "julia-agrippina",
-    name: "Julia Agrippina",
-    role: "Media Head",
+    slug: "ann-gracia-s",
+    name: "Ann Gracia S",
+    alias: "ann",
+    role: "Member",
+    group: "Events",
+    year: "2025 CSE",
+    bio: "That's all it is, Miles. A leap of faith",
+    status: "current",
+    linkedin: "ann-gracia-s-567a54356",
+    email: "ann.gracia07@gmail.com",
+  },
+  {
+    slug: "srivaibhav-n",
+    name: "Srivaibhav N",
+    alias: "Redslayer112",
+    role: "Tech",
+    group: "Tech",
+    year: "2028, CSE",
+    bio: "",
+    status: "current",
+    email: "vaibhav.tolearn@gmail.com",
+  },
+  {
+    slug: "achyuth-jois-m",
+    name: "Achyuth Jois M",
+    alias: "Shankar Nag",
+    role: "Technical Member",
+    group: "Tech",
+    year: "2029, CSE",
+    bio: "Seek God In Humans ;)",
+    status: "current",
+    github: "jois-code",
+    linkedin: "achyuthjoism",
+    portfolio: "https://jois-code.vercel.app",
+    email: "achyuthjoism@gmail.com",
+  },
+  {
+    slug: "chatresh-ramasai-gudi",
+    name: "Chatresh Ramasai Gudi",
+    alias: "Chatresh",
+    role: "Tech Member",
+    group: "Tech",
+    year: "3 & CSE",
+    bio: "Trust. Verify. Repeat.",
+    status: "current",
+    linkedin: "chatreshgudi",
+    email: "chatreshrsg0202@gmail.com",
+  },
+  {
+    slug: "aks-raj-singh",
+    name: "Aks Raj Singh",
+    role: "Media",
     group: "Media",
-    bio: "Owns the club's public voice — writeups, socials, recaps and the newsletter. Edits every post before it goes out with the Layer8 name on it.",
-    github: "juliaagrippina",
-    linkedin: "julia-agrippina",
-    email: "julia.agrippina@pesu.pes.edu",
+    year: "24-28 CSE",
+    bio: "FERGIE TIME",
+    status: "current",
+    email: "aksvardhan2000@gmail.com",
   },
   {
-    slug: "servius-tullius",
-    name: "Servius Tullius",
-    role: "Media Vice-Head",
+    slug: "krishnaja-jinka",
+    name: "Krishnaja Jinka",
+    alias: "acrylicgecko",
+    role: "Events and Ops Team",
+    group: "Events",
+    year: "2029 CSE",
+    bio: "Always down for a new project, a spontaneous idea, or a mocha.",
+    status: "current",
+    email: "krish30.j@gmail.com",
+  },
+  {
+    slug: "rithvik-deepak",
+    name: "Rithvik Deepak",
+    alias: "DPES",
+    role: "Marketing Head 25-26",
     group: "Media",
-    bio: "Runs the posting schedule and the photo/video coverage at events. Turns rough session notes into things people actually read.",
-    github: "serviustullius",
-    linkedin: "servius-tullius",
-    email: "servius.tullius@pesu.pes.edu",
+    year: "4th Year & CSE[AI&ML]",
+    bio: "Turning curiosity into impact, one challenge at a time.",
+    status: "current",
+    github: "rithvikd0605",
+    linkedin: "rithvik-deepak-0992b136a",
+    email: "rithvik0605@gmail.com",
   },
   {
-    slug: "claudia-pulchra",
-    name: "Claudia Pulchra",
-    role: "Design Head",
-    group: "Design",
-    bio: "Owns the brand — posters, slide decks, event identity and this site. Makes sure the rest of the club's output looks deliberate.",
-    github: "claudiapulchra",
-    linkedin: "claudia-pulchra",
-    email: "claudia.pulchra@pesu.pes.edu",
+    slug: "hiranmayi-b",
+    name: "Hiranmayi B",
+    alias: "Hiran",
+    role: "Events Member",
+    group: "Events",
+    year: "2nd year, AIML",
+    bio: "",
+    status: "current",
+    linkedin: "hiranmayi-b-1426493bb",
+    email: "baskarhiran@gmail.com",
   },
   {
-    slug: "marcus-vitruvius",
-    name: "Marcus Vitruvius",
-    role: "Design Vice-Head",
+    slug: "nandana-shyam",
+    name: "Nandana Shyam",
+    alias: "nandu",
+    role: "Social Media and Marketing Member",
+    group: "Media",
+    year: "2nd year AIML",
+    bio: "kya tum mantally challenged ho my bwoy",
+    status: "current",
+    linkedin: "nandana-shyam-644248380",
+    email: "nandanashyam@gmail.com",
+  },
+  {
+    slug: "ianna-elizabeth-reni",
+    name: "Ianna Elizabeth Reni",
+    alias: "Eliza",
+    role: "Tech member",
+    group: "Tech",
+    year: "3rd year CSE",
+    bio: "Living in fiction",
+    status: "current",
+    email: "ianna.elizabeth.reni@gmail.com",
+  },
+  {
+    slug: "himani-nune",
+    name: "Himani Nune",
+    role: "Events and Operations Member 26-27",
+    group: "Events",
+    year: "3rd year CSE",
+    bio: "Gimme food-",
+    status: "current",
+    linkedin: "himani-nune-41a03723b",
+    email: "nune.himani@gmail.com",
+  },
+  {
+    slug: "krisha-varma-k",
+    name: "Krisha Varma K",
+    role: "Event Management Member 26-27",
+    group: "Events",
+    year: "2nd, CSE",
+    bio: "Debugging my life since forever.",
+    status: "current",
+    linkedin: "krisha-varma-konduru-4103aa426",
+    email: "krishavarma27@gmail.com",
+  },
+  {
+    slug: "prajwal-m",
+    name: "Prajwal M",
+    alias: "PixelAlgorithm",
+    role: "Member",
+    group: "Tech",
+    year: "2028 CSE",
+    bio: "Be the exploit !",
+    status: "current",
+    linkedin: "prajwal-m-",
+    email: "studies.prajwalm@gmail.com",
+  },
+  {
+    slug: "ankit-bembalgi",
+    name: "Ankit Bembalgi",
+    alias: "Ankit",
+    role: "Member",
+    group: "Tech",
+    year: "2024-28 AIML",
+    bio: "Put some shit da idc",
+    status: "current",
+    portfolio: "https://ankitbembalgi.vercel.app",
+    email: "ankitbembalgi@gmail.com",
+  },
+  {
+    slug: "p-mahema-sai",
+    name: "P Mahema Sai",
+    alias: "Mah",
+    role: "Events Team Member",
+    group: "Events",
+    year: "3rd year - CSE(AIML)",
+    bio: "If the plots good, Im staying.",
+    status: "current",
+    linkedin: "mahema-sai",
+    email: "mahemasai14@gmail.com",
+  },
+  {
+    slug: "sai-sudeshna",
+    name: "Sai Sudeshna",
+    alias: "Sudeshna",
+    role: "Marketing Member 25-now",
+    group: "Media",
+    year: "3rd year CSE",
+    bio: "With great password comes great security",
+    status: "current",
+    email: "saisudeshna@gmail.com",
+  },
+  {
+    slug: "isha-desai",
+    name: "Isha Desai",
+    role: "Member",
+    group: "Media",
+    year: "2029, CSE",
+    bio: "Designing behind the firewall.",
+    status: "current",
+    email: "ishasd2308@gmail.com",
+  },
+  {
+    slug: "sowmya-ramesh",
+    name: "Sowmya Ramesh",
+    alias: "Sowmya",
+    role: "Design 25-27",
     group: "Design",
-    bio: "Production design and templates — keeps the asset library current so nobody rebuilds a poster from scratch. Front-end tinkerer on the side.",
-    github: "marcusvitruvius",
-    linkedin: "marcus-vitruvius",
-    email: "marcus.vitruvius@pesu.pes.edu",
+    year: "3rd CSE",
+    bio: "If you cant convince them, confuse them",
+    status: "current",
+    linkedin: "sowmya-ramesh-843662374",
+    email: "",
+  },
+  {
+    slug: "anish",
+    name: "Anish",
+    role: "Core Tech",
+    group: "Tech",
+    year: "2 CSE",
+    bio: "Every system has a weakness. Find it",
+    status: "current",
+    email: "",
+  },
+  {
+    slug: "varunavi-kumbar",
+    name: "Varunavi Kumbar",
+    role: "Design Member from 2025",
+    group: "Design",
+    year: "2nd year CSE",
+    bio: "Designing ideas into impact",
+    status: "current",
+    linkedin: "varunavi-kumbar-9104242a8",
+    email: "",
+  },
+  {
+    slug: "shreya-surya-prakash",
+    name: "Shreya Surya Prakash",
+    alias: "Shreya",
+    role: "Events Member",
+    group: "Events",
+    year: "3rd year ECE",
+    bio: "Keeping it together (mostly)",
+    status: "current",
+    linkedin: "shreya-surya-prakash-8572023a6",
+    email: "",
+  },
+  {
+    slug: "rashi-sharan",
+    name: "Rashi Sharan",
+    alias: "Rashi",
+    role: "Club Member",
+    group: "Club",
+    year: "2nd year, CSE",
+    bio: "Dancing & vibing my way through life",
+    status: "current",
+    linkedin: "rashi-sharan-789219363",
+    email: "",
+  },
+  {
+    slug: "sreehaas-vangara",
+    name: "Sreehaas Vangara",
+    alias: "sreehaas",
+    role: "Tech member",
+    group: "Tech",
+    year: "2nd year CSE-AIML",
+    bio: "i forgot",
+    status: "current",
+    linkedin: "sreehaas-vangara-72143b392",
+    email: "",
+  },
+  {
+    slug: "shivangi-tiwari",
+    name: "Shivangi Tiwari",
+    role: "Events member",
+    group: "Events",
+    year: "2nd, AIML",
+    bio: "24/7 concert, 100 tabs open",
+    status: "current",
+    email: "",
+  },
+  {
+    slug: "hemal-s",
+    name: "Hemal S",
+    role: "Events Member 26-27",
+    group: "Events",
+    year: "2nd year - CSE(AIML)",
+    bio: "",
+    status: "current",
+    linkedin: "hemal-s-771a21386",
+    email: "",
+  },
+  {
+    slug: "nikhita-medayhal",
+    name: "Nikhita Medayhal",
+    alias: "bm0",
+    role: "Member",
+    group: "Tech",
+    year: "2nd year CSE",
+    bio: "Always rely on your grey cells",
+    status: "current",
+    github: "NikhitaMedayhal",
+    email: "",
+  },
+  {
+    slug: "syed-ayaan-hasan",
+    name: "Syed Ayaan Hasan",
+    alias: "rebus06",
+    role: "Tech Architect",
+    group: "Tech",
+    year: "2028-CSE",
+    bio: "Breaking code professionally",
+    status: "current",
+    email: "",
+  },
+  {
+    slug: "shreehari-b-deshpande",
+    name: "Shreehari B Deshpande",
+    role: "Tech Head (25-26)",
+    group: "Tech",
+    year: "4th year, CSE",
+    bio: "I am exactly what I yearn to be.",
+    status: "alumni",
+    linkedin: "shreehari-b-deshpande",
+    email: "shreehari.deshpande2005@gmail.com",
+  },
+  {
+    slug: "heth-mehul-shah",
+    name: "Heth Mehul Shah",
+    alias: "H8",
+    role: "Tech Head (25-26)",
+    group: "Tech",
+    year: "4th year, CSE",
+    bio: "Put something good",
+    status: "alumni",
+    linkedin: "heth-shah-634848244",
+    email: "hethshah12@gmail.com",
+  },
+  {
+    slug: "rishil-abhijit-jalisatgi",
+    name: "Rishil Abhijit Jalisatgi",
+    role: "Tech Member",
+    group: "Tech",
+    year: "4th year, CSE",
+    bio: "For those who come after.",
+    status: "alumni",
+    linkedin: "rishil-jalisatgi",
+    email: "rishil.aj99@gmail.com",
+  },
+  {
+    slug: "rithvik-a-m",
+    name: "Rithvik A M",
+    alias: "Rithrizz",
+    role: "Tech Member",
+    group: "Tech",
+    year: "3rd year, ECE",
+    bio: "Many interests. One direction: forward.",
+    status: "alumni",
+    linkedin: "amrithvik",
+    email: "rithvikam2006@gmail.com",
   },
 ];
+
+const PHOTO_SLUGS = new Set([
+  "achyuth-jois-m",
+  "aks-raj-singh",
+  "amogh-garg",
+  "ankit-bembalgi",
+  "ann-gracia-s",
+  "archita-agrawal",
+  "arnav-deva",
+  "avrit-sharma",
+  "blason-raj",
+  "chatresh-ramasai-gudi",
+  "hemal-s",
+  "himani-nune",
+  "hiranmayi-b",
+  "ianna-elizabeth-reni",
+  "isha-desai",
+  "jyeshta-j",
+  "krisha-varma-k",
+  "krishnaja-jinka",
+  "krithika-swaminathan",
+  "nandana-shyam",
+  "p-mahema-sai",
+  "prajwal-m",
+  "rashi-sharan",
+  "riddhima-agarwal",
+  "rishil-abhijit-jalisatgi",
+  "rithvik-a-m",
+  "rithvik-deepak",
+  "saakshi-mohanty",
+  "shivangi-tiwari",
+  "shreehari-b-deshpande",
+  "shreya-ajith",
+  "shreya-surya-prakash",
+  "sohan-mr",
+  "sowmya-ramesh",
+  "sreehaas-vangara",
+  "srivaibhav-n",
+  "syed-ayaan-hasan",
+  "varunavi-kumbar",
+]);
+
+export function photoUrl(slug: string): string | undefined {
+  return PHOTO_SLUGS.has(slug) ? `/members/${slug}.webp` : undefined;
+}
+
+export function getMember(slug: string): Member | undefined {
+  return MEMBERS.find((m) => m.slug === slug);
+}
+
+/** Best external link for a member: portfolio → github → linkedin → email. */
+export function profileHref(m: Member): string | undefined {
+  if (m.portfolio) return m.portfolio;
+  if (m.github) return `https://github.com/${m.github}`;
+  if (m.linkedin) return `https://www.linkedin.com/in/${m.linkedin}`;
+  if (m.email) return `mailto:${m.email}`;
+  return undefined;
+}
+
+/** Alumni — shown on /legacy, not /about. */
+export const ALUMNI: Member[] = MEMBERS.filter((m) => m.status === "alumni").sort(
+  (a, b) => a.name.localeCompare(b.name),
+);
+
+/* ------------------------------------------------------------------ */
+/*  domain sub-pages (/about/[domain]) — head + vice + group roster    */
+/* ------------------------------------------------------------------ */
 
 export type Domain = {
   slug: string;
   name: string;
+  group: MemberGroup;
   tagline: string;
   headSlug: string;
   viceSlug: string;
@@ -130,39 +627,53 @@ export const DOMAINS: Domain[] = [
   {
     slug: "tech",
     name: "Tech",
+    group: "Tech",
     tagline:
       "CTF infrastructure, challenge development, tooling and running the weekly sessions.",
-    headSlug: "gaius-plinius",
-    viceSlug: "aulus-persius",
+    headSlug: "shubhika-pradeep",
+    viceSlug: "amogh-garg",
   },
   {
     slug: "events",
     name: "Events",
+    group: "Events",
     tagline:
       "CTFs, workshops, talks and inter-college competitions — everything with a date on it.",
-    headSlug: "fulvia-flacca",
-    viceSlug: "decimus-brutus",
+    headSlug: "blason-raj",
+    viceSlug: "saakshi-mohanty",
   },
   {
     slug: "media",
     name: "Media",
+    group: "Media",
     tagline:
-      "Writeups, socials, recaps and the newsletter. If it went out with the club's name on it, Media shipped it.",
-    headSlug: "julia-agrippina",
-    viceSlug: "servius-tullius",
+      "Writeups, socials, recaps and marketing. If it went out with the club's name on it, Media shipped it.",
+    headSlug: "sohan-mr",
+    viceSlug: "krithika-swaminathan",
   },
   {
     slug: "design",
     name: "Design",
+    group: "Design",
     tagline:
       "Brand, posters, slides and the site. Makes the rest of it look deliberate.",
-    headSlug: "claudia-pulchra",
-    viceSlug: "marcus-vitruvius",
+    headSlug: "shreya-ajith",
+    viceSlug: "riddhima-agarwal",
   },
 ];
 
-export function getMember(slug: string): Member | undefined {
-  return MEMBERS.find((m) => m.slug === slug);
+export function getDomain(slug: string): Domain | undefined {
+  return DOMAINS.find((d) => d.slug === slug);
+}
+
+/** A domain's roster: current members in that group who aren't its head/vice. */
+export function getDomainMembers(domainSlug: string): Member[] {
+  const d = getDomain(domainSlug);
+  if (!d) return [];
+  const leads = new Set([d.headSlug, d.viceSlug]);
+  return MEMBERS.filter(
+    (m) => m.group === d.group && m.status === "current" && !leads.has(m.slug),
+  ).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export function initials(name: string): string {
@@ -172,47 +683,4 @@ export function initials(name: string): string {
     .slice(0, 2)
     .join("")
     .toUpperCase();
-}
-
-export function getDomain(slug: string): Domain | undefined {
-  return DOMAINS.find((d) => d.slug === slug);
-}
-
-/* ------------------------------------------------------------------ */
-/*  full domain rosters (rank-and-file members, not core)             */
-/* ------------------------------------------------------------------ */
-
-export type DomainMember = {
-  name: string;
-  focus: string; // primary lane, e.g. "web", "pwn"
-  year: string;
-  role?: string; // special title alongside focus/year, e.g. "Webmaster"
-};
-
-/**
- * Members per domain, beyond the head/vice-head. Placeholder names — swap for
- * the real roster. Only `tech` is populated for now; the other domains render
- * a "roster being finalised" placeholder until members are added.
- */
-export const DOMAIN_MEMBERS: Record<string, DomainMember[]> = {
-  tech: [
-    { name: "Marcus Livius", focus: "web", year: "3rd year", role: "Webmaster" },
-    { name: "Quintus Ennius", focus: "web", year: "3rd year" },
-    { name: "Lucius Cornelius", focus: "pwn", year: "3rd year" },
-    { name: "Titus Lucretius", focus: "reversing", year: "2nd year" },
-    { name: "Gaius Valerius", focus: "crypto", year: "2nd year" },
-    { name: "Publius Ovidius", focus: "web", year: "2nd year" },
-    { name: "Sextus Propertius", focus: "infra", year: "2nd year" },
-    { name: "Aulus Gellius", focus: "forensics", year: "1st year" },
-    { name: "Gnaeus Naevius", focus: "pwn", year: "1st year" },
-    { name: "Marcus Terentius", focus: "web", year: "1st year" },
-    { name: "Lucia Caecilia", focus: "crypto", year: "1st year" },
-  ],
-  events: [],
-  media: [],
-  design: [],
-};
-
-export function getDomainMembers(slug: string): DomainMember[] {
-  return DOMAIN_MEMBERS[slug] ?? [];
 }

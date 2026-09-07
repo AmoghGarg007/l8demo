@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Header, Footer } from "../_components/site-chrome";
-import { DOMAINS } from "./about-data";
+import { MEMBERS } from "./about-data";
+import { AboutMembers } from "./about-members";
 
 export const metadata: Metadata = {
   title: "About Us · Layer8 — PES University, ECC",
@@ -12,33 +13,6 @@ export const metadata: Metadata = {
 /* ------------------------------------------------------------------ */
 /*  content                                                            */
 /* ------------------------------------------------------------------ */
-
-const CORE_MEMBERS = [
-  {
-    number: "01",
-    name: "Alex Johnson",
-    role: "President",
-    bio: "Offensive security, CTFs and making unnecessarily complicated security projects.",
-  },
-  {
-    number: "02",
-    name: "Rohan Sharma",
-    role: "Vice President",
-    bio: "Reverse engineering, binary exploitation and whatever rabbit hole comes next.",
-  },
-  {
-    number: "03",
-    name: "Sarah Thomas",
-    role: "Technical Lead",
-    bio: "Security tooling, research and breaking APIs for educational purposes.",
-  },
-  {
-    number: "04",
-    name: "Arjun Mehta",
-    role: "CTF Lead",
-    bio: "Challenges, competitions and making sure the flags are actually where they should be.",
-  },
-];
 
 const WHAT_WE_DO = [
   {
@@ -89,6 +63,9 @@ const PHILOSOPHY = [
     text: "Tools, challenges, research and experiments turn concepts into actual skills.",
   },
 ];
+
+const CURRENT_COUNT = MEMBERS.filter((m) => m.status === "current").length;
+const CORE_COUNT = MEMBERS.filter((m) => m.core).length;
 
 /* ------------------------------------------------------------------ */
 /*  small pieces                                                       */
@@ -171,13 +148,12 @@ export default function AboutPage() {
             </p>
             <div className={bodyCopy}>
               <p>
-                We bring together students interested in cybersecurity, from
-                people taking their first steps to those already deep into
-                security research and competitive CTFs.
+                We bring together students with different interests, experience
+                levels and ways of approaching security.
               </p>
               <p>
-                Through CTFs, workshops, projects, research and competitions, we
-                create an environment where members can explore security outside
+                Through CTFs, workshops, projects, research and competitions,
+                Layer8 gives students a place to explore cybersecurity outside
                 the classroom.
               </p>
               <p>There is no prerequisite for curiosity.</p>
@@ -215,131 +191,46 @@ export default function AboutPage() {
             </p>
             <div className={bodyCopy}>
               <p>
-                Layer8 is made up of students with different interests, different
-                levels of experience and different ways of approaching security.
-              </p>
-              <p>
                 Some of us break web applications. Some reverse binaries. Some
                 build tools. Some are still figuring out what a buffer overflow
                 is.
               </p>
               <p>That&apos;s exactly how it should be.</p>
+              <p>
+                Layer8 is built around people teaching people, sharing what they
+                discover and giving each other room to get better.
+              </p>
             </div>
           </div>
 
-          {/* core */}
-          <div className="mt-16 md:mt-24" id="core">
-            <div className="mb-7 flex items-end justify-between">
-              <div>
-                <p className="kicker">{"// core"}</p>
-                <h3 className="mt-2.5 font-display font-bold text-[1.35rem]">
-                  People keeping the machine running.
-                </h3>
-              </div>
-              <span className="shrink-0 pl-4 text-fg-faint text-[0.65rem] tracking-[0.1em] uppercase max-sm:hidden">
-                [ core_team ]
-              </span>
-            </div>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border border border-border">
-              {CORE_MEMBERS.map((m) => (
-                <article
-                  key={m.number}
-                  className="flex flex-col p-[1.4rem] bg-bg-2 min-h-[18rem]"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-fg-faint text-[0.7rem]">
-                      {m.number}
-                    </span>
-                    <span className="text-fg-faint text-[0.6rem] tracking-[0.08em] uppercase">
-                      <span className="text-accent">&#9679;</span> active
-                    </span>
-                  </div>
-
-                  <div className="mt-14">
-                    <h4 className="font-display font-bold text-[1.15rem]">
-                      {m.name}
-                    </h4>
-                    <span className="mt-1.5 block text-accent text-[0.65rem] tracking-[0.12em] uppercase">
-                      {m.role}
-                    </span>
-                    <p className="mt-5 text-fg-dim text-[0.78rem] leading-[1.7]">
-                      {m.bio}
-                    </p>
-                  </div>
-
-                  <a
-                    href="https://github.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-auto pt-6 text-fg text-[0.72rem] hover:text-accent transition-colors"
-                  >
-                    &gt; github
-                  </a>
-                </article>
-              ))}
-            </div>
-          </div>
-
-          {/* members */}
-          <div className="mt-16 md:mt-20">
+          {/* members — core + community */}
+          <div className="mt-16 md:mt-24" id="members">
             <div className="mb-7 flex items-end justify-between">
               <div>
                 <p className="kicker">{"// members"}</p>
                 <h3 className="mt-2.5 font-display font-bold text-[1.35rem]">
-                  The rest of the layer.
+                  The people behind Layer8.
                 </h3>
               </div>
               <span className="shrink-0 pl-4 text-fg-faint text-[0.65rem] tracking-[0.1em] uppercase max-sm:hidden">
-                [ community ]
+                [ club + domains ]
               </span>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 lg:gap-24 items-center">
-              <div className={bodyCopy}>
-                <p>
-                  The core might keep things moving, but Layer8 is everyone who
-                  shows up, asks questions, solves challenges and shares what they
-                  learned afterwards.
-                </p>
-                <p>
-                  You don&apos;t have to be an expert to contribute. You just
-                  have to be willing to learn and help someone else learn too.
-                </p>
-              </div>
+            <p className="mb-10 max-w-2xl text-fg-dim font-mono text-[0.87rem] leading-[1.85]">
+              The people running the machine, the people building it, and
+              everyone who keeps the layer alive.
+            </p>
 
-              <div className="term w-full">
-                <div className="term-bar">
-                  <span className="term-dot" />
-                  <span className="term-dot" />
-                  <span className="term-dot" />
-                  <span className="ml-2 text-xs text-fg-dim">
-                    layer8 — ~/members
-                  </span>
-                </div>
-                <div className="term-body font-mono">
-                  <div>
-                    <span className="prompt">$</span> members --count
-                  </div>
-                  <div className="text-fg font-medium">100+</div>
-                  <div className="mt-3">
-                    <span className="prompt">$</span> experience --range
-                  </div>
-                  <div className="text-fg font-medium">beginner &rarr; expert</div>
-                  <div className="mt-3">
-                    <span className="prompt">$</span> status
-                  </div>
-                  <div className="text-fg font-medium">growing</div>
-                </div>
-              </div>
-            </div>
+            <AboutMembers />
 
-            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
+            {/* stats */}
+            <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
               {[
-                ["100+", "members"],
-                ["08", "domains"],
-                ["50+", "CTF challenges"],
-                ["20+", "projects"],
+                [`${CURRENT_COUNT}`, "current members"],
+                [`${CORE_COUNT}`, "core roles"],
+                ["08", "security domains"],
+                ["∞", "rabbit holes"],
               ].map(([value, label]) => (
                 <div key={label} className="flex flex-col p-6 bg-bg">
                   <strong className="text-accent font-display font-bold text-[1.6rem]">
@@ -349,49 +240,6 @@ export default function AboutPage() {
                     {label}
                   </span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* domains — full roster per domain */}
-          <div className="mt-16 md:mt-20" id="domains">
-            <div className="mb-7 flex items-end justify-between">
-              <div>
-                <p className="kicker">{"// domains"}</p>
-                <h3 className="mt-2.5 font-display font-bold text-[1.35rem]">
-                  Where the work happens.
-                </h3>
-              </div>
-              <span className="shrink-0 pl-4 text-fg-faint text-[0.65rem] tracking-[0.1em] uppercase max-sm:hidden">
-                [ rosters ]
-              </span>
-            </div>
-
-            <p className="mb-6 max-w-2xl text-fg-dim font-mono text-[0.87rem] leading-[1.85]">
-              Each domain has a head and a vice-head, and a roster of members
-              behind them. Open one for the full list.
-            </p>
-
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {DOMAINS.map((d) => (
-                <Link
-                  key={d.slug}
-                  href={`/about/${d.slug}`}
-                  className="card text-left flex flex-col transition-colors hover:border-accent"
-                >
-                  <span className="font-mono text-[0.7rem] text-fg-faint">
-                    drwxr-xr-x
-                  </span>
-                  <span className="mt-2 block font-display font-bold text-lg text-fg">
-                    {d.name}
-                  </span>
-                  <span className="mt-1 block text-xs text-fg-dim line-clamp-3">
-                    {d.tagline}
-                  </span>
-                  <span className="mt-3 block font-mono text-xs text-accent">
-                    {`$ cd ~/about/${d.slug}`}
-                  </span>
-                </Link>
               ))}
             </div>
           </div>
@@ -512,7 +360,7 @@ export default function AboutPage() {
                 alt=""
                 aria-hidden
                 className="ccncs-mark"
-                />
+              />
               <span className="font-display font-bold text-base tracking-tight text-fg">
                 CCNCS
               </span>
