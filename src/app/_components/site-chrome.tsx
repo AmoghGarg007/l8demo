@@ -29,6 +29,7 @@ export const ROUTES: Partial<Record<(typeof NAV)[number], string>> = {
   Sandbox: "/sandbox",
   Domains: "/domains",
   "Legacy/Alumni": "/legacy",
+  "Hall of Fame": "/hall-of-fame",
   Recruitments: "/recruitments",
   "About Us": "/about",
 };
