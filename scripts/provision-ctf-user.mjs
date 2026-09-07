@@ -18,8 +18,8 @@ const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 if (!/^[A-Z0-9]{6,24}$/.test(srn) || !displayName || !/^[a-z0-9_-]{3,24}$/.test(handle)) {
   throw new Error("Usage: npm run ctf:provision-user -- --srn=PES... --name=\"Student Name\" --handle=alias [--role=student|host|admin]");
 }
-if (!url || !serviceKey || !password || password.length < 8) {
-  throw new Error("Set NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, and CTF_INITIAL_PASSWORD (8+ characters).");
+if (!url || !serviceKey || !password || password.length < 10) {
+  throw new Error("Set NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, and CTF_INITIAL_PASSWORD (10+ characters).");
 }
 if (!["student", "host", "admin"].includes(role)) throw new Error("Invalid role.");
 
@@ -45,5 +45,13 @@ if (profileError) {
   await supabase.auth.admin.deleteUser(data.user.id);
   throw profileError;
 }
+
+await supabase.from("ctf_audit_log").insert({
+  actor_id: null,
+  action: "account.provisioned_by_script",
+  entity_type: "account",
+  entity_id: data.user.id,
+  details: { srn, role },
+});
 
 console.log(`Provisioned ${srn} as ${role}. Ask the student to change the temporary password when that flow is enabled.`);

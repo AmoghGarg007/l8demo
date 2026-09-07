@@ -5,8 +5,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/config";
 import { isValidSrn, srnToAuthEmail } from "../../lib/ctf-auth";
-import { createAdminClient } from "../../lib/supabase/admin";
-import { createHash, timingSafeEqual } from "node:crypto";
+import { createHash } from "node:crypto";
 
 export type AuthState = { error: string | null };
 export type FlagState = {
@@ -88,59 +87,41 @@ export async function submitFlag(
   const { data: authData } = await supabase.auth.getUser();
   if (!authData.user) return { status: "error", message: "Sign in before submitting a flag." };
 
-  const admin = createAdminClient();
-  const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString();
-  const { count } = await admin
-    .from("ctf_submissions")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", authData.user.id)
-    .gte("submitted_at", oneMinuteAgo);
-  if ((count ?? 0) >= 8) return { status: "error", message: "Rate limit reached. Wait one minute and try again." };
+  const { data, error } = await supabase
+    .rpc("submit_ctf_flag", {
+      p_challenge_id: challengeId,
+      p_submitted_hash: hashFlag(flag),
+    })
+    .single();
 
-  const [{ data: challenge }, { data: secret }, { data: existingSolve }] = await Promise.all([
-    admin
-      .from("ctf_challenges")
-      .select("id,points,published,ctf_weeks!inner(starts_at,ends_at,published)")
-      .eq("id", challengeId)
-      .eq("published", true)
-      .maybeSingle(),
-    admin.from("ctf_challenge_secrets").select("flag_hash").eq("challenge_id", challengeId).maybeSingle(),
-    admin.from("ctf_solves").select("challenge_id").eq("user_id", authData.user.id).eq("challenge_id", challengeId).maybeSingle(),
-  ]);
-
-  if (existingSolve) return { status: "solved", message: "You already own this flag." };
-  if (!challenge || !secret) return { status: "error", message: "This challenge is unavailable." };
-
-  const week = challenge.ctf_weeks as unknown as { starts_at: string; ends_at: string; published: boolean };
-  const now = Date.now();
-  if (!week.published || now < new Date(week.starts_at).getTime() || now > new Date(week.ends_at).getTime()) {
-    return { status: "error", message: "This operation is not accepting submissions." };
+  if (error || !data) {
+    return { status: "error", message: "The submission service is unavailable. Try again." };
   }
 
-  const submittedHash = hashFlag(flag);
-  const expected = Buffer.from(secret.flag_hash, "hex");
-  const actual = Buffer.from(submittedHash, "hex");
-  const correct = expected.length === actual.length && timingSafeEqual(expected, actual);
-
-  await admin.from("ctf_submissions").insert({
-    user_id: authData.user.id,
-    challenge_id: challengeId,
-    submitted_hash: submittedHash,
-    correct,
-  });
-
-  if (!correct) return { status: "wrong", message: "Flag rejected. Inspect the target and try again." };
-
-  const elapsedSeconds = Math.max(0, Math.floor((now - new Date(week.starts_at).getTime()) / 1000));
-  const { error } = await admin.from("ctf_solves").insert({
-    user_id: authData.user.id,
-    challenge_id: challengeId,
-    points_awarded: challenge.points,
-    elapsed_seconds: elapsedSeconds,
-  });
-  if (error && error.code !== "23505") return { status: "error", message: "The flag was valid, but the solve could not be recorded." };
+  const result = data as { outcome: string; awarded_points: number };
+  if (result.outcome === "rate_limited") {
+    return { status: "error", message: "Rate limit reached. Wait one minute and try again." };
+  }
+  if (result.outcome === "unauthenticated") {
+    return { status: "error", message: "Sign in before submitting a flag." };
+  }
+  if (result.outcome === "unavailable") {
+    return { status: "error", message: "This operation is not accepting submissions." };
+  }
+  if (result.outcome === "solved") {
+    return { status: "solved", message: "You already own this flag." };
+  }
+  if (result.outcome === "wrong") {
+    return { status: "wrong", message: "Flag rejected. Inspect the target and try again." };
+  }
+  if (result.outcome !== "correct") {
+    return { status: "error", message: "The submission returned an unexpected result." };
+  }
 
   revalidatePath("/weekly-ctfs");
-  revalidatePath(`/weekly-ctfs/${slug}`);
-  return { status: "correct", message: `Flag accepted. +${challenge.points} points.` };
+  if (/^[a-z0-9-]+$/.test(slug)) revalidatePath(`/weekly-ctfs/${slug}`);
+  return {
+    status: "correct",
+    message: `Flag accepted. +${result.awarded_points} points.`,
+  };
 }
