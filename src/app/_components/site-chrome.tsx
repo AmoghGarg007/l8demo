@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /* ------------------------------------------------------------------ */
 /*  shared nav data                                                    */
@@ -103,18 +103,39 @@ function NavItem({
 export function Header({ current }: { current?: string }) {
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuClosing, setMenuClosing] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<number | undefined>(undefined);
+
+  // menuOpen drives the open animation; menuClosing keeps the panel
+  // mounted long enough to play the close animation.
+  const menuRender = menuOpen || menuClosing;
+
+  const openMenu = useCallback(() => {
+    window.clearTimeout(closeTimer.current);
+    setMenuClosing(false);
+    setMenuOpen(true);
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+    setMenuClosing(true);
+    window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => setMenuClosing(false), 160);
+  }, []);
+
+  useEffect(() => () => window.clearTimeout(closeTimer.current), []);
 
   // close the desktop "menu" dropdown on outside click / Escape
   useEffect(() => {
     if (!menuOpen) return;
     function onPointer(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
+        closeMenu();
       }
     }
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setMenuOpen(false);
+      if (e.key === "Escape") closeMenu();
     }
     document.addEventListener("mousedown", onPointer);
     document.addEventListener("keydown", onKey);
@@ -122,7 +143,7 @@ export function Header({ current }: { current?: string }) {
       document.removeEventListener("mousedown", onPointer);
       document.removeEventListener("keydown", onKey);
     };
-  }, [menuOpen]);
+  }, [menuOpen, closeMenu]);
 
   const currentInMenu =
     current !== undefined &&
@@ -148,7 +169,7 @@ export function Header({ current }: { current?: string }) {
                 aria-haspopup="menu"
                 aria-expanded={menuOpen}
                 data-current={currentInMenu || undefined}
-                onClick={() => setMenuOpen((v) => !v)}
+                onClick={() => (menuOpen ? closeMenu() : openMenu())}
               >
                 menu
                 <span
@@ -161,19 +182,25 @@ export function Header({ current }: { current?: string }) {
                 </span>
               </button>
 
-              {menuOpen && (
+              {menuRender && (
                 <div
                   role="menu"
-                  className="absolute right-0 top-full mt-3 min-w-[13rem] border border-border bg-bg-2 p-1.5 shadow-[0_18px_40px_-28px_var(--glow)]"
+                  data-open={menuOpen}
+                  className="menu-dd absolute right-0 top-full mt-3 min-w-[13rem] border border-border bg-bg-2 p-1.5 shadow-[0_18px_40px_-28px_var(--glow)]"
                 >
-                  {SECONDARY.map((item) => (
-                    <NavItem
+                  {SECONDARY.map((item, i) => (
+                    <div
                       key={item}
-                      item={item}
-                      current={current}
-                      className="block px-3 py-1.5"
-                      onNavigate={() => setMenuOpen(false)}
-                    />
+                      className="menu-dd-item"
+                      style={{ animationDelay: `${i * 26}ms` }}
+                    >
+                      <NavItem
+                        item={item}
+                        current={current}
+                        className="block px-3 py-1.5"
+                        onNavigate={closeMenu}
+                      />
+                    </div>
                   ))}
                 </div>
               )}
@@ -299,7 +326,8 @@ export function Footer({ current }: { current?: string }) {
         <div className="rule my-5" />
 
         <div className="text-xs text-fg-dim">
-          © {new Date().getFullYear()} Layer8 · built in the 8th layer
+          © {new Date().getFullYear()} Layer8 · built by Layer8 · in the 8th
+          layer
         </div>
       </div>
     </footer>
