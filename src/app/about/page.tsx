@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Header, Footer } from "../_components/site-chrome";
-import { CORE_MEMBERS, MEMBERS } from "./about-data";
+import { MEMBERS } from "./about-data";
 import { AboutMembers } from "./about-members";
 
 export const metadata: Metadata = {
@@ -65,6 +65,7 @@ const PHILOSOPHY = [
 ];
 
 const CURRENT_COUNT = MEMBERS.filter((m) => m.status === "current").length;
+const CORE_COUNT = MEMBERS.filter((m) => m.core).length;
 
 /* ------------------------------------------------------------------ */
 /*  small pieces                                                       */
@@ -227,7 +228,7 @@ export default function AboutPage() {
             <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
               {[
                 [`${CURRENT_COUNT}`, "current members"],
-                [`${CORE_MEMBERS.length}`, "core roles"],
+                [`${CORE_COUNT}`, "core roles"],
                 ["08", "security domains"],
                 ["∞", "rabbit holes"],
               ].map(([value, label]) => (

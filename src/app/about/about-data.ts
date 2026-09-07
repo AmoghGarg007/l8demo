@@ -1,10 +1,10 @@
 /**
- * Layer8 member roster for /about (and /about/[domain]).
+ * Layer8 member roster for /about and /legacy.
  *
  * Updated from the AboutLateL8 member sheet — all current members plus the
  * four alumni kept for /legacy. Roles/domains are as given on the sheet.
- * `core: true` marks head / vice-head / webmaster / architect-style people
- * shown in the "core" group on /about.
+ * `core: true` marks the club head / vice-head and each domain's head /
+ * vice-head — the people shown as large cards on /about.
  */
 
 export type MemberGroup = "Club" | "Tech" | "Events" | "Media" | "Design";
@@ -604,31 +604,6 @@ export function profileHref(m: Member): string | undefined {
   if (m.email) return `mailto:${m.email}`;
   return undefined;
 }
-
-/** Core group on /about — head / vice-head / webmaster / architect people. */
-export const CORE_SLUGS: string[] = [
-  // head then vice-head, per domain
-  "sriya-chandu", // Club
-  "archita-agrawal",
-  "shubhika-pradeep", // Tech
-  "amogh-garg",
-  "blason-raj", // Events
-  "saakshi-mohanty",
-  "sohan-mr", // Media
-  "krithika-swaminathan",
-  "shreya-ajith", // Design
-  "riddhima-agarwal",
-  "arnav-deva", // Webmaster (Tech)
-];
-
-export const CORE_MEMBERS: Member[] = CORE_SLUGS.map(
-  (s) => MEMBERS.find((m) => m.slug === s)!,
-).filter(Boolean);
-
-/** Everyone else who's currently active (the "members" group). */
-export const COMMUNITY_MEMBERS: Member[] = MEMBERS.filter(
-  (m) => m.status === "current" && !m.core,
-);
 
 /** Alumni — shown on /legacy, not /about. */
 export const ALUMNI: Member[] = MEMBERS.filter((m) => m.status === "alumni").sort(
