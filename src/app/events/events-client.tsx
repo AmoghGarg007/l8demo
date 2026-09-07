@@ -67,8 +67,8 @@ function Detail({ event }: { event: L8Event }) {
 
       <dl className="mt-5 border border-border divide-y divide-border font-mono text-xs">
         {meta.map(([k, v]) => (
-          <div key={k} className="flex gap-3 px-3 py-2">
-            <dt className="shrink-0 w-24 text-fg-faint uppercase tracking-[0.1em]">
+          <div key={k} className="flex gap-4 px-3 py-2">
+            <dt className="shrink-0 w-32 pr-3 text-fg-faint uppercase tracking-[0.1em]">
               {k}
             </dt>
             <dd className="text-fg-dim">{v}</dd>
@@ -88,7 +88,7 @@ function Detail({ event }: { event: L8Event }) {
         {event.status === "ARCHIVED" ? (
           <p className="text-xs text-fg-faint font-mono">
             {
-              "// this operation has concluded — slides and writeups live in the Layer8 GitHub archives."
+              "// this event has concluded — slides and writeups live in the Layer8 GitHub archives."
             }
           </p>
         ) : (
@@ -192,7 +192,7 @@ export default function EventsClient() {
             <div>
               <span className="tag">catalog</span>
               <h2 className="mt-3 font-display font-bold text-2xl md:text-3xl">
-                Operations &amp; events
+                Event catalog
               </h2>
               <p
                 className="mt-2 text-[0.72rem] tracking-[0.14em] uppercase text-fg-faint"
@@ -295,13 +295,13 @@ export default function EventsClient() {
 
             {shown.length === 0 && (
               <p className="col-span-full p-6 border border-dashed border-border text-sm text-fg-dim">
-                No operations or events match your filter query.
+                No events match your filter query.
               </p>
             )}
           </div>
 
           <div ref={detailRef} className="mt-8 scroll-mt-24">
-            <p className="kicker mb-3">{"// operations log"}</p>
+            <p className="kicker mb-3">{"// event log"}</p>
             <Detail event={event} />
           </div>
         </section>
