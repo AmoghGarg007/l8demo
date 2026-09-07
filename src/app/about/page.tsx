@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Header, Footer } from "../_components/site-chrome";
-import {
-  COMMUNITY_MEMBERS,
-  CORE_MEMBERS,
-  MEMBERS,
-  type Member,
-} from "./about-data";
-import { MemberAvatar } from "./member-avatar";
+import { CORE_MEMBERS, MEMBERS } from "./about-data";
+import { AboutMembers } from "./about-members";
 
 export const metadata: Metadata = {
   title: "About Us · Layer8 — PES University, ECC",
@@ -103,98 +98,6 @@ const bigText =
   "max-w-xl font-display font-medium text-fg leading-[1.25] tracking-[-0.025em] text-[clamp(1.45rem,3vw,2.15rem)]";
 const bodyCopy =
   "max-w-xl text-fg-dim font-mono text-[0.87rem] leading-[1.85] space-y-5";
-
-function profileHref(m: Member): string | undefined {
-  if (m.portfolio) return m.portfolio;
-  if (m.github) return `https://github.com/${m.github}`;
-  if (m.linkedin) return `https://www.linkedin.com/in/${m.linkedin}`;
-  if (m.email) return `mailto:${m.email}`;
-  return undefined;
-}
-
-function MemberCard({
-  m,
-  idx,
-  core,
-}: {
-  m: Member;
-  idx: number;
-  core?: boolean;
-}) {
-  const href = profileHref(m);
-  return (
-    <article className="card flex gap-3.5 p-4">
-      <MemberAvatar
-        member={m}
-        className={
-          core ? "w-16 h-16 text-lg self-start" : "w-12 h-12 text-sm self-start"
-        }
-      />
-
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <div className="flex items-center justify-between gap-2 text-[0.55rem] tracking-[0.12em] uppercase">
-          <span className="truncate text-accent">{m.role}</span>
-          <span className="shrink-0 text-fg-faint">
-            {core ? "core" : String(idx).padStart(2, "0")}
-          </span>
-        </div>
-
-        <h4 className="font-display font-bold text-[0.92rem] leading-tight text-fg">
-          {m.name}
-        </h4>
-
-        <div className="flex flex-wrap items-center gap-x-1.5 text-[0.57rem] tracking-[0.08em] uppercase text-fg-faint">
-          {m.alias && (
-            <>
-              <span>@{m.alias}</span>
-              <span className="text-fg-faint/50">·</span>
-            </>
-          )}
-          <span>{m.group}</span>
-          <span className="text-fg-faint/50">·</span>
-          <span>{m.year ?? "—"}</span>
-        </div>
-
-        {m.bio && (
-          <p className="mt-0.5 line-clamp-2 text-[0.72rem] leading-snug text-fg-dim">
-            &ldquo;{m.bio}&rdquo;
-          </p>
-        )}
-
-        {href && (
-          <a
-            href={href}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-auto pt-1.5 text-[0.66rem] text-accent hover:underline"
-          >
-            &gt; profile
-          </a>
-        )}
-      </div>
-    </article>
-  );
-}
-
-function GroupHeading({
-  label,
-  desc,
-}: {
-  label: string;
-  desc: string;
-}) {
-  return (
-    <div className="mb-6 flex items-center gap-4">
-      <span className="shrink-0 font-mono text-[0.7rem] tracking-[0.12em] uppercase text-fg-faint">
-        {label}
-      </span>
-      <span className="h-px flex-1 bg-border" />
-      <span className="shrink-0 text-[0.62rem] tracking-[0.1em] uppercase text-fg-faint max-sm:hidden">
-        {desc}
-      </span>
-    </div>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /*  page                                                               */
@@ -309,7 +212,7 @@ export default function AboutPage() {
                 </h3>
               </div>
               <span className="shrink-0 pl-4 text-fg-faint text-[0.65rem] tracking-[0.1em] uppercase max-sm:hidden">
-                [ core + community ]
+                [ club + domains ]
               </span>
             </div>
 
@@ -318,30 +221,7 @@ export default function AboutPage() {
               everyone who keeps the layer alive.
             </p>
 
-            {/* core */}
-            <GroupHeading
-              label="00 / core"
-              desc="people keeping the machine running"
-            />
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {CORE_MEMBERS.map((m, i) => (
-                <MemberCard key={m.slug} m={m} idx={i + 1} core />
-              ))}
-            </div>
-
-            {/* community */}
-            <div className="mt-14">
-              <GroupHeading label="01 / members" desc="the rest of the layer" />
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {COMMUNITY_MEMBERS.map((m, i) => (
-                  <MemberCard
-                    key={m.slug}
-                    m={m}
-                    idx={CORE_MEMBERS.length + i + 1}
-                  />
-                ))}
-              </div>
-            </div>
+            <AboutMembers />
 
             {/* stats */}
             <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
