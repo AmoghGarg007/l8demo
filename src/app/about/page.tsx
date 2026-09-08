@@ -7,7 +7,7 @@ import { AboutMembers } from "./about-members";
 export const metadata: Metadata = {
   title: "About Us · Layer8 — PES University, ECC",
   description:
-    "Layer8 is the student-driven cybersecurity community at PES University, Electronic City Campus — CTFs, workshops, projects and research.",
+    "Layer8 is the student-driven cybersecurity community at PES University, Electronic City Campus — CTFs, workshops, blogs and competitions.",
 };
 
 /* ------------------------------------------------------------------ */
@@ -29,33 +29,6 @@ const WHAT_WE_DO = [
     label: "~/workshops",
     title: "Workshops & guest speakers",
     text: "Regular technical sessions and talks from people working in the field — concepts moving from slides into terminals.",
-  },
-];
-
-const PHILOSOPHY = [
-  {
-    number: "01",
-    label: "learn",
-    title: "Learn by doing.",
-    text: "Security makes more sense when you can see the failure yourself. We favour hands-on exploration over memorising attack names.",
-  },
-  {
-    number: "02",
-    label: "break",
-    title: "Break things.",
-    text: "Understanding how something breaks is often the fastest way to understand how it works.",
-  },
-  {
-    number: "03",
-    label: "share",
-    title: "Share what you learn.",
-    text: "A solved challenge is useful. A writeup that helps someone else solve the next one is better.",
-  },
-  {
-    number: "04",
-    label: "build",
-    title: "Build, don't just consume.",
-    text: "Tools, challenges, research and experiments turn concepts into actual skills.",
   },
 ];
 
@@ -93,7 +66,7 @@ function SectionHeading({
 const bigText =
   "max-w-xl font-display font-medium text-fg leading-[1.25] tracking-[-0.025em] text-[clamp(1.45rem,3vw,2.15rem)]";
 const bodyCopy =
-  "max-w-xl text-fg-dim font-mono text-[0.87rem] leading-[1.85] space-y-5";
+  "max-w-xl text-fg-dim font-mono text-[0.87rem] leading-[1.85] space-y-4";
 
 /* ------------------------------------------------------------------ */
 /*  page                                                               */
@@ -106,17 +79,22 @@ export default function AboutPage() {
 
       <main className="flex-1">
         {/* hero */}
-        <section className="wrap flex items-center min-h-[72vh] pt-24 pb-20">
+        <section className="wrap flex items-center min-h-[62vh] pt-24 pb-16">
           <div className="w-full">
             <p className="kicker">{"// about_layer8"}</p>
-            <h1 className="my-5 md:my-8 font-display font-bold leading-[0.9] tracking-[-0.06em] text-[clamp(3.8rem,11vw,7.5rem)]">
+            <h1 className="my-5 md:my-7 font-display font-bold leading-[0.9] tracking-[-0.06em] text-[clamp(3.8rem,11vw,7.5rem)]">
               The human
               <br />
               layer<span className="text-accent">.</span>
             </h1>
             <p className="max-w-2xl text-fg text-[clamp(0.95rem,2vw,1.1rem)] leading-relaxed">
-              The cybersecurity community at PES University, Electronic City
-              Campus.
+              The OSI model stops at seven layers, physical up to application.
+              Layer 8 is the informal one on top — the human at the keyboard.
+            </p>
+            <p className="mt-3 max-w-2xl text-sm text-fg-dim leading-relaxed">
+              User error, social engineering, every human-shaped mistake in
+              security lives there. It&apos;s also the name of the cybersecurity
+              community at PES University, Electronic City Campus.
             </p>
             <div className="mt-6 flex flex-wrap gap-2.5 text-[0.68rem] tracking-[0.12em] uppercase text-fg-faint">
               <span>security</span>
@@ -128,6 +106,10 @@ export default function AboutPage() {
           </div>
         </section>
 
+        <div className="wrap">
+          <div className="rule" />
+        </div>
+
         {/* what we are */}
         <section className="wrap py-20">
           <SectionHeading
@@ -138,20 +120,20 @@ export default function AboutPage() {
 
           <div className="grid md:grid-cols-2 gap-12 lg:gap-32 items-start">
             <p className={bigText}>
-              Layer8 is a student-driven cybersecurity community built around
-              learning by actually doing.
+              A student-driven cybersecurity community built around learning by
+              actually doing.
             </p>
             <div className={bodyCopy}>
               <p>
-                We bring together students with different interests, experience
-                levels and ways of approaching security.
+                Students at every experience level, coming at security from every
+                direction — web, crypto, reversing, pwn and everything around
+                them.
               </p>
               <p>
-                Through CTFs, workshops, projects, research and competitions,
-                Layer8 gives students a place to explore cybersecurity outside
-                the classroom.
+                CTFs, workshops, blogs and competitions: a place to explore
+                cybersecurity outside the classroom. The only prerequisite is
+                curiosity.
               </p>
-              <p>There is no prerequisite for curiosity.</p>
             </div>
           </div>
 
@@ -172,6 +154,10 @@ export default function AboutPage() {
           </div>
         </section>
 
+        <div className="wrap">
+          <div className="rule" />
+        </div>
+
         {/* who we are */}
         <section className="wrap py-20 md:pt-24" id="who-we-are">
           <SectionHeading kicker="// who_we_are" title="Who we are." index="02" />
@@ -186,19 +172,18 @@ export default function AboutPage() {
             </p>
             <div className={bodyCopy}>
               <p>
-                Some of us break web applications. Some reverse binaries. Some
-                build tools. Some are still figuring out what a buffer overflow
-                is.
+                Some break web applications, some reverse binaries, some are
+                still figuring out what a buffer overflow is. That&apos;s exactly
+                how it should be.
               </p>
-              <p>That&apos;s exactly how it should be.</p>
               <p>
-                Layer8 is built around people teaching people, sharing what they
-                discover and giving each other room to get better.
+                Layer8 runs on people teaching people and sharing what they
+                find.
               </p>
             </div>
           </div>
 
-          {/* members — core + community */}
+          {/* members */}
           <div className="mt-16 md:mt-24" id="members">
             <div className="mb-7 flex items-end justify-between">
               <div>
@@ -240,51 +225,35 @@ export default function AboutPage() {
           </div>
         </section>
 
+        <div className="wrap">
+          <div className="rule" />
+        </div>
+
         {/* philosophy */}
         <section className="wrap py-20 md:pt-24" id="layer8-phil">
           <SectionHeading
             kicker="// layer8_phil"
-            title="Layer8 philosophy."
+            title="How we work."
             index="03"
           />
 
-          <div className="mb-12 grid md:grid-cols-2 gap-12 lg:gap-32">
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-32 items-start">
             <p className={bigText}>
               Curiosity first.
               <br />
               Credentials later.
             </p>
-            <p className="max-w-xl text-fg-dim font-mono text-[0.87rem] leading-[1.85]">
-              We believe cybersecurity is best learned through experimentation,
-              failure and sharing what you discover.
-            </p>
+            <div className={bodyCopy}>
+              <p>
+                Security makes more sense once you&apos;ve seen the failure
+                yourself. We favour hands-on exploration over memorising attack
+                names, and a solved challenge matters less than the writeup that
+                helps the next person solve it.
+              </p>
+            </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
-            {PHILOSOPHY.map((item) => (
-              <article
-                key={item.number}
-                className="card flex flex-col min-h-[14.5rem]"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-fg-faint text-[0.7rem]">
-                    {item.number}
-                  </span>
-                  <span className="text-accent text-[0.68rem] tracking-[0.14em] uppercase">
-                    / {item.label}
-                  </span>
-                </div>
-                <h3 className="mt-10 font-display font-bold text-[1.2rem]">
-                  {item.title}
-                </h3>
-                <p className="mt-3 text-fg-dim text-[0.82rem] leading-[1.75]">
-                  {item.text}
-                </p>
-              </article>
-            ))}
-          </div>
-
-          <div className="term mt-8">
+          <div className="term mt-12">
             <div className="term-bar">
               <span className="term-dot" />
               <span className="term-dot" />
@@ -313,8 +282,12 @@ export default function AboutPage() {
           </div>
         </section>
 
+        <div className="wrap">
+          <div className="rule" />
+        </div>
+
         {/* final cta */}
-        <section className="wrap pt-28 pb-36">
+        <section className="wrap pt-24 pb-32">
           <p className="kicker">{"// find_your_layer"}</p>
           <h2 className="my-4 md:mb-6 font-display font-bold leading-[0.95] tracking-[-0.05em] text-[clamp(2.8rem,7vw,5.5rem)]">
             There is always
@@ -326,7 +299,7 @@ export default function AboutPage() {
             you&apos;re capable of.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/#top" className="btn btn-solid">
+            <Link href="/recruitments" className="btn btn-solid">
               &gt; join_layer8
             </Link>
             <Link href="/weekly-ctfs" className="btn">
