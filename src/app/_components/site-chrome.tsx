@@ -326,8 +326,7 @@ export function Footer({ current }: { current?: string }) {
         <div className="rule my-5" />
 
         <div className="text-xs text-fg-dim">
-          © {new Date().getFullYear()} Layer8 · built by Layer8 · in the 8th
-          layer
+          © {new Date().getFullYear()} Layer8 · built by Layer8
         </div>
       </div>
     </footer>
