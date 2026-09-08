@@ -21,21 +21,6 @@ const WHAT_WE_DO = [
     text: "A fresh challenge set on a regular cycle, spanning every domain of security — a few hours on the clock, hosted on our own platform.",
   },
   {
-    label: "~/cyber-week",
-    title: "Cybersecurity Week",
-    text: "A week built around security: hands-on red-team workshops from basics to advanced, an industry visit, and a simulated corporate environment to break into.",
-  },
-  {
-    label: "~/projects",
-    title: "Project Lead",
-    text: "Members pitch a security project, build a team around it and take it to completion — real hands-on experience, and something real for the resume.",
-  },
-  {
-    label: "~/bootcamp",
-    title: "Bootcamp",
-    text: "A one-to-two week crash course run by members, covering the fundamentals of cybersecurity from the ground up for newcomers.",
-  },
-  {
     label: "~/blogs",
     title: "Blogs & Tool of the Week",
     text: "A running series where members break down security tools and new developments, beginner to advanced.",
