@@ -17,23 +17,33 @@ export const metadata: Metadata = {
 const WHAT_WE_DO = [
   {
     label: "~/ctfs",
-    title: "Capture the Flag",
-    text: "Challenges designed to make you think, break things and learn something new along the way.",
+    title: "CTF contests",
+    text: "A fresh challenge set on a regular cycle, spanning every domain of security — a few hours on the clock, hosted on our own platform.",
   },
   {
-    label: "~/workshops",
-    title: "Workshops",
-    text: "Technical sessions where concepts move from slides into terminals.",
+    label: "~/cyber-week",
+    title: "Cybersecurity Week",
+    text: "A week built around security: hands-on red-team workshops from basics to advanced, an industry visit, and a simulated corporate environment to break into.",
   },
   {
     label: "~/projects",
-    title: "Projects",
-    text: "Build security tools, experiment with ideas and turn what you learn into something real.",
+    title: "Project Lead",
+    text: "Members pitch a security project, build a team around it and take it to completion — real hands-on experience, and something real for the resume.",
   },
   {
-    label: "~/research",
-    title: "Research",
-    text: "Follow interesting vulnerabilities, techniques and problems wherever the rabbit hole leads.",
+    label: "~/bootcamp",
+    title: "Bootcamp",
+    text: "A one-to-two week crash course run by members, covering the fundamentals of cybersecurity from the ground up for newcomers.",
+  },
+  {
+    label: "~/blogs",
+    title: "Blogs & Tool of the Week",
+    text: "A running series where members break down security tools and new developments, beginner to advanced.",
+  },
+  {
+    label: "~/workshops",
+    title: "Workshops & guest speakers",
+    text: "Regular technical sessions and talks from people working in the field — concepts moving from slides into terminals.",
   },
 ];
 
@@ -160,7 +170,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="mt-16 grid sm:grid-cols-2 gap-4">
+          <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {WHAT_WE_DO.map((c) => (
               <article key={c.label} className="card">
                 <span className="block text-accent text-[0.68rem] tracking-[0.14em] uppercase">
