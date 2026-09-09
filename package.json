@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "ctf:provision-user": "node scripts/provision-ctf-user.mjs",
-    "ctf:reset-password": "node scripts/reset-ctf-password.mjs",
-    "ctf:verify-backend": "node scripts/verify-ctf-backend.mjs"
+    "ctf:provision-user": "node --env-file=.env.local scripts/provision-ctf-user.mjs",
+    "ctf:reset-password": "node --env-file=.env.local scripts/reset-ctf-password.mjs",
+    "ctf:verify-backend": "node --env-file=.env.local scripts/verify-ctf-backend.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.6",

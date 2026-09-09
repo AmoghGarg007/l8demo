@@ -99,9 +99,11 @@ function NoActiveWeek() {
   return (
     <div className="flex flex-col gap-4 py-10">
       <p className="kicker">{"// no active week"}</p>
+
       <h1 className="font-display font-bold text-[clamp(1.5rem,4vw,2.5rem)] text-fg">
         No CTF Running
       </h1>
+
       <p className="text-sm text-fg-dim max-w-md">
         There is no active CTF week right now. Sessions run weekly — check
         back soon or follow Layer8 on{" "}
@@ -115,6 +117,10 @@ function NoActiveWeek() {
         </a>{" "}
         for announcements.
       </p>
+
+      <div className="mt-4 max-w-[22rem]">
+        <SignInForm />
+      </div>
     </div>
   );
 }
