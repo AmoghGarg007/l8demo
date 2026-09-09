@@ -667,6 +667,7 @@ const PHOTO_SLUGS = new Set([
   "manasi-trivedi",
   "manish-kumar-r",
   "nandana-shyam",
+  "nikhita-medayhal",
   "p-mahema-sai",
   "prajwal-m",
   "preksha-nehru",
