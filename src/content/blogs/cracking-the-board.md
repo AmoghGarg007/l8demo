@@ -1,3 +1,5 @@
+Event: sudo$rm CTF 2026
+
 Hello there, fellas! Welcome to the Layer8 weekly blog <3
 
 Cybersecurity, or "hacking," has been portrayed by mainstream media as something that can only be achieved by a prodigy tech bro — a few smart clicks here and there, and oh, we hack into a super-secret official domain just like that.
