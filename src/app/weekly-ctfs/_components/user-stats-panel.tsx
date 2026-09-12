@@ -170,6 +170,16 @@ function AuthenticatedStats({
 
       {/* ── Account actions ── */}
       <div className="flex flex-col gap-2">
+        {(viewer.role === "host" || viewer.role === "admin") && (
+          <Link
+            href="/weekly-ctfs/admin"
+            id="ctf-open-dashboard-btn"
+            className="btn btn-solid text-left text-xs w-full"
+          >
+            &gt; open_dashboard
+          </Link>
+        )}
+
         <button
           type="button"
           id="ctf-change-pw-toggle"
