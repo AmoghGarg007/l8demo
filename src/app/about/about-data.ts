@@ -530,7 +530,7 @@ export const MEMBERS: Member[] = [
     role: "Events Member",
     group: "Events",
     year: "3rd year, CSE",
-    bio: "Fist my bump, fist it!",
+    bio: "",
     status: "current",
     linkedin: "preksha-nehru-abbb5238b",
     email: "prekshanehru@gmail.com",
@@ -651,7 +651,6 @@ const PHOTO_SLUGS = new Set([
   "archita-agrawal",
   "arnav-deva",
   "arrham-jain",
-  "avrit-sharma",
   "blason-raj",
   "chatresh-ramasai-gudi",
   "deepthi-venkatesh",
@@ -688,7 +687,6 @@ const PHOTO_SLUGS = new Set([
   "sowmya-ramesh",
   "sreehaas-vangara",
   "srivaibhav-n",
-  "syed-ayaan-hasan",
   "varunavi-kumbar",
 ]);
 
@@ -723,8 +721,7 @@ export const DOMAINS: Domain[] = [
     slug: "tech",
     name: "Tech",
     group: "Tech",
-    tagline:
-      "CTF infrastructure, challenge development, tooling and running the weekly sessions.",
+    tagline: "",
     headSlug: "shubhika-pradeep",
     viceSlug: "amogh-garg",
   },

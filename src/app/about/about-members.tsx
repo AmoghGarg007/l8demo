@@ -252,9 +252,11 @@ export function AboutMembers() {
 
         {/* active domain — head + vice in a line, then the roster */}
         <div key={domain.slug} style={{ animation: "route-in 0.22s ease-out" }}>
-          <p className="mt-6 max-w-2xl text-[0.8rem] leading-relaxed text-fg-dim">
-            {domain.tagline}
-          </p>
+          {domain.tagline && (
+            <p className="mt-6 max-w-2xl text-[0.8rem] leading-relaxed text-fg-dim">
+              {domain.tagline}
+            </p>
+          )}
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 items-stretch">
             {head && <LeadCard m={head} rank="head" />}
