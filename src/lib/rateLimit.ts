@@ -43,15 +43,20 @@ function makeLimiter(windowMs: number, cleanupEveryMs: number) {
 // 5 submissions per IP per 5-second window.
 const submissionLimiter = makeLimiter(5_000, 60_000);
 
-// 5 auth failures per key (IP or email) per 15-minute window.
-const authLimiter = makeLimiter(15 * 60_000, 5 * 60_000);
+// 10 login attempts per key (IP or username) per 10-minute window. Every
+// POST to /api/auth/login counts here, not just failed ones — real
+// credentials with a mistyped password (or someone logging in/out a few
+// times while testing) shouldn't burn through the budget in a couple of
+// tries, so this is deliberately generous relative to what a credential-
+// stuffing attempt would need.
+const authLimiter = makeLimiter(10 * 60_000, 5 * 60_000);
 
 export function checkSubmissionRateLimit(ip: string): boolean {
   return submissionLimiter.hit(`submit:${ip}`, 5);
 }
 
 export function checkAuthRateLimit(ip: string, email?: string): boolean {
-  const ipOk = authLimiter.hit(`auth-ip:${ip}`, 5);
-  const emailOk = email ? authLimiter.hit(`auth-email:${email}`, 5) : true;
+  const ipOk = authLimiter.hit(`auth-ip:${ip}`, 10);
+  const emailOk = email ? authLimiter.hit(`auth-email:${email}`, 10) : true;
   return ipOk && emailOk;
 }
