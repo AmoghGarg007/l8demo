@@ -73,8 +73,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let pesuData: PesuAuthResponse;
-  try {
+  async function callPesuAuth(withKycs: boolean): Promise<PesuAuthResponse> {
     const pesuRes = await fetch("https://pesu-auth.onrender.com/authenticate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -82,10 +81,31 @@ export async function POST(req: NextRequest) {
         username: userName,
         password,
         profile: true,
-        knowYourClassAndSection: true,
+        knowYourClassAndSection: withKycs,
       }),
     });
-    pesuData = await pesuRes.json();
+    return pesuRes.json();
+  }
+
+  let pesuData: PesuAuthResponse;
+  try {
+    pesuData = await callPesuAuth(true);
+
+    // PESU Auth folds the optional "know your class and section" scrape
+    // into the same top-level `status` as the actual credential check —
+    // so a student who hasn't yet clicked "Agree & Continue" on PESU
+    // Academy's consent prompt gets a full login failure for a reason
+    // that has nothing to do with their password. If that's what this
+    // looks like, retry without it: the login itself doesn't need
+    // semester/section, only the join form's year auto-fill does, and
+    // that degrades to blank (not a crash) via extractSemesterNumber /
+    // deriveYear when it's missing.
+    if (
+      pesuData.status !== true &&
+      /know your class and section/i.test(pesuData.message ?? "")
+    ) {
+      pesuData = await callPesuAuth(false);
+    }
   } catch (err) {
     console.error("[login] PESU Auth API request failed:", err);
     return NextResponse.json(
