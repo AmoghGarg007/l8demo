@@ -120,7 +120,7 @@ export const MEMBERS: Member[] = [
     role: "Vice Head of E&O",
     group: "Events",
     year: "2nd, CS-AIML",
-    bio: "when life gets harder, i get harder",
+    bio: "What the horse considers play, the monkey considers business.",
     status: "current",
     core: true,
     linkedin: "saakshi-mohanty-417285252",
