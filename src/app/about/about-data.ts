@@ -700,15 +700,6 @@ export function getMember(slug: string): Member | undefined {
   return MEMBERS.find((m) => m.slug === slug);
 }
 
-/** Best external link for a member: portfolio → github → linkedin → email. */
-export function profileHref(m: Member): string | undefined {
-  if (m.portfolio) return m.portfolio;
-  if (m.github) return `https://github.com/${m.github}`;
-  if (m.linkedin) return `https://www.linkedin.com/in/${m.linkedin}`;
-  if (m.email) return `mailto:${m.email}`;
-  return undefined;
-}
-
 /** Alumni — shown on /legacy, not /about. */
 export const ALUMNI: Member[] = MEMBERS.filter((m) => m.status === "alumni").sort(
   (a, b) => a.name.localeCompare(b.name),
