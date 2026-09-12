@@ -13,9 +13,20 @@ export const metadata: Metadata = {
 
 function maskEmail(raw: string | null): string | null {
   if (!raw) return null;
-  const at = raw.indexOf("@");
-  if (at < 0) return null;
-  return `***@${raw.slice(at + 1)}`;
+
+  const email = raw.trim();
+  const at = email.lastIndexOf("@");
+
+  if (at <= 0 || at === email.length - 1) return null;
+
+  const localPart = email.slice(0, at);
+  const domain = email.slice(at + 1);
+
+  if (localPart.length < 6) {
+    return `${localPart.slice(0, 1)}***${localPart.slice(-1)}@${domain}`;
+  }
+
+  return `${localPart.slice(0, 2)}***${localPart.slice(-3)}@${domain}`;
 }
 
 /* ------------------------------------------------------------------ */
