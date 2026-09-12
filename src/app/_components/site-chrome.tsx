@@ -9,6 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export const NAV = [
   "Blogs",
+  "CTF Writeups",
   "Weekly CTFs",
   "Events",
   "Resources",
@@ -23,6 +24,7 @@ export const NAV = [
 // nav entries that have a real route yet — everything else is still a button.
 export const ROUTES: Partial<Record<(typeof NAV)[number], string>> = {
   Blogs: "/blogs",
+  "CTF Writeups": "/ctf-writeups",
   "Weekly CTFs": "/weekly-ctfs",
   Events: "/events",
   Resources: "/resources",
