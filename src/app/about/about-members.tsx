@@ -258,3 +258,30 @@ export function AboutMembers() {
         <div key={domain.slug} style={{ animation: "route-in 0.22s ease-out" }}>
           {domain.tagline && (
             <p className="mt-6 max-w-2xl text-[0.8rem] leading-relaxed text-fg-dim">
+              {domain.tagline}
+            </p>
+          )}
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 items-stretch">
+            {head && <LeadCard m={head} rank="head" />}
+            {vice && <LeadCard m={vice} rank="vice" />}
+          </div>
+
+          {roster.length > 0 && (
+            <div className="mt-8">
+              <RosterHeading
+                label={`${domain.name.toLowerCase()} / members`}
+                count={roster.length}
+              />
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+                {roster.map((m) => (
+                  <MiniCard key={m.slug} m={m} />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
