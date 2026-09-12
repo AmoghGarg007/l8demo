@@ -6,10 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "ctf:provision-user": "node --env-file=.env.local scripts/provision-ctf-user.mjs",
+    "ctf:reset-password": "node --env-file=.env.local scripts/reset-ctf-password.mjs",
+    "ctf:verify-backend": "node --env-file=.env.local scripts/verify-ctf-backend.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",
+    "@marsidev/react-turnstile": "1.6.1",
+    "@supabase/ssr": "^0.12.6",
+    "@supabase/supabase-js": "^2.115.0",
     "exceljs": "^4.4.0",
     "googleapis": "^178.0.0",
     "jose": "^5.0.0",
