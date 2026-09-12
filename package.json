@@ -6,9 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "ctf:provision-user": "node --env-file=.env.local scripts/provision-ctf-user.mjs",
+    "ctf:reset-password": "node --env-file=.env.local scripts/reset-ctf-password.mjs",
+    "ctf:verify-backend": "node --env-file=.env.local scripts/verify-ctf-backend.mjs"
   },
   "dependencies": {
+    "@marsidev/react-turnstile": "1.6.1",
+    "@supabase/ssr": "^0.12.6",
+    "@supabase/supabase-js": "^2.115.0",
     "next": "16.3.4",
     "react": "19.2.8",
     "react-dom": "19.2.8"
@@ -22,5 +28,8 @@
     "eslint-config-next": "16.3.4",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
   }
 }
