@@ -1,12 +1,12 @@
 /**
  * Events catalog, ported from ChatreshGudi/L8-Website-Events
  * (src/data/eventsData.js). The source's non-functional registration form was
- * dropped; LIVE/PENDING events link to the weekly sessions, ARCHIVED ones show
- * an archive note.
+ * dropped; PENDING events link to the weekly sessions, ARCHIVED ones show an
+ * archive note.
  */
 
 export type EventStatus = "LIVE" | "PENDING" | "ARCHIVED";
-export type EventCategory = "CTF" | "Workshop" | "Seminar";
+export type EventCategory = "CTF" | "Workshop" | "Seminar" | "Contest";
 
 export type L8Event = {
   id: string;
@@ -24,90 +24,63 @@ export type L8Event = {
 
 export const EVENTS: L8Event[] = [
   {
-    id: "ctf-2024",
-    title: "Layer8 CTF 2024",
-    status: "LIVE",
+    id: "deeplinks",
+    title: "Deeplinks Workshop",
+    status: "PENDING",
+    category: "Workshop",
+    date: "2026.09.30",
+    venue: "Seminar Hall, PES University",
+    desc: "Layer8 workshop diving into deep link exploitation, URL scheme hijacking, and mobile/web inter-app communication vulnerabilities.",
+    prerequisites: "Basic web knowledge, HTTP fundamentals",
+    flags: "Hands-on exploitation challenges.",
+    actionText: "register_now",
+    tags: ["workshop", "deeplinks", "mobile", "web", "exploitation"],
+  },
+  {
+    id: "sudo-rm",
+    title: "sudo$rm CTF 2026",
+    status: "ARCHIVED",
     category: "CTF",
-    date: "2024.11.15",
-    venue: "PES University, EC Campus - Auditorium & Online",
-    desc: "Initializing global capture the flag sequence. Vulnerabilities identified in sector 7G. Operators required for immediate extraction and analysis.",
-    prerequisites: "Basic networking, Linux CLI, Wireshark, Python",
-    flags: "10 flags across Web, Crypto, Forensic and Pwn categories.",
-    actionText: "join_ops",
-    tags: ["ctf", "jeopardy", "pwn", "web", "crypto"],
-  },
-  {
-    id: "workshop-crypto",
-    title: "Advanced Cryptography Workshop",
-    status: "PENDING",
-    category: "Workshop",
-    date: "2024.12.01",
-    venue: "Lab 402, CS Block",
-    desc: "Decoding modern encryption standards. Practical session on quantum-resistant algorithms, RSA attacks, and lattice-based cryptography.",
-    prerequisites: "Basic Python, Linear Algebra & Modular Arithmetic",
-    flags: "Certificate of completion upon decryption challenge success.",
-    actionText: "register_now",
-    tags: ["workshop", "crypto", "rsa", "lattice"],
-  },
-  {
-    id: "web-sec-101",
-    title: "Web Security 101: Exploiting OWASP Top 10",
-    status: "PENDING",
-    category: "Workshop",
-    date: "2024.12.18",
-    venue: "PESU EC Campus Seminar Hall",
-    desc: "Hands-on exploitation of SQL Injections, Cross-Site Scripting (XSS), CSRF, and SSRF vulnerabilities in simulated targets.",
-    prerequisites: "HTML, JavaScript, HTTP Basics, Burp Suite",
-    flags: "Live target sandbox access provided during session.",
-    actionText: "register_now",
-    tags: ["workshop", "web", "owasp", "burp-suite"],
-  },
-  {
-    id: "buffers",
-    title: "Workshop: Intro to Buffer Overflows",
-    status: "ARCHIVED",
-    category: "Workshop",
-    date: "2024.09.12",
-    venue: "Lab 301, Mechanical Block",
-    desc: "Memory manipulation techniques detailed, stack smashing protection bypasses, and shellcode injection in Linux x86.",
-    prerequisites: "C Programming, Assembly (x86/x64) fundamentals",
-    flags: "Logged archive session & binary challenges.",
+    date: "2026.04.11",
+    venue: "Seminar Hall 3 & 4, PES University",
+    desc: "Layer8 Capture The Flag contest. Participants solved multi-domain challenges across web exploitation, cryptography, OSINT, and reverse engineering across 4 progressive waves.",
+    prerequisites:
+      "Web exploitation, Cryptography, OSINT, Linux CLI & Network Analysis",
+    flags:
+      "57 teams (209 participants) competed across 4 progressive waves on a custom CTF platform with live leaderboard.",
     actionText: "view_logs",
-    tags: ["workshop", "pwn", "assembly", "buffer-overflow"],
+    tags: ["ctf", "jeopardy", "web", "crypto", "osint", "sudorm"],
   },
   {
-    id: "zerotrust",
-    title: "Seminar: Zero Trust Architecture",
+    id: "escape-the-matrix",
+    title: "Escape The Matrix",
     status: "ARCHIVED",
-    category: "Seminar",
-    date: "2024.08.20",
-    venue: "Virtual Keynote",
-    desc: "Implementing identity-based perimeter defense and micro-segmentation strategies in enterprise cloud networks.",
-    prerequisites: "Cloud Infrastructure Basics, IAM Fundamentals",
-    flags: "Logged archive session & slides available.",
+    category: "Contest",
+    date: "2025.10.11",
+    venue: "Ground Floor Classrooms 001 & 002, PES University",
+    desc: "Layer8 X Maaya flagship cybersecurity escape room event. Participants analyzed hidden clues, solved interactive murder mysteries, and decoded cryptographic ciphers.",
+    prerequisites:
+      "Beginner friendly — cipher decoding, problem solving & critical thinking",
+    flags:
+      "₹8,000 prize pool. 24 registered teams (20 active participant teams).",
     actionText: "view_logs",
-    tags: ["seminar", "cloud", "zero-trust", "architecture"],
-  },
-  {
-    id: "network-forensics",
-    title: "PCAP Analysis & Network Forensics Masterclass",
-    status: "ARCHIVED",
-    category: "Seminar",
-    date: "2024.07.05",
-    venue: "Online Interactive Stream",
-    desc: "Analyzing packet captures for C2 traffic, data exfiltration, and malware beaconing using Wireshark and TShark.",
-    prerequisites: "TCP/IP Model, Wireshark installation",
-    flags: "Recorded telemetry and PCAP dump files archived.",
-    actionText: "view_logs",
-    tags: ["seminar", "forensics", "wireshark", "network"],
+    tags: [
+      "escape-room",
+      "maaya",
+      "ciphers",
+      "crypto",
+      "puzzle",
+      "murder-mystery",
+    ],
   },
 ];
 
 export const EVENT_FILTERS = [
   "ALL",
   "LIVE",
-  "WORKSHOPS",
   "CTF",
+  "WORKSHOPS",
+  "CONTESTS",
   "SEMINARS",
   "ARCHIVED",
 ] as const;
@@ -125,6 +98,8 @@ export function matchesFilter(
       return ev.category === "Workshop";
     case "CTF":
       return ev.category === "CTF";
+    case "CONTESTS":
+      return ev.category === "Contest";
     case "SEMINARS":
       return ev.category === "Seminar";
     case "ARCHIVED":

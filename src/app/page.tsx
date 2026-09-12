@@ -107,9 +107,9 @@ function Hero() {
               &gt; weekly_ctfs
             </Link>
 
-            <button type="button" className="btn">
+            <Link href="/recruitments" className="btn">
               &gt; join_layer8
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -206,19 +206,16 @@ function CTFStrip() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <button
-              type="button"
+            <Link
+              href="/weekly-ctfs"
               className="btn btn-solid justify-center"
             >
               &gt; view_schedule
-            </button>
+            </Link>
 
-            <button
-              type="button"
-              className="btn justify-center"
-            >
+            <Link href="/blogs" className="btn justify-center">
               &gt; past_writeups
-            </button>
+            </Link>
           </div>
         </div>
 
