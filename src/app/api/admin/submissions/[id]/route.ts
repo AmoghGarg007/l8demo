@@ -10,42 +10,43 @@ function getClientIp(req: NextRequest): string {
   return req.headers.get("x-real-ip") ?? "unknown";
 }
 
-export async function GET() {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   const admin = await requireAdmin();
   if (!admin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  const { id } = await params;
   const client = await db();
-  const result = await client.execute(`
-    SELECT id, srn, ip, user_type, action, detail, created_at
-    FROM audit_logs
-    ORDER BY created_at DESC
-    LIMIT 100
-  `);
 
-  return NextResponse.json({ logs: result.rows });
-}
+  const existing = await client.execute({
+    sql: `SELECT fullName, srn FROM applications WHERE id = ?`,
+    args: [id],
+  });
+  const row = existing.rows[0] as unknown as
+    | { fullName: string; srn: string }
+    | undefined;
 
-// Wipes the audit log table entirely, then writes a single fresh entry
-// recording who cleared it — so the "clear" itself is still accountable,
-// without leaving anything from before it.
-export async function DELETE(req: NextRequest) {
-  const admin = await requireAdmin();
-  if (!admin) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!row) {
+    return NextResponse.json({ error: "Submission not found" }, { status: 404 });
   }
 
-  const client = await db();
-  await client.execute(`DELETE FROM audit_logs`);
+  await client.execute({
+    sql: `DELETE FROM applications WHERE id = ?`,
+    args: [id],
+  });
+
   await client.execute({
     sql: `INSERT INTO audit_logs (srn, ip, user_type, action, detail) VALUES (?, ?, ?, ?, ?)`,
     args: [
       admin.srn,
       getClientIp(req),
       admin.role,
-      "audit_log.cleared",
-      "Cleared all audit log entries",
+      "submission.deleted",
+      `Deleted application from ${row.fullName} (${row.srn})`,
     ],
   });
 

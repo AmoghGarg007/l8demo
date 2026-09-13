@@ -61,7 +61,7 @@ interface Stats {
 }
 
 interface Submission {
-  id: number;
+  id: string;
   user_srn: string;
   fullName: string;
   srn: string;
@@ -178,6 +178,26 @@ export default function AdminPage() {
     await fetchData();
   }
 
+  async function deleteSubmission(id: string) {
+    if (!window.confirm("Delete this application permanently? This can't be undone.")) {
+      return;
+    }
+    await fetch(`/api/admin/submissions/${id}`, { method: "DELETE" });
+    await fetchData();
+  }
+
+  async function clearLogs() {
+    if (
+      !window.confirm(
+        "Clear the entire audit log? This wipes every past entry and can't be undone.",
+      )
+    ) {
+      return;
+    }
+    await fetch("/api/admin/audit-logs", { method: "DELETE" });
+    await fetchData();
+  }
+
   if (isLoading) {
     return (
       <div className="admin-page">
@@ -262,10 +282,16 @@ export default function AdminPage() {
           />
         )}
 
-        {tab === "audit" && <AuditTab logs={logs} loading={loadingData} />}
+        {tab === "audit" && (
+          <AuditTab logs={logs} loading={loadingData} onClearLogs={clearLogs} />
+        )}
 
         {tab === "submissions" && (
-          <SubmissionsTab submissions={submissions} loading={loadingData} />
+          <SubmissionsTab
+            submissions={submissions}
+            loading={loadingData}
+            onDelete={deleteSubmission}
+          />
         )}
       </div>
     </div>
@@ -425,9 +451,27 @@ function UsersTab({
   );
 }
 
-function AuditTab({ logs, loading }: { logs: AuditLog[]; loading: boolean }) {
+function AuditTab({
+  logs,
+  loading,
+  onClearLogs,
+}: {
+  logs: AuditLog[];
+  loading: boolean;
+  onClearLogs: () => void;
+}) {
   return (
     <div className="admin-card">
+      <div className="admin-section-title flex items-center justify-between">
+        <span>audit logs ({logs.length})</span>
+        <button
+          className="admin-role-btn admin-role-btn-demote"
+          onClick={onClearLogs}
+          disabled={loading || logs.length === 0}
+        >
+          clear_logs
+        </button>
+      </div>
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
@@ -478,9 +522,11 @@ function AuditTab({ logs, loading }: { logs: AuditLog[]; loading: boolean }) {
 function SubmissionsTab({
   submissions,
   loading,
+  onDelete,
 }: {
   submissions: Submission[];
   loading: boolean;
+  onDelete: (id: string) => void;
 }) {
   const COLUMNS: { header: string; render: (s: Submission) => ReactNode }[] = [
     { header: "submitted", render: (s) => formatToIST(s.createdAt) },
@@ -547,6 +593,7 @@ function SubmissionsTab({
                   {col.header}
                 </th>
               ))}
+              <th className="whitespace-nowrap">actions</th>
             </tr>
           </thead>
           <tbody>
@@ -557,11 +604,19 @@ function SubmissionsTab({
                     {col.render(s)}
                   </td>
                 ))}
+                <td className="whitespace-nowrap">
+                  <button
+                    className="admin-role-btn admin-role-btn-demote"
+                    onClick={() => onDelete(s.id)}
+                  >
+                    delete
+                  </button>
+                </td>
               </tr>
             ))}
             {!loading && submissions.length === 0 && (
               <tr>
-                <td colSpan={COLUMNS.length} className="text-fg-faint">
+                <td colSpan={COLUMNS.length + 1} className="text-fg-faint">
                   no submissions yet
                 </td>
               </tr>
