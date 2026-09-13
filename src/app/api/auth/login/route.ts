@@ -91,19 +91,18 @@ export async function POST(req: NextRequest) {
   try {
     pesuData = await callPesuAuth(true);
 
-    // PESU Auth folds the optional "know your class and section" scrape
-    // into the same top-level `status` as the actual credential check —
-    // so a student who hasn't yet clicked "Agree & Continue" on PESU
-    // Academy's consent prompt gets a full login failure for a reason
-    // that has nothing to do with their password. If that's what this
-    // looks like, retry without it: the login itself doesn't need
+    // PESU Auth's "know your class and section" option is unreliable —
+    // it's rejected outright with a schema error on some deployments
+    // ("body.knowYourClassAndSection: Extra inputs are not permitted"),
+    // and on others it folds a consent-prompt failure into the same
+    // top-level `status` as the actual credential check. Either way, a
+    // failure here says nothing about whether the password was right.
+    // Retry without it unconditionally — the login itself doesn't need
     // semester/section, only the join form's year auto-fill does, and
     // that degrades to blank (not a crash) via extractSemesterNumber /
-    // deriveYear when it's missing.
-    if (
-      pesuData.status !== true &&
-      /know your class and section/i.test(pesuData.message ?? "")
-    ) {
+    // deriveYear when it's missing. A genuinely wrong password still
+    // fails the same way on the retry, just one request later.
+    if (pesuData.status !== true) {
       pesuData = await callPesuAuth(false);
     }
   } catch (err) {
