@@ -383,11 +383,28 @@ export default function RecruitmentsClient() {
               </div>
               <div className="field">
                 <label>year</label>
-                <input type="text" value={year} readOnly required />
-                <span className="field-hint">
-                  derived from your PESU semester — this can&apos;t be
-                  edited
-                </span>
+                <input type="text" value={year || "—"} readOnly />
+                {year ? (
+                  <span className="field-hint">
+                    derived from your PESU semester — this can&apos;t be
+                    edited
+                  </span>
+                ) : (
+                  <p className="field-error">
+                    {"> "}PESU Academy didn&apos;t return your semester, so we
+                    can&apos;t determine your year. Log into{" "}
+                    <a
+                      href="https://www.pesuacademy.com"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline"
+                    >
+                      pesuacademy.com
+                    </a>{" "}
+                    directly, accept the consent prompt if one appears, then
+                    sign out and back in here.
+                  </p>
+                )}
               </div>
               <div className="field">
                 <label>email</label>
