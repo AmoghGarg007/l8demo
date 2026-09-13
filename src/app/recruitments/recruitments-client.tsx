@@ -397,14 +397,21 @@ export default function RecruitmentsClient() {
             <p className="text-fg">
               {"> application received. we'll be in touch."}
             </p>
-            <button
-              type="button"
-              onClick={handleLogout}
-              disabled={loggingOut}
-              className="btn text-xs shrink-0"
-            >
-              {loggingOut ? "signing_out..." : "> sign_out"}
-            </button>
+            <div className="flex items-center gap-2 shrink-0">
+              {user.role === "admin" && (
+                <Link href="/admin" className="btn btn-solid text-xs">
+                  &gt; admin_panel
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="btn text-xs"
+              >
+                {loggingOut ? "signing_out..." : "> sign_out"}
+              </button>
+            </div>
           </div>
         )}
 
@@ -425,14 +432,21 @@ export default function RecruitmentsClient() {
               <h3 className="text-sm text-fg-dim uppercase tracking-wide">
                 verified via pesu auth
               </h3>
-              <button
-                type="button"
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="btn text-xs shrink-0"
-              >
-                {loggingOut ? "signing_out..." : "> sign_out"}
-              </button>
+              <div className="flex items-center gap-2 shrink-0">
+                {user.role === "admin" && (
+                  <Link href="/admin" className="btn btn-solid text-xs">
+                    &gt; admin_panel
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  disabled={loggingOut}
+                  className="btn text-xs"
+                >
+                  {loggingOut ? "signing_out..." : "> sign_out"}
+                </button>
+              </div>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-x-4">
