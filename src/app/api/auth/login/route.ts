@@ -74,6 +74,11 @@ export async function POST(req: NextRequest) {
   }
 
   async function callPesuAuth(withKycs: boolean): Promise<PesuAuthResponse> {
+    // The upstream API rejects this key's mere presence with a schema
+    // error ("Extra inputs are not permitted") whenever it doesn't
+    // support it — sending `knowYourClassAndSection: false` still
+    // includes the key and fails the same way `true` does. It has to
+    // be omitted outright, not just falsy.
     const pesuRes = await fetch("https://pesu-auth.onrender.com/authenticate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -81,7 +86,7 @@ export async function POST(req: NextRequest) {
         username: userName,
         password,
         profile: true,
-        knowYourClassAndSection: withKycs,
+        ...(withKycs ? { knowYourClassAndSection: true } : {}),
       }),
     });
     return pesuRes.json();
