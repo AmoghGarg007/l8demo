@@ -107,7 +107,14 @@ function ScalePicker({
 }
 
 export default function RecruitmentsClient() {
-  const { user, profile, isLoading } = useAuth();
+  const { user, profile, isLoading, logout } = useAuth();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    setLoggingOut(true);
+    await logout();
+    setLoggingOut(false);
+  }
   const formRef = useRef<HTMLDivElement>(null);
 
   const [domains, setDomains] = useState<DomainId[]>([]);
@@ -191,9 +198,51 @@ export default function RecruitmentsClient() {
     designConfidence: [designConfidence, setDesignConfidence],
   };
 
+  // Required-field check done by hand instead of relying on the browser's
+  // native HTML5 validation — that just silently blocks submit and jumps
+  // the page to the offending field with no visible message, which reads
+  // as "the button did nothing." This makes what's missing explicit.
+  function findMissingFields(): string[] {
+    const missing: string[] = [];
+    if (!year) missing.push("year (see the note above the form)");
+    if (!email.trim()) missing.push("email");
+    if (!phone.trim()) missing.push("phone");
+    if (domains.length === 0) missing.push("at least one domain");
+    if (!feedback.trim()) missing.push("feedback & queries");
+
+    if (domains.includes("marketing")) {
+      if (!marketingWhyDomain.trim()) missing.push("why join marketing");
+      if (!marketingConfidence) missing.push("marketing confidence rating");
+    }
+    if (domains.includes("media") && !mediaWhyDomain.trim()) {
+      missing.push("why join media");
+    }
+    if (domains.includes("design")) {
+      if (!designWhyDomain.trim()) missing.push("why join design");
+      if (!designConfidence) missing.push("design confidence rating");
+    }
+    if (domains.includes("tech")) {
+      if (!techWhyDomain.trim()) missing.push("why join tech");
+      if (!techPriorExperience.trim()) missing.push("tech prior experience");
+    }
+    if (domains.includes("events")) {
+      if (!eventsWhyJoin.trim()) missing.push("why join events");
+      if (!eventsPriorExperience.trim()) missing.push("events prior experience");
+    }
+
+    return missing;
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!user || !profile) return;
+
+    const missing = findMissingFields();
+    if (missing.length > 0) {
+      setStatus("error");
+      setErrorMessage(`Missing required fields: ${missing.join(", ")}.`);
+      return;
+    }
 
     setStatus("submitting");
     setErrorMessage(null);
@@ -344,15 +393,23 @@ export default function RecruitmentsClient() {
         )}
 
         {!isLoading && user && status === "success" && (
-          <div className="card">
+          <div className="card flex flex-wrap items-center justify-between gap-3">
             <p className="text-fg">
               {"> application received. we'll be in touch."}
             </p>
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="btn text-xs shrink-0"
+            >
+              {loggingOut ? "signing_out..." : "> sign_out"}
+            </button>
           </div>
         )}
 
         {!isLoading && user && status !== "success" && (
-          <form className="card" onSubmit={handleSubmit}>
+          <form className="card" onSubmit={handleSubmit} noValidate>
             <input
               type="text"
               name="website"
@@ -364,9 +421,19 @@ export default function RecruitmentsClient() {
               aria-hidden="true"
             />
 
-            <h3 className="text-sm text-fg-dim uppercase tracking-wide mb-4">
-              verified via pesu auth
-            </h3>
+            <div className="flex items-center justify-between gap-3 mb-4">
+              <h3 className="text-sm text-fg-dim uppercase tracking-wide">
+                verified via pesu auth
+              </h3>
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="btn text-xs shrink-0"
+              >
+                {loggingOut ? "signing_out..." : "> sign_out"}
+              </button>
+            </div>
 
             <div className="grid sm:grid-cols-2 gap-x-4">
               <div className="field">
