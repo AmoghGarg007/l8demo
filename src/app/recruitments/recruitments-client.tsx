@@ -107,7 +107,7 @@ function ScalePicker({
 }
 
 export default function RecruitmentsClient() {
-  const { user, profile, isLoading, logout } = useAuth();
+  const { user, profile, isLoading, hasApplied, logout } = useAuth();
   const [loggingOut, setLoggingOut] = useState(false);
 
   async function handleLogout() {
@@ -318,12 +318,14 @@ export default function RecruitmentsClient() {
     }
   }
 
+  const applied = Boolean(user) && (status === "success" || hasApplied);
+
   return (
     <>
       <Header current="Recruitments" />
 
       <main className="flex-1">
-      {!(user && status === "success") && (
+      {!applied && (
         <>
           <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-20 pb-16 grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
@@ -361,13 +363,53 @@ export default function RecruitmentsClient() {
         </>
       )}
 
-      <section ref={formRef} className="max-w-3xl mx-auto px-4 sm:px-8 pb-24">
+      <section
+        ref={formRef}
+        className={`max-w-3xl mx-auto px-4 sm:px-8 pb-24 ${
+          applied ? "pt-20" : ""
+        }`}
+      >
         <span className="kicker">application</span>
-        <h2 className="text-2xl font-display mt-2 mb-6">apply_now</h2>
+        <h2 className="text-2xl font-display mt-2 mb-6">
+          {applied ? "status" : "apply_now"}
+        </h2>
 
         {isLoading && <p className="text-fg-dim">loading session...</p>}
 
-        {!isLoading && !user && (
+        {!isLoading && applied && (
+          <div className="card flex flex-col items-center gap-5 text-center py-14 px-6">
+            <div className="w-12 h-12 rounded-full border border-accent/40 bg-accent/10 flex items-center justify-center text-accent text-xl leading-none">
+              ✓
+            </div>
+            <div>
+              <h3 className="text-xl font-display mb-2">
+                application received
+              </h3>
+              <p className="text-fg-dim max-w-sm mx-auto">
+                {"> we've got your application on file"}
+                {user?.name ? `, ${user.name.split(" ")[0]}` : ""}. We&apos;ll
+                reach out over email if you&apos;re shortlisted.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              {user?.role === "admin" && (
+                <Link href="/admin" className="btn btn-solid text-xs">
+                  &gt; admin_panel
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="btn text-xs"
+              >
+                {loggingOut ? "signing_out..." : "> sign_out"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {!isLoading && !applied && !user && (
           <div className="card">
             <p className="mb-4">
               Please log in first to apply. We use your PESU Academy login to
@@ -396,30 +438,7 @@ export default function RecruitmentsClient() {
           </div>
         )}
 
-        {!isLoading && user && status === "success" && (
-          <div className="card flex flex-wrap items-center justify-between gap-3">
-            <p className="text-fg">
-              {"> application received. we'll be in touch."}
-            </p>
-            <div className="flex items-center gap-2 shrink-0">
-              {user.role === "admin" && (
-                <Link href="/admin" className="btn btn-solid text-xs">
-                  &gt; admin_panel
-                </Link>
-              )}
-              <button
-                type="button"
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="btn text-xs"
-              >
-                {loggingOut ? "signing_out..." : "> sign_out"}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {!isLoading && user && status !== "success" && (
+        {!isLoading && !applied && user && (
           <form className="card" onSubmit={handleSubmit} noValidate>
             <input
               type="text"

@@ -19,6 +19,11 @@ export async function GET() {
           FROM users WHERE srn = ?`,
     args: [payload.srn],
   });
+  const appliedResult = await client.execute({
+    sql: `SELECT 1 FROM applications WHERE user_srn = ? LIMIT 1`,
+    args: [payload.srn],
+  });
+  const hasApplied = appliedResult.rows.length > 0;
   const row = result.rows[0] as unknown as
     | {
         srn: string;
@@ -42,6 +47,7 @@ export async function GET() {
       branch: payload.branch,
       semester: payload.semester,
     },
+    hasApplied,
     // Full PESU profile, reconstructed from the users table so the
     // recruitment form can still auto-fill after a page reload (the JWT
     // itself only carries a slim subset of fields).
