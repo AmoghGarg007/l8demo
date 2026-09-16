@@ -3,7 +3,8 @@ import RecruitmentsClient from "./recruitments-client";
 
 export const metadata: Metadata = {
   title: "Recruitments · Layer8 — PES University, ECC",
-  description: "Layer8 recruitments — applications and timeline, opening soon.",
+  description:
+    "Apply to join Layer8 — one application, five domains. Log in with your PESU Academy credentials to get started.",
 };
 
 export default function RecruitmentsPage() {
