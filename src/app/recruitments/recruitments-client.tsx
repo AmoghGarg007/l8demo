@@ -325,7 +325,7 @@ export default function RecruitmentsClient() {
       <Header current="Recruitments" />
 
       <main className="flex-1">
-      {!applied && (
+      {!user && (
         <>
           <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-20 pb-16 grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
@@ -366,7 +366,7 @@ export default function RecruitmentsClient() {
       <section
         ref={formRef}
         className={`max-w-3xl mx-auto px-4 sm:px-8 pb-24 ${
-          applied ? "pt-20" : ""
+          user ? "pt-20" : ""
         }`}
       >
         <span className="kicker">application</span>
