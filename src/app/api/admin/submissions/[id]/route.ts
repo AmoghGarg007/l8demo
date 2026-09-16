@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { deleteRowFromSheetBySrn } from "@/lib/googleSheets";
+import { SHEET_TAB_NAME, SHEET_HEADER_ROW } from "@/app/api/apply/route";
 
 export const runtime = "nodejs";
 
@@ -38,6 +40,9 @@ export async function DELETE(
     sql: `DELETE FROM applications WHERE id = ?`,
     args: [id],
   });
+
+  // Best-effort — never fail the delete because Sheets is unreachable.
+  await deleteRowFromSheetBySrn(SHEET_TAB_NAME, SHEET_HEADER_ROW, row.srn);
 
   await client.execute({
     sql: `INSERT INTO audit_logs (srn, ip, user_type, action, detail) VALUES (?, ?, ?, ?, ?)`,

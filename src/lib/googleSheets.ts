@@ -150,6 +150,72 @@ export async function appendFormSubmissionToSheet(
   }
 }
 
+/**
+ * Deletes the row matching the given SRN from the given tab of the
+ * configured Google Sheet. Never throws — logs and returns instead, so a
+ * Sheets outage never breaks the admin delete action itself.
+ */
+export async function deleteRowFromSheetBySrn(
+  formTitle: string,
+  headerRow: string[],
+  srn: string
+): Promise<void> {
+  const client = getSheetsClient();
+  if (!client) {
+    console.warn(
+      "[googleSheets] Missing GOOGLE_SHEET_ID / GOOGLE_SERVICE_ACCOUNT_EMAIL / GOOGLE_PRIVATE_KEY — skipping delete"
+    );
+    return;
+  }
+
+  const { sheets, sheetId } = client;
+  const tabName = sanitizeTabName(formTitle);
+
+  try {
+    const meta = await sheets.spreadsheets.get({ spreadsheetId: sheetId });
+    const tab = meta.data.sheets?.find((s) => s.properties?.title === tabName);
+    const gridId = tab?.properties?.sheetId;
+    if (gridId === undefined || gridId === null) return;
+
+    const srnColIndex = headerRow.findIndex((h) =>
+      h.toLowerCase().includes("srn")
+    );
+    if (srnColIndex === -1) return;
+
+    const existing = await sheets.spreadsheets.values.get({
+      spreadsheetId: sheetId,
+      range: `'${tabName}'!A:${columnLetter(headerRow.length - 1)}`,
+    });
+
+    const rows = existing.data.values ?? [];
+    // rows[0] is the header row.
+    const rowIndex = rows.findIndex(
+      (row, idx) => idx > 0 && row[srnColIndex] === srn
+    );
+    if (rowIndex <= 0) return; // not found
+
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId: sheetId,
+      requestBody: {
+        requests: [
+          {
+            deleteDimension: {
+              range: {
+                sheetId: gridId,
+                dimension: "ROWS",
+                startIndex: rowIndex,
+                endIndex: rowIndex + 1,
+              },
+            },
+          },
+        ],
+      },
+    });
+  } catch (err) {
+    console.error("[googleSheets] delete failed:", err);
+  }
+}
+
 function columnLetter(zeroIndexedCol: number): string {
   let n = zeroIndexedCol + 1;
   let letters = "";
