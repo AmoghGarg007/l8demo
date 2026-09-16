@@ -35,6 +35,7 @@ interface AuthState {
   user: User | null;
   isLoading: boolean;
   profile: PESUProfile | null;
+  hasApplied: boolean;
   login: (
     userName: string,
     password: string
@@ -48,6 +49,7 @@ const AuthContext = createContext<AuthState | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<PESUProfile | null>(null);
+  const [hasApplied, setHasApplied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const refresh = useCallback(async () => {
@@ -57,14 +59,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!res.ok) {
         setUser(null);
         setProfile(null);
+        setHasApplied(false);
         return;
       }
       const data = await res.json();
       setUser(data.user ?? null);
       setProfile(data.profile ?? null);
+      setHasApplied(Boolean(data.hasApplied));
     } catch {
       setUser(null);
       setProfile(null);
+      setHasApplied(false);
     } finally {
       setIsLoading(false);
     }
@@ -93,6 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         setUser(data.user ?? null);
         setProfile(data.profile ?? null);
+        setHasApplied(Boolean(data.hasApplied));
         return { success: true };
       } catch {
         return {
@@ -110,12 +116,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setUser(null);
       setProfile(null);
+      setHasApplied(false);
     }
   }, []);
 
   const value = useMemo<AuthState>(
-    () => ({ user, isLoading, profile, login, logout, refresh }),
-    [user, isLoading, profile, login, logout, refresh]
+    () => ({ user, isLoading, profile, hasApplied, login, logout, refresh }),
+    [user, isLoading, profile, hasApplied, login, logout, refresh]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

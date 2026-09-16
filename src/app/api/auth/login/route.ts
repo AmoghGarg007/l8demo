@@ -204,11 +204,18 @@ export async function POST(req: NextRequest) {
     args: [srn, ip, role, "login", `Logged in as ${role}`],
   });
 
+  const appliedResult = await client.execute({
+    sql: `SELECT 1 FROM applications WHERE user_srn = ? LIMIT 1`,
+    args: [srn],
+  });
+  const hasApplied = appliedResult.rows.length > 0;
+
   const token = await signToken({ srn, name, role, branch, semester });
 
   const response = NextResponse.json({
     success: true,
     user: { srn, name, role, branch, semester },
+    hasApplied,
     profile: {
       name: profile.name ?? "",
       srn,
