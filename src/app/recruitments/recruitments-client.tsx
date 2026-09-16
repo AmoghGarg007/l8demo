@@ -583,14 +583,14 @@ export default function RecruitmentsClient() {
               </p>
             </div>
             <div className="field">
-              <label>relevant experience (optional)</label>
+              <label>relevant experience</label>
               <textarea
                 value={experience}
                 onChange={(e) => setExperience(e.target.value)}
               />
             </div>
             <div className="field">
-              <label>why do you want to join the club? (optional)</label>
+              <label>why do you want to join the club?</label>
               <textarea value={whyJoin} onChange={(e) => setWhyJoin(e.target.value)} />
             </div>
 
