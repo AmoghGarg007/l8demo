@@ -17,9 +17,9 @@ function getClientIp(req: NextRequest): string {
   return req.headers.get("x-real-ip") ?? "unknown";
 }
 
-const SHEET_TAB_NAME = "Recruitment Applications";
+export const SHEET_TAB_NAME = "Recruitment Applications";
 
-const SHEET_HEADER_ROW = [
+export const SHEET_HEADER_ROW = [
   "Full Name",
   "SRN",
   "Branch",
