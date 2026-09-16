@@ -323,39 +323,43 @@ export default function RecruitmentsClient() {
       <Header current="Recruitments" />
 
       <main className="flex-1">
-      <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-20 pb-16 grid gap-10 lg:grid-cols-2 lg:items-center">
-        <div>
-          <span className="kicker">pesu club recruitment</span>
-          <h1 className="text-4xl sm:text-5xl font-display mt-3 mb-5 leading-tight">
-            join the club.
-            <br />
-            build something real.
-          </h1>
-          <p className="text-fg-dim mb-8 max-w-md">
-            One application, five domains, no fluff. Log in with your PESU
-            Academy credentials and we auto-fill the boring parts so you can
-            get straight to telling us why you&apos;d be a good fit.
-          </p>
-          <button className="btn btn-solid" onClick={scrollToForm}>
-            apply_now
-          </button>
-        </div>
+      {!(user && status === "success") && (
+        <>
+          <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-20 pb-16 grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div>
+              <span className="kicker">pesu club recruitment</span>
+              <h1 className="text-4xl sm:text-5xl font-display mt-3 mb-5 leading-tight">
+                join the club.
+                <br />
+                build something real.
+              </h1>
+              <p className="text-fg-dim mb-8 max-w-md">
+                One application, five domains, no fluff. Log in with your PESU
+                Academy credentials and we auto-fill the boring parts so you can
+                get straight to telling us why you&apos;d be a good fit.
+              </p>
+              <button className="btn btn-solid" onClick={scrollToForm}>
+                apply_now
+              </button>
+            </div>
 
-        <Terminal onApply={scrollToForm} />
-      </section>
+            <Terminal onApply={scrollToForm} />
+          </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-8 pb-16">
-        <div className="card">
-          <span className="kicker">why join</span>
-          <h2 className="text-2xl font-display mt-2 mb-4">what you get</h2>
-          <ul className="space-y-3 text-fg-dim">
-            <li>→ hands-on ownership over real projects from week one</li>
-            <li>→ a domain that matches what you actually want to get better at</li>
-            <li>→ a small, fast-moving team instead of a committee</li>
-            <li>→ a straight line from &quot;I applied&quot; to &quot;I shipped this&quot;</li>
-          </ul>
-        </div>
-      </section>
+          <section className="max-w-6xl mx-auto px-4 sm:px-8 pb-16">
+            <div className="card">
+              <span className="kicker">why join</span>
+              <h2 className="text-2xl font-display mt-2 mb-4">what you get</h2>
+              <ul className="space-y-3 text-fg-dim">
+                <li>→ hands-on ownership over real projects from week one</li>
+                <li>→ a domain that matches what you actually want to get better at</li>
+                <li>→ a small, fast-moving team instead of a committee</li>
+                <li>→ a straight line from &quot;I applied&quot; to &quot;I shipped this&quot;</li>
+              </ul>
+            </div>
+          </section>
+        </>
+      )}
 
       <section ref={formRef} className="max-w-3xl mx-auto px-4 sm:px-8 pb-24">
         <span className="kicker">application</span>
