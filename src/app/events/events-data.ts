@@ -1,11 +1,11 @@
 /**
  * Events catalog, ported from ChatreshGudi/L8-Website-Events
  * (src/data/eventsData.js). The source's non-functional registration form was
- * dropped; PENDING events link to the weekly sessions, ARCHIVED ones show an
+ * dropped; UPCOMING events link to the weekly sessions, ARCHIVED ones show an
  * archive note.
  */
 
-export type EventStatus = "LIVE" | "PENDING" | "ARCHIVED";
+export type EventStatus = "LIVE" | "UPCOMING" | "ARCHIVED";
 export type EventCategory = "CTF" | "Workshop" | "Seminar" | "Contest";
 
 export type L8Event = {
@@ -26,7 +26,7 @@ export const EVENTS: L8Event[] = [
   {
     id: "deeplinks",
     title: "Deeplinks Workshop",
-    status: "PENDING",
+    status: "UPCOMING",
     category: "Workshop",
     date: "2026.09.30",
     venue: "Seminar Hall, PES University",
@@ -109,14 +109,14 @@ export function matchesFilter(
 
 /**
  * Tailwind classes for a status badge. Kept on the site's single-accent
- * palette (no green/amber) — LIVE is full accent, PENDING a dimmer accent,
+ * palette (no green/amber) — LIVE is full accent, UPCOMING a dimmer accent,
  * ARCHIVED fades to the neutral faint/border pair.
  */
 export function statusClasses(status: EventStatus): string {
   switch (status) {
     case "LIVE":
       return "text-accent border-accent/40";
-    case "PENDING":
+    case "UPCOMING":
       return "text-accent/70 border-accent/25";
     case "ARCHIVED":
       return "text-fg-faint border-border";
