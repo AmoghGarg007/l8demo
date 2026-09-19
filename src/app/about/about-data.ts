@@ -120,7 +120,7 @@ export const MEMBERS: Member[] = [
     role: "Vice Head of E&O",
     group: "Events",
     year: "2nd, CS-AIML",
-    bio: "when life gets harder, i get harder",
+    bio: "What the horse considers play, the monkey considers business.",
     status: "current",
     core: true,
     linkedin: "saakshi-mohanty-417285252",
@@ -530,7 +530,7 @@ export const MEMBERS: Member[] = [
     role: "Events Member",
     group: "Events",
     year: "3rd year, CSE",
-    bio: "Fist my bump, fist it!",
+    bio: "",
     status: "current",
     linkedin: "preksha-nehru-abbb5238b",
     email: "prekshanehru@gmail.com",
@@ -651,7 +651,6 @@ const PHOTO_SLUGS = new Set([
   "archita-agrawal",
   "arnav-deva",
   "arrham-jain",
-  "avrit-sharma",
   "blason-raj",
   "chatresh-ramasai-gudi",
   "deepthi-venkatesh",
@@ -688,7 +687,6 @@ const PHOTO_SLUGS = new Set([
   "sowmya-ramesh",
   "sreehaas-vangara",
   "srivaibhav-n",
-  "syed-ayaan-hasan",
   "varunavi-kumbar",
 ]);
 
@@ -698,15 +696,6 @@ export function photoUrl(slug: string): string | undefined {
 
 export function getMember(slug: string): Member | undefined {
   return MEMBERS.find((m) => m.slug === slug);
-}
-
-/** Best external link for a member: portfolio → github → linkedin → email. */
-export function profileHref(m: Member): string | undefined {
-  if (m.portfolio) return m.portfolio;
-  if (m.github) return `https://github.com/${m.github}`;
-  if (m.linkedin) return `https://www.linkedin.com/in/${m.linkedin}`;
-  if (m.email) return `mailto:${m.email}`;
-  return undefined;
 }
 
 /** Alumni — shown on /legacy, not /about. */
@@ -732,8 +721,7 @@ export const DOMAINS: Domain[] = [
     slug: "tech",
     name: "Tech",
     group: "Tech",
-    tagline:
-      "CTF infrastructure, challenge development, tooling and running the weekly sessions.",
+    tagline: "",
     headSlug: "shubhika-pradeep",
     viceSlug: "amogh-garg",
   },

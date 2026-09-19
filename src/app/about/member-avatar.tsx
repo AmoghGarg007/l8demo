@@ -12,7 +12,10 @@ export function MemberAvatar({
   member: Pick<Member, "slug" | "name">;
   className: string;
 }) {
-  const src = photoUrl(member.slug);
+  const src =
+    member.slug === "shubhika-pradeep"
+      ? "/members/shubhika-pradeep.webp"
+      : photoUrl(member.slug);
 
   if (src) {
     return (
