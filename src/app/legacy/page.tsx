@@ -6,7 +6,7 @@ import { ALUMNI } from "../about/about-data";
 
 /**
  * Ported from anish20126-collab/layer8legacy. The club-history bits
- * (commit log, founding crew, headline numbers) are still placeholder
+ * (founding crew, headline numbers) are still placeholder
  * flavour; the alumni directory is real — everyone in MEMBERS whose
  * status is "alumni".
  */
@@ -45,17 +45,6 @@ const LEGACY_FS = {
     }),
   ),
 } as const;
-
-const HISTORY_LOG = [
-  ["a1f00c2", "2019 — root commit: layer8 registered, first CTF lab stood up"],
-  ["d3e7b81", "2020 — patch: hosted first inter-college jeopardy CTF, 40 teams"],
-  ["7bc41aa", "2021 — feat: layer8 lands a top-10 finish in a national pwn track"],
-  ["92aa031", "2021 — infra: dedicated lab granted, vuln-box range goes always-on"],
-  ["f10d5e6", "2022 — feat: weekly_ctfs shipped as a standing Friday fixture"],
-  ["c4b8912", "2023 — feat: alumni onboarded as mentors for the induction batch"],
-  ["0e2f77d", "2024 — release: layer8 hosts its first on-campus red-vs-blue CTF"],
-  ["55a19b0", "2025 — feat: alumni network formalised as a standing resource"],
-] as const;
 
 const FOUNDERS = [
   {
@@ -104,48 +93,6 @@ export default function LegacyPage() {
               barLabel="layer8@pesu — ~/legacy"
               fs={LEGACY_FS}
             />
-          </div>
-        </section>
-
-        <div className="wrap">
-          <div className="rule" />
-        </div>
-
-        {/* history log */}
-        <section className="wrap py-12 md:py-16">
-          <span className="tag">history_log</span>
-          <h2 className="mt-3 font-display font-bold text-2xl md:text-3xl">
-            Commits since 2019
-          </h2>
-
-          <div className="term mt-7">
-            <div className="term-bar">
-              <span className="term-dot" />
-              <span className="term-dot" />
-              <span className="term-dot" />
-              <span className="ml-2 text-xs text-fg-dim">
-                layer8@history — ~
-              </span>
-            </div>
-            <div className="term-body font-mono">
-              <div>
-                <span className="prompt">$</span> git log --oneline --reverse
-                layer8
-              </div>
-              <div className="mt-3 space-y-1.5">
-                {HISTORY_LOG.map(([hash, message]) => (
-                  <div key={hash}>
-                    <span className="prompt">{hash}</span>{" "}
-                    <span className="text-fg-dim">{message}</span>
-                  </div>
-                ))}
-                <div>
-                  <span className="text-accent">HEAD</span>{" "}
-                  <span className="text-fg-dim">2026 — WIP: this page</span>
-                  <span className="cursor">&nbsp;</span>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
 
