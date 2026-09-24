@@ -3,7 +3,7 @@ export const MEMBER_SOCIAL_OVERRIDES: Record<
   { github?: string; linkedin?: string }
 > = {
   "shubhika-pradeep": {
-    github: "Shubhikapradeepand",
+    github: "Shubhikapradeep",
     linkedin: "shubhika-pradeep",
   },
 };
