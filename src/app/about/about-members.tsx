@@ -153,10 +153,11 @@ function MiniCard({ m }: { m: Member }) {
         <h4 className="truncate font-display font-bold text-[0.88rem] leading-tight text-fg">
           {m.name}
         </h4>
-        <span className="truncate text-[0.56rem] tracking-[0.1em] uppercase text-fg-faint">
-          {m.alias ? `@${m.alias} · ` : ""}
-          {m.role}
-        </span>
+        {(m.alias || m.role) && (
+          <span className="truncate text-[0.56rem] tracking-[0.1em] uppercase text-fg-faint">
+            {m.alias && m.role ? `@${m.alias} · ${m.role}` : `${m.alias ? `@${m.alias}` : m.role}`}
+          </span>
+        )}
         {m.bio && (
           <p className="mt-0.5 line-clamp-2 text-[0.7rem] italic leading-snug text-fg-dim">
             &ldquo;{m.bio}&rdquo;
