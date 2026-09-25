@@ -95,6 +95,11 @@ async function ensureSchema(client: Client): Promise<void> {
       `CREATE UNIQUE INDEX IF NOT EXISTS idx_applications_email ON applications(email)`,
       `CREATE UNIQUE INDEX IF NOT EXISTS idx_applications_srn ON applications(srn)`,
       `CREATE INDEX IF NOT EXISTS idx_audit_logs_createdAt ON audit_logs(created_at DESC)`,
+      `CREATE TABLE IF NOT EXISTS rate_limits (
+        key      TEXT PRIMARY KEY,
+        count    INTEGER NOT NULL,
+        reset_at INTEGER NOT NULL
+      )`,
     ],
     "write"
   );

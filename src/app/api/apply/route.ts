@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
   }
 
   // 2. Rate limit by IP.
-  if (!checkSubmissionRateLimit(ip)) {
+  if (!(await checkSubmissionRateLimit(ip))) {
     return NextResponse.json(
       { error: "Too many submissions. Please slow down." },
       { status: 429 }

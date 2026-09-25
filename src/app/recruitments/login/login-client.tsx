@@ -39,7 +39,7 @@ export default function LoginClient() {
       return;
     }
 
-    router.replace("/");
+    router.replace("/recruitments");
   }
 
   return (

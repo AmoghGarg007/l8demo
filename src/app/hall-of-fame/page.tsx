@@ -24,13 +24,16 @@ export const metadata: Metadata = {
     "The teams who topped Layer8's competitions — Escape Matrix, SUDO$RM and every podium since.",
 };
 
-const HOF_SCRIPT = `$ ls hall-of-fame/
+const HOF_SCRIPT = HOF.length
+  ? `$ ls hall-of-fame/
 ${HOF.map((e) => e.slug).join("  ")}
 $ cat hall-of-fame/${HOF[0].slug}
 ${HOF[0].event} (${HOF[0].year})
 ${HOF[0].teams
   .map((t) => `  ${MEDAL[t.placement]} ${t.team} — ${t.members.length} members`)
-  .join("\n")}`;
+  .join("\n")}`
+  : `$ ls hall-of-fame/
+(directory empty)`;
 
 const HOF_FS = {
   dir: "hall-of-fame",

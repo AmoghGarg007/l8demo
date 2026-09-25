@@ -6,10 +6,13 @@ import { Footer, Header } from "../_components/site-chrome";
 import { InteractiveTerminal } from "../_components/interactive-terminal";
 import { CATEGORIES, difficultyStyle, WRITEUPS } from "./writeups";
 
-const TERMINAL_SCRIPT = `$ ls ctf-writeups/
+const TERMINAL_SCRIPT = WRITEUPS.length
+  ? `$ ls ctf-writeups/
 ${WRITEUPS.map((writeup) => writeup.slug).join("  ")}
 $ cat ctf-writeups/${WRITEUPS[0].slug}.md
-${WRITEUPS[0].excerpt}`;
+${WRITEUPS[0].excerpt}`
+  : `$ ls ctf-writeups/
+(directory empty)`;
 
 const WRITEUP_FS = {
   dir: "ctf-writeups",

@@ -10,10 +10,13 @@ import { POSTS, CATEGORIES, formatDate } from "./blogs";
 /*  terminal                                                            */
 /* ------------------------------------------------------------------ */
 
-const BLOG_SCRIPT = `$ ls blogs/
+const BLOG_SCRIPT = POSTS.length
+  ? `$ ls blogs/
 ${POSTS.map((p) => p.slug).join("  ")}
 $ cat blogs/${POSTS[0].slug}.md
-${POSTS[0].excerpt}`;
+${POSTS[0].excerpt}`
+  : `$ ls blogs/
+(directory empty)`;
 
 const BLOG_FS = {
   dir: "blogs",
