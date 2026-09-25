@@ -109,6 +109,7 @@ export function InteractiveTerminal({
   script = DEFAULT_SCRIPT,
   barLabel = DEFAULT_BAR_LABEL,
   fs,
+  readOnly = false,
 }: {
   /** Page-specific intro text, typed out before the live prompt appears. */
   script?: string;
@@ -116,6 +117,13 @@ export function InteractiveTerminal({
   barLabel?: string;
   /** Real page data for `ls`/`cat` to read. */
   fs?: TerminalFS;
+  /**
+   * Plays the intro script, then stops — no live input line, no command
+   * handling. For spots that just want the terminal's look for a canned
+   * bit of copy (an about-page callout, a static status readout) rather
+   * than an actual command shell.
+   */
+  readOnly?: boolean;
 } = {}) {
   const router = useRouter();
   const pathname = usePathname();
@@ -315,8 +323,8 @@ export function InteractiveTerminal({
     <div
       className="term term-interactive w-full"
       role="region"
-      aria-label="Interactive Layer8 terminal"
-      onClick={() => inputRef.current?.focus()}
+      aria-label={readOnly ? "Layer8 terminal" : "Interactive Layer8 terminal"}
+      onClick={readOnly ? undefined : () => inputRef.current?.focus()}
     >
       <div className="term-bar">
         <span className="term-dot" />
@@ -334,7 +342,14 @@ export function InteractiveTerminal({
           <TerminalLine key={`intro-${index}`} line={line} />
         ))}
 
-        {ready && (
+        {ready && readOnly && (
+          <div>
+            <span className="prompt">$</span>{" "}
+            <span className="cursor">&nbsp;</span>
+          </div>
+        )}
+
+        {ready && !readOnly && (
           <>
             {output.map((line, index) => (
               <TerminalLine
