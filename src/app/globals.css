@@ -1051,6 +1051,241 @@
   border-bottom: none;
 }
 
+/* ---------- submissions tab ---------- */
+
+.admin-sub-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-search {
+  flex: 1 1 220px;
+  min-width: 0;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  padding: 0.5rem 0.7rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.admin-search:focus {
+  border-color: var(--accent);
+}
+
+.admin-search::placeholder {
+  color: var(--fg-faint);
+}
+
+.admin-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.admin-filter-chip {
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--fg-dim);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.admin-filter-chip:hover {
+  color: var(--fg);
+  border-color: var(--fg-dim);
+}
+
+.admin-filter-chip-active {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.admin-sub-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 720px;
+  overflow-y: auto;
+}
+
+.admin-sub-row {
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-sub-row:last-child {
+  border-bottom: none;
+}
+
+.admin-sub-row-main {
+  display: grid;
+  grid-template-columns: 1.2rem minmax(0, 1.4fr) minmax(0, 1.4fr) minmax(0, 0.9fr) auto auto;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: transparent;
+  border: none;
+  color: inherit;
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.admin-sub-row-main:hover {
+  background: color-mix(in srgb, var(--fg) 3%, transparent);
+}
+
+.admin-sub-chevron {
+  color: var(--fg-faint);
+  font-size: 0.7rem;
+}
+
+.admin-sub-name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.admin-sub-fullname {
+  color: var(--fg);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-sub-srn {
+  font-size: 0.68rem;
+  color: var(--fg-faint);
+  letter-spacing: 0.04em;
+}
+
+.admin-sub-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.admin-sub-meta {
+  font-size: 0.72rem;
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+
+.admin-sub-date {
+  font-size: 0.7rem;
+  color: var(--fg-faint);
+  white-space: nowrap;
+}
+
+.admin-sub-delete {
+  justify-self: end;
+}
+
+.admin-sub-empty {
+  padding: 1.5rem 1rem;
+  color: var(--fg-faint);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.admin-sub-detail {
+  padding: 0.25rem 1rem 1.1rem 2.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: color-mix(in srgb, var(--fg) 2%, transparent);
+}
+
+.admin-sub-detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-sub-detail-heading {
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.admin-sub-field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.7rem 1.2rem;
+}
+
+.admin-sub-field {
+  min-width: 0;
+}
+
+.admin-sub-field-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  margin-bottom: 0.15rem;
+}
+
+.admin-sub-field-value {
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+@media (max-width: 720px) {
+  .admin-sub-row-main {
+    grid-template-columns: 1.2rem 1fr auto;
+    grid-template-areas:
+      "chevron name delete"
+      ". tags tags"
+      ". meta date";
+    row-gap: 0.35rem;
+  }
+  .admin-sub-chevron {
+    grid-area: chevron;
+  }
+  .admin-sub-name {
+    grid-area: name;
+  }
+  .admin-sub-delete {
+    grid-area: delete;
+  }
+  .admin-sub-tags {
+    grid-area: tags;
+  }
+  .admin-sub-meta {
+    grid-area: meta;
+  }
+  .admin-sub-date {
+    grid-area: date;
+    justify-self: end;
+  }
+  .admin-sub-detail {
+    padding-left: 1rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
