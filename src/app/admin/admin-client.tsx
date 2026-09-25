@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../_components/auth-context";
 import { formatToIST } from "@/lib/date";
@@ -519,6 +519,127 @@ function AuditTab({
   );
 }
 
+const DOMAIN_LABELS: Record<string, string> = {
+  tech: "tech",
+  events: "events",
+  marketing: "marketing",
+  media: "media",
+  design: "design",
+};
+
+const DOMAIN_ORDER = ["tech", "events", "marketing", "media", "design"];
+
+const DOMAIN_FIELD_GROUPS: Record<
+  string,
+  { label: string; key: string }[]
+> = {
+  tech: [
+    { label: "why tech?", key: "techWhyDomain" },
+    { label: "prior experience", key: "techPriorExperience" },
+    { label: "cyber experience", key: "techCyberExperience" },
+    { label: "preferred language", key: "techLanguage" },
+    { label: "ctf participated", key: "techCtfParticipated" },
+    { label: "ctf (other)", key: "techCtfOther" },
+    { label: "ctf confidence", key: "techCtfConfidence" },
+    { label: "github", key: "techGithub" },
+    { label: "linkedin", key: "techLinkedin" },
+    { label: "project", key: "techProject" },
+  ],
+  events: [
+    { label: "why events?", key: "eventsWhyJoin" },
+    { label: "prior experience", key: "eventsPriorExperience" },
+    { label: "plan steps", key: "eventsPlanSteps" },
+    { label: "orientation ideas", key: "eventsOrientationIdeas" },
+    { label: "what excites you", key: "eventsExcites" },
+  ],
+  marketing: [
+    { label: "why marketing?", key: "marketingWhyDomain" },
+    { label: "experience", key: "marketingExperience" },
+    { label: "confidence (1-10)", key: "marketingConfidence" },
+  ],
+  media: [
+    { label: "why media?", key: "mediaWhyDomain" },
+    { label: "tools", key: "mediaTools" },
+    { label: "portfolio", key: "mediaPortfolio" },
+  ],
+  design: [
+    { label: "why design?", key: "designWhyDomain" },
+    { label: "tools", key: "designTools" },
+    { label: "confidence (1-10)", key: "designConfidence" },
+  ],
+};
+
+function DetailField({ label, value }: { label: string; value: ReactNode }) {
+  if (value === null || value === undefined || value === "") return null;
+  return (
+    <div className="admin-sub-field">
+      <div className="admin-sub-field-label">{label}</div>
+      <div className="admin-sub-field-value">{value}</div>
+    </div>
+  );
+}
+
+function SubmissionDetail({ s }: { s: Submission }) {
+  const domains = s.domains ?? [];
+  return (
+    <div className="admin-sub-detail">
+      <div className="admin-sub-detail-group">
+        <div className="admin-sub-detail-heading">contact</div>
+        <div className="admin-sub-field-grid">
+          <DetailField label="email" value={s.email} />
+          <DetailField label="phone" value={s.phone as string} />
+          <DetailField
+            label="portfolio"
+            value={
+              s.portfolioUrl ? (
+                <a
+                  href={s.portfolioUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-accent hover:underline"
+                >
+                  {s.portfolioUrl}
+                </a>
+              ) : null
+            }
+          />
+        </div>
+      </div>
+
+      <DetailField label="general experience" value={s.experience} />
+      <DetailField label="why join layer8?" value={s.whyJoin} />
+
+      {domains.map((d) => {
+        const fields = DOMAIN_FIELD_GROUPS[d];
+        if (!fields) return null;
+        const populated = fields.filter((f) => {
+          const v = s[f.key];
+          return v !== null && v !== undefined && v !== "";
+        });
+        if (populated.length === 0) return null;
+        return (
+          <div className="admin-sub-detail-group" key={d}>
+            <div className="admin-sub-detail-heading">
+              {DOMAIN_LABELS[d] ?? d}
+            </div>
+            <div className="admin-sub-field-grid">
+              {populated.map((f) => (
+                <DetailField
+                  key={f.key}
+                  label={f.label}
+                  value={s[f.key] as string}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+
+      <DetailField label="feedback & queries" value={s.feedback} />
+    </div>
+  );
+}
+
 function SubmissionsTab({
   submissions,
   loading,
@@ -528,101 +649,128 @@ function SubmissionsTab({
   loading: boolean;
   onDelete: (id: string) => void;
 }) {
-  const COLUMNS: { header: string; render: (s: Submission) => ReactNode }[] = [
-    { header: "submitted", render: (s) => formatToIST(s.createdAt) },
-    { header: "name", render: (s) => s.fullName },
-    { header: "srn", render: (s) => s.srn },
-    { header: "branch", render: (s) => s.branch },
-    { header: "year", render: (s) => s.year },
-    { header: "email", render: (s) => s.email },
-    { header: "phone", render: (s) => (s.phone as string) ?? "—" },
-    {
-      header: "domains",
-      render: (s) => (
-        <>
-          {(s.domains ?? []).map((d) => (
-            <span className="tag mr-1" key={d}>
-              {d}
-            </span>
-          ))}
-        </>
-      ),
-    },
-    { header: "experience", render: (s) => s.experience ?? "—" },
-    { header: "portfolio url", render: (s) => s.portfolioUrl ?? "—" },
-    { header: "why join", render: (s) => s.whyJoin ?? "—" },
-    { header: "tech: cyber experience", render: (s) => (s.techCyberExperience as string) ?? "—" },
-    { header: "tech: language", render: (s) => (s.techLanguage as string) ?? "—" },
-    { header: "tech: why domain", render: (s) => (s.techWhyDomain as string) ?? "—" },
-    { header: "tech: prior experience", render: (s) => (s.techPriorExperience as string) ?? "—" },
-    { header: "tech: ctf participated", render: (s) => (s.techCtfParticipated as string) ?? "—" },
-    { header: "tech: ctf other", render: (s) => (s.techCtfOther as string) ?? "—" },
-    { header: "tech: ctf confidence", render: (s) => (s.techCtfConfidence as string) ?? "—" },
-    { header: "tech: github", render: (s) => (s.techGithub as string) ?? "—" },
-    { header: "tech: linkedin", render: (s) => (s.techLinkedin as string) ?? "—" },
-    { header: "tech: project", render: (s) => (s.techProject as string) ?? "—" },
-    { header: "events: why join", render: (s) => (s.eventsWhyJoin as string) ?? "—" },
-    { header: "events: prior experience", render: (s) => (s.eventsPriorExperience as string) ?? "—" },
-    { header: "events: plan steps", render: (s) => (s.eventsPlanSteps as string) ?? "—" },
-    { header: "events: orientation ideas", render: (s) => (s.eventsOrientationIdeas as string) ?? "—" },
-    { header: "events: excites", render: (s) => (s.eventsExcites as string) ?? "—" },
-    { header: "marketing: why domain", render: (s) => (s.marketingWhyDomain as string) ?? "—" },
-    { header: "marketing: experience", render: (s) => (s.marketingExperience as string) ?? "—" },
-    { header: "marketing: confidence", render: (s) => (s.marketingConfidence as string) ?? "—" },
-    { header: "media: why domain", render: (s) => (s.mediaWhyDomain as string) ?? "—" },
-    { header: "media: tools", render: (s) => (s.mediaTools as string) ?? "—" },
-    { header: "media: portfolio", render: (s) => (s.mediaPortfolio as string) ?? "—" },
-    { header: "design: why domain", render: (s) => (s.designWhyDomain as string) ?? "—" },
-    { header: "design: tools", render: (s) => (s.designTools as string) ?? "—" },
-    { header: "design: confidence", render: (s) => (s.designConfidence as string) ?? "—" },
-    { header: "feedback", render: (s) => s.feedback ?? "—" },
-  ];
+  const [query, setQuery] = useState("");
+  const [domainFilter, setDomainFilter] = useState<string>("all");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const domainCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const s of submissions) {
+      for (const d of s.domains ?? []) {
+        counts[d] = (counts[d] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }, [submissions]);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return submissions.filter((s) => {
+      if (domainFilter !== "all" && !(s.domains ?? []).includes(domainFilter)) {
+        return false;
+      }
+      if (!q) return true;
+      return (
+        s.fullName?.toLowerCase().includes(q) ||
+        s.srn?.toLowerCase().includes(q) ||
+        s.email?.toLowerCase().includes(q)
+      );
+    });
+  }, [submissions, query, domainFilter]);
 
   return (
     <div className="admin-card">
-      <div className="admin-section-title flex items-center justify-between">
-        <span>submissions ({submissions.length})</span>
+      <div className="admin-section-title flex items-center justify-between flex-wrap gap-3">
+        <span>
+          submissions ({filtered.length}
+          {filtered.length !== submissions.length ? ` / ${submissions.length}` : ""})
+        </span>
         <ExportControls />
       </div>
-      <div className="admin-table-wrap overflow-x-auto">
-        <table className="admin-table">
-          <thead>
-            <tr>
-              {COLUMNS.map((col) => (
-                <th key={col.header} className="whitespace-nowrap">
-                  {col.header}
-                </th>
-              ))}
-              <th className="whitespace-nowrap">actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {submissions.map((s) => (
-              <tr key={s.id}>
-                {COLUMNS.map((col) => (
-                  <td key={col.header} className="whitespace-nowrap max-w-xs truncate">
-                    {col.render(s)}
-                  </td>
-                ))}
-                <td className="whitespace-nowrap">
-                  <button
-                    className="admin-role-btn admin-role-btn-demote"
-                    onClick={() => onDelete(s.id)}
-                  >
-                    delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {!loading && submissions.length === 0 && (
-              <tr>
-                <td colSpan={COLUMNS.length + 1} className="text-fg-faint">
-                  no submissions yet
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+
+      <div className="admin-sub-toolbar">
+        <input
+          type="text"
+          placeholder="search name, srn, email..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="admin-search"
+        />
+        <div className="admin-filter-chips">
+          <button
+            className={`admin-filter-chip ${domainFilter === "all" ? "admin-filter-chip-active" : ""}`}
+            onClick={() => setDomainFilter("all")}
+          >
+            all ({submissions.length})
+          </button>
+          {DOMAIN_ORDER.filter((d) => domainCounts[d]).map((d) => (
+            <button
+              key={d}
+              className={`admin-filter-chip ${domainFilter === d ? "admin-filter-chip-active" : ""}`}
+              onClick={() => setDomainFilter(d)}
+            >
+              {DOMAIN_LABELS[d]} ({domainCounts[d]})
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="admin-sub-list">
+        {filtered.map((s) => {
+          const isOpen = expandedId === s.id;
+          return (
+            <div className="admin-sub-row" key={s.id}>
+              <div
+                role="button"
+                tabIndex={0}
+                className="admin-sub-row-main"
+                onClick={() => setExpandedId(isOpen ? null : s.id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setExpandedId(isOpen ? null : s.id);
+                  }
+                }}
+                aria-expanded={isOpen}
+              >
+                <span className="admin-sub-chevron">{isOpen ? "▾" : "▸"}</span>
+                <span className="admin-sub-name">
+                  <span className="admin-sub-fullname">{s.fullName}</span>
+                  <span className="admin-sub-srn">{s.srn}</span>
+                </span>
+                <span className="admin-sub-tags">
+                  {(s.domains ?? []).map((d) => (
+                    <span className="tag" key={d}>
+                      {DOMAIN_LABELS[d] ?? d}
+                    </span>
+                  ))}
+                </span>
+                <span className="admin-sub-meta">
+                  {s.branch} · yr {s.year}
+                </span>
+                <span className="admin-sub-date">{formatToIST(s.createdAt)}</span>
+                <button
+                  type="button"
+                  className="admin-role-btn admin-role-btn-demote admin-sub-delete"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(s.id);
+                  }}
+                >
+                  delete
+                </button>
+              </div>
+              {isOpen && <SubmissionDetail s={s} />}
+            </div>
+          );
+        })}
+
+        {!loading && filtered.length === 0 && submissions.length > 0 && (
+          <div className="admin-sub-empty">no submissions match your search/filter</div>
+        )}
+        {!loading && submissions.length === 0 && (
+          <div className="admin-sub-empty">no submissions yet</div>
+        )}
       </div>
     </div>
   );
