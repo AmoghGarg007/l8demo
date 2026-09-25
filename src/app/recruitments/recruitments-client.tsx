@@ -36,6 +36,7 @@ const DOMAIN_QUESTIONS: Record<"marketing" | "media" | "design", DomainQuestion[
       id: "marketingExperience",
       label: "Any prior marketing, copywriting, or social media experience?",
       type: "textarea",
+      required: true,
     },
     {
       id: "marketingConfidence",
@@ -55,6 +56,7 @@ const DOMAIN_QUESTIONS: Record<"marketing" | "media" | "design", DomainQuestion[
       id: "mediaTools",
       label: "Which tools do you use? (Photoshop, Premiere, CapCut, etc.)",
       type: "text",
+      required: true,
     },
     {
       id: "mediaPortfolio",
@@ -73,6 +75,7 @@ const DOMAIN_QUESTIONS: Record<"marketing" | "media" | "design", DomainQuestion[
       id: "designTools",
       label: "Which tools do you use? (Figma, Illustrator, etc.)",
       type: "text",
+      required: true,
     },
     {
       id: "designConfidence",
@@ -208,26 +211,39 @@ export default function RecruitmentsClient() {
     if (!email.trim()) missing.push("email");
     if (!phone.trim()) missing.push("phone");
     if (domains.length === 0) missing.push("at least one domain");
-    if (!feedback.trim()) missing.push("feedback & queries");
 
     if (domains.includes("marketing")) {
       if (!marketingWhyDomain.trim()) missing.push("why join marketing");
+      if (!marketingExperience.trim()) missing.push("marketing experience");
       if (!marketingConfidence) missing.push("marketing confidence rating");
     }
-    if (domains.includes("media") && !mediaWhyDomain.trim()) {
-      missing.push("why join media");
+    if (domains.includes("media")) {
+      if (!mediaWhyDomain.trim()) missing.push("why join media");
+      if (!mediaTools.trim()) missing.push("media tools");
     }
     if (domains.includes("design")) {
       if (!designWhyDomain.trim()) missing.push("why join design");
+      if (!designTools.trim()) missing.push("design tools");
       if (!designConfidence) missing.push("design confidence rating");
     }
     if (domains.includes("tech")) {
+      if (!techCyberExperience) missing.push("prior cybersecurity experience");
+      if (!techLanguage.trim()) missing.push("preferred coding language(s)");
       if (!techWhyDomain.trim()) missing.push("why join tech");
       if (!techPriorExperience.trim()) missing.push("tech prior experience");
+      if (!techCtfParticipated) missing.push("CTF participation");
+      if (techCtfParticipated === "other" && !techCtfOther.trim()) {
+        missing.push("CTF participation details");
+      }
+      if (!techCtfConfidence) missing.push("CTF confidence rating");
+      if (!techProject.trim()) missing.push("tech project description");
     }
     if (domains.includes("events")) {
       if (!eventsWhyJoin.trim()) missing.push("why join events");
       if (!eventsPriorExperience.trim()) missing.push("events prior experience");
+      if (!eventsPlanSteps.trim()) missing.push("event planning steps");
+      if (!eventsOrientationIdeas.trim()) missing.push("orientation ideas");
+      if (!eventsExcites.trim()) missing.push("what excites you about events");
     }
 
     return missing;
@@ -642,8 +658,9 @@ export default function RecruitmentsClient() {
                 </h3>
 
                 <div className="field">
-                  <label>do you have prior cybersecurity experience?</label>
+                  <label>do you have prior cybersecurity experience? *</label>
                   <select
+                    required
                     value={techCyberExperience}
                     onChange={(e) => setTechCyberExperience(e.target.value)}
                   >
@@ -654,9 +671,10 @@ export default function RecruitmentsClient() {
                 </div>
 
                 <div className="field">
-                  <label>preferred coding language(s)</label>
+                  <label>preferred coding language(s) *</label>
                   <input
                     type="text"
+                    required
                     value={techLanguage}
                     onChange={(e) => setTechLanguage(e.target.value)}
                   />
@@ -681,8 +699,9 @@ export default function RecruitmentsClient() {
                 </div>
 
                 <div className="field">
-                  <label>have you participated in a CTF before?</label>
+                  <label>have you participated in a CTF before? *</label>
                   <select
+                    required
                     value={techCtfParticipated}
                     onChange={(e) => setTechCtfParticipated(e.target.value)}
                   >
@@ -695,8 +714,9 @@ export default function RecruitmentsClient() {
 
                 {techCtfParticipated === "other" && (
                   <div className="field">
-                    <label>tell us more</label>
+                    <label>tell us more *</label>
                     <textarea
+                      required
                       value={techCtfOther}
                       onChange={(e) => setTechCtfOther(e.target.value)}
                     />
@@ -704,7 +724,7 @@ export default function RecruitmentsClient() {
                 )}
 
                 <div className="field">
-                  <label>how confident are you solving CTF challenges? (1-10)</label>
+                  <label>how confident are you solving CTF challenges? (1-10) *</label>
                   <ScalePicker value={techCtfConfidence} onChange={setTechCtfConfidence} />
                 </div>
 
@@ -729,8 +749,9 @@ export default function RecruitmentsClient() {
                 </div>
 
                 <div className="field">
-                  <label>describe a project you&apos;re proud of</label>
+                  <label>describe a project you&apos;re proud of *</label>
                   <textarea
+                    required
                     value={techProject}
                     onChange={(e) => setTechProject(e.target.value)}
                   />
@@ -764,24 +785,27 @@ export default function RecruitmentsClient() {
                 </div>
 
                 <div className="field">
-                  <label>walk us through the steps you&apos;d take to plan an event</label>
+                  <label>walk us through the steps you&apos;d take to plan an event *</label>
                   <textarea
+                    required
                     value={eventsPlanSteps}
                     onChange={(e) => setEventsPlanSteps(e.target.value)}
                   />
                 </div>
 
                 <div className="field">
-                  <label>got any ideas for our next orientation?</label>
+                  <label>got any ideas for our next orientation? *</label>
                   <textarea
+                    required
                     value={eventsOrientationIdeas}
                     onChange={(e) => setEventsOrientationIdeas(e.target.value)}
                   />
                 </div>
 
                 <div className="field">
-                  <label>what excites you most about running events?</label>
+                  <label>what excites you most about running events? *</label>
                   <textarea
+                    required
                     value={eventsExcites}
                     onChange={(e) => setEventsExcites(e.target.value)}
                   />
@@ -792,9 +816,8 @@ export default function RecruitmentsClient() {
             <hr className="rule" />
 
             <div className="field">
-              <label>feedback & queries *</label>
+              <label>feedback & queries</label>
               <textarea
-                required
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 placeholder="anything you'd like us to know, or questions for us"

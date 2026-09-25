@@ -90,81 +90,68 @@ export const applicationSchema = z
     website: z.string().max(0, "Bot detected").optional().default(""),
   })
   .superRefine((data, ctx) => {
-    if (data.domains.includes("tech")) {
-      const requiredTechFields: Array<keyof typeof data> = [
-        "techWhyDomain",
-        "techPriorExperience",
-      ];
-      for (const field of requiredTechFields) {
+    function requireFields(domain: string, fields: Array<keyof typeof data>) {
+      for (const field of fields) {
         if (!data[field] || String(data[field]).length === 0) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: [field as string],
-            message: `${String(field)} is required when applying to the Tech domain`,
+            message: `${String(field)} is required when applying to the ${domain} domain`,
           });
         }
+      }
+    }
+
+    // Every domain-specific field is required once that domain is
+    // selected, except link fields (techGithub/techLinkedin/
+    // mediaPortfolio) — those stay optional everywhere.
+    if (data.domains.includes("tech")) {
+      requireFields("Tech", [
+        "techCyberExperience",
+        "techLanguage",
+        "techWhyDomain",
+        "techPriorExperience",
+        "techCtfParticipated",
+        "techCtfConfidence",
+        "techProject",
+      ]);
+      if (data.techCtfParticipated === "other" && !data.techCtfOther) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["techCtfOther"],
+          message: "techCtfOther is required when techCtfParticipated is 'other'",
+        });
       }
     }
 
     if (data.domains.includes("events")) {
-      const requiredEventsFields: Array<keyof typeof data> = [
+      requireFields("Events", [
         "eventsWhyJoin",
         "eventsPriorExperience",
-      ];
-      for (const field of requiredEventsFields) {
-        if (!data[field] || String(data[field]).length === 0) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: [field as string],
-            message: `${String(field)} is required when applying to the Events domain`,
-          });
-        }
-      }
+        "eventsPlanSteps",
+        "eventsOrientationIdeas",
+        "eventsExcites",
+      ]);
     }
 
     if (data.domains.includes("marketing")) {
-      const requiredMarketingFields: Array<keyof typeof data> = [
+      requireFields("Marketing", [
         "marketingWhyDomain",
+        "marketingExperience",
         "marketingConfidence",
-      ];
-      for (const field of requiredMarketingFields) {
-        if (!data[field] || String(data[field]).length === 0) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: [field as string],
-            message: `${String(field)} is required when applying to the Marketing domain`,
-          });
-        }
-      }
+      ]);
     }
 
     if (data.domains.includes("media")) {
-      const requiredMediaFields: Array<keyof typeof data> = ["mediaWhyDomain"];
-      for (const field of requiredMediaFields) {
-        if (!data[field] || String(data[field]).length === 0) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: [field as string],
-            message: `${String(field)} is required when applying to the Media domain`,
-          });
-        }
-      }
+      requireFields("Media", ["mediaWhyDomain", "mediaTools"]);
     }
 
     if (data.domains.includes("design")) {
-      const requiredDesignFields: Array<keyof typeof data> = [
+      requireFields("Design", [
         "designWhyDomain",
+        "designTools",
         "designConfidence",
-      ];
-      for (const field of requiredDesignFields) {
-        if (!data[field] || String(data[field]).length === 0) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: [field as string],
-            message: `${String(field)} is required when applying to the Design domain`,
-          });
-        }
-      }
+      ]);
     }
   });
 
