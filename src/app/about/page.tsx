@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Header, Footer } from "../_components/site-chrome";
+import { InteractiveTerminal } from "../_components/interactive-terminal";
 import { MEMBERS } from "./about-data";
 import { AboutMembers } from "./about-members";
 
@@ -253,32 +254,16 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="term mt-12">
-            <div className="term-bar">
-              <span className="term-dot" />
-              <span className="term-dot" />
-              <span className="term-dot" />
-              <span className="ml-auto text-xs text-fg-dim">layer8 — ~/phil</span>
-            </div>
-            <div className="term-body font-mono">
-              <div>
-                <span className="prompt">$</span> cat philosophy.txt
-              </div>
-              <div className="text-fg-dim pl-[1.1rem]">
-                curiosity &gt; credentials
-              </div>
-              <div className="text-fg-dim pl-[1.1rem]">
-                hands_on &gt; theory_only
-              </div>
-              <div className="text-fg-dim pl-[1.1rem]">share &gt; gatekeep</div>
-              <div className="text-fg-dim pl-[1.1rem]">
-                build &rarr; break &rarr; understand &rarr; repeat
-              </div>
-              <div>
-                <span className="prompt">$</span>{" "}
-                <span className="cursor">&nbsp;</span>
-              </div>
-            </div>
+          <div className="mt-12">
+            <InteractiveTerminal
+              readOnly
+              barLabel="layer8 — ~/phil"
+              script={`$ cat philosophy.txt
+curiosity > credentials
+hands_on > theory_only
+share > gatekeep
+build → break → understand → repeat`}
+            />
           </div>
         </section>
 
