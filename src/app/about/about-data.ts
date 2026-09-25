@@ -721,7 +721,8 @@ export const DOMAINS: Domain[] = [
     slug: "tech",
     name: "Tech",
     group: "Tech",
-    tagline: "",
+    tagline:
+      "Exploit dev, infra, tooling and the weekly CTFs. If it has a shell, Tech wants it first.",
     headSlug: "shubhika-pradeep",
     viceSlug: "amogh-garg",
   },

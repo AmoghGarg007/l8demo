@@ -213,7 +213,7 @@ function CTFStrip() {
               &gt; view_schedule
             </Link>
 
-            <Link href="/blogs" className="btn justify-center">
+            <Link href="/ctf-writeups" className="btn justify-center">
               &gt; past_writeups
             </Link>
           </div>

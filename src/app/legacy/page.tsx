@@ -83,7 +83,7 @@ export default function LegacyPage() {
               <p className="mt-6 text-sm md:text-base text-fg-dim max-w-xl">
                 Layer8 didn&apos;t start as a club — it started as five people
                 in a lab after hours, arguing about a buffer overflow. Every
-                batch since has added a line to the log, and every graduate
+                batch since has built on what came before, and every graduate
                 stays on the network. This is both.
               </p>
             </div>
