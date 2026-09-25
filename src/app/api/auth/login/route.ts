@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (!checkAuthRateLimit(ip, userName)) {
+  if (!(await checkAuthRateLimit(ip, userName))) {
     return NextResponse.json(
       { error: "Too many attempts. Try again later." },
       { status: 429 }

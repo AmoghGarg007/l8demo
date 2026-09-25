@@ -12,10 +12,13 @@ import {
   type L8Event,
 } from "./events-data";
 
-const EVENTS_SCRIPT = `$ ls events/
+const EVENTS_SCRIPT = EVENTS.length
+  ? `$ ls events/
 ${EVENTS.map((e) => e.id).join("  ")}
 $ cat events/${EVENTS[0].id}.md
-${EVENTS[0].desc}`;
+${EVENTS[0].desc}`
+  : `$ ls events/
+(directory empty)`;
 
 const EVENTS_FS = {
   dir: "events",
@@ -152,7 +155,14 @@ export default function EventsClient() {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  const event = EVENTS.find((e) => e.id === selected) ?? EVENTS[0];
+  // If a search/filter change drops the selected event out of `shown`,
+  // fall forward to the new list's first result for both the detail pane
+  // and the "active" highlight below, instead of continuing to display
+  // something no longer in view. Derived at render time rather than
+  // synced via an effect + setState, which would just trigger an extra
+  // render for the same result.
+  const event =
+    shown.find((e) => e.id === selected) ?? shown[0] ?? EVENTS[0];
 
   return (
     <>
@@ -251,7 +261,7 @@ export default function EventsClient() {
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {shown.map((ev) => {
-              const active = ev.id === selected;
+              const active = ev.id === event.id;
               return (
                 <button
                   key={ev.id}

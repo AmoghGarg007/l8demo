@@ -174,16 +174,39 @@ export default function AdminPage() {
   }, [isLoading, user, router]);
 
   async function toggleRole(srn: string) {
-    await fetch(`/api/admin/users/${srn}/role`, { method: "PATCH" });
-    await fetchData();
+    if (
+      !window.confirm(
+        `Change ${srn}'s role? This changes what they can access.`,
+      )
+    ) {
+      return;
+    }
+    try {
+      const res = await fetch(`/api/admin/users/${srn}/role`, { method: "PATCH" });
+      if (!res.ok) {
+        setFetchError("could not change that user's role. try again.");
+        return;
+      }
+      await fetchData();
+    } catch {
+      setFetchError("could not reach the admin API.");
+    }
   }
 
   async function deleteSubmission(id: string) {
     if (!window.confirm("Delete this application permanently? This can't be undone.")) {
       return;
     }
-    await fetch(`/api/admin/submissions/${id}`, { method: "DELETE" });
-    await fetchData();
+    try {
+      const res = await fetch(`/api/admin/submissions/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        setFetchError("could not delete that submission. try again.");
+        return;
+      }
+      await fetchData();
+    } catch {
+      setFetchError("could not reach the admin API.");
+    }
   }
 
   async function clearLogs() {
@@ -194,15 +217,23 @@ export default function AdminPage() {
     ) {
       return;
     }
-    await fetch("/api/admin/audit-logs", { method: "DELETE" });
-    await fetchData();
+    try {
+      const res = await fetch("/api/admin/audit-logs", { method: "DELETE" });
+      if (!res.ok) {
+        setFetchError("could not clear the audit log. try again.");
+        return;
+      }
+      await fetchData();
+    } catch {
+      setFetchError("could not reach the admin API.");
+    }
   }
 
   if (isLoading) {
     return (
       <div className="admin-page">
         <div className="admin-container">
-          <p className="text-fg-dim">loading...</p>
+          <p className="text-fg-dim">loading session...</p>
         </div>
       </div>
     );

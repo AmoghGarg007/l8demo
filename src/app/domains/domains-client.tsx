@@ -6,10 +6,13 @@ import { InteractiveTerminal } from "../_components/interactive-terminal";
 import { Header, Footer } from "../_components/site-chrome";
 import { DOMAINS, referenceLink, type Domain } from "./domains-data";
 
-const DOMAINS_SCRIPT = `$ ls domains/
+const DOMAINS_SCRIPT = DOMAINS.length
+  ? `$ ls domains/
 ${DOMAINS.map((d) => d.id).join("  ")}
 $ cat domains/${DOMAINS[0].id}/readme.md
-${DOMAINS[0].overview}`;
+${DOMAINS[0].overview}`
+  : `$ ls domains/
+(directory empty)`;
 
 const DOMAINS_FS = {
   dir: "domains",
