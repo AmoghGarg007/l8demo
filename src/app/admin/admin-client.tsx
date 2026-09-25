@@ -387,8 +387,36 @@ function UsersTab({
   onToggleRole: (srn: string) => void;
   loading: boolean;
 }) {
+  const [query, setQuery] = useState("");
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return users;
+    return users.filter(
+      (u) =>
+        u.srn?.toLowerCase().includes(q) ||
+        u.name?.toLowerCase().includes(q) ||
+        u.branch?.toLowerCase().includes(q),
+    );
+  }, [users, query]);
+
   return (
     <div className="admin-card">
+      <div className="admin-section-title flex items-center justify-between flex-wrap gap-3">
+        <span>
+          users ({filtered.length}
+          {filtered.length !== users.length ? ` / ${users.length}` : ""})
+        </span>
+      </div>
+      <div className="admin-sub-toolbar">
+        <input
+          type="text"
+          placeholder="search srn, name, branch..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="admin-search"
+        />
+      </div>
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
@@ -403,7 +431,7 @@ function UsersTab({
             </tr>
           </thead>
           <tbody>
-            {users.map((u) => (
+            {filtered.map((u) => (
               <tr key={u.srn}>
                 <td>{u.srn}</td>
                 <td>{u.name}</td>
@@ -437,6 +465,13 @@ function UsersTab({
                 </td>
               </tr>
             ))}
+            {!loading && filtered.length === 0 && users.length > 0 && (
+              <tr>
+                <td colSpan={7} className="text-fg-faint">
+                  no users match your search
+                </td>
+              </tr>
+            )}
             {!loading && users.length === 0 && (
               <tr>
                 <td colSpan={7} className="text-fg-faint">
