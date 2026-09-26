@@ -9,11 +9,11 @@ export default function RecruitmentsClosedClient() {
       <Header current="Recruitments" />
 
       <main className="flex-1 grid place-items-center">
-        <section className="wrap py-20 md:py-28 text-center">
+        <section className="wrap py-10 md:py-14 text-center">
           <p className="kicker mb-6">{"// ~/recruitments"}</p>
 
           <h1 className="font-mono font-bold uppercase tracking-[0.18em] text-accent glow leading-none break-words text-[clamp(2rem,9vw,5rem)]">
-            <ScrambleText text="APPLICATIONS CLOSED" />
+            <ScrambleText text="APPLICATIONS CLOSED" decryptStepMs={60} />
           </h1>
 
           <p className="mt-8 text-sm md:text-base text-fg-dim max-w-md mx-auto">
