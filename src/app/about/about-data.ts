@@ -688,6 +688,7 @@ const PHOTO_SLUGS = new Set([
   "sohan-mr",
   "sowmya-ramesh",
   "sreehaas-vangara",
+  "sriya-chandu",
   "srivaibhav-n",
   "varunavi-kumbar",
 ]);
