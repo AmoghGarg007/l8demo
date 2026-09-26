@@ -28,14 +28,15 @@ export type Member = {
 export const MEMBERS: Member[] = [
   {
     slug: "sriya-chandu",
-    name: "Sriya Chandu",
+    name: "Sriya Yashita Chandu",
+    alias: "ysczie",
     role: "Club Head",
     group: "Club",
     year: "2028, CSE",
-    bio: "",
+    bio: "A kunafa a day I tell you.",
     status: "current",
     core: true,
-    email: "",
+    email: "sriyachandu691@gmail.com",
   },
   {
     slug: "archita-agrawal",
