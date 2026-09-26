@@ -3,12 +3,11 @@ import Link from "next/link";
 import { InteractiveTerminal } from "../_components/interactive-terminal";
 import { Header, Footer } from "../_components/site-chrome";
 import { ALUMNI } from "../about/about-data";
+import { MemberAvatar } from "../about/member-avatar";
 
 /**
- * Ported from anish20126-collab/layer8legacy. The club-history bits
- * (founding crew, headline numbers) are still placeholder
- * flavour; the alumni directory is real — everyone in MEMBERS whose
- * status is "alumni".
+ * Ported from anish20126-collab/layer8legacy. The alumni directory is
+ * real — everyone in MEMBERS whose status is "alumni".
  */
 
 export const metadata: Metadata = {
@@ -125,8 +124,9 @@ export default function LegacyPage() {
                   return (
                     <div
                       key={a.slug}
-                      className="flex flex-wrap items-baseline gap-x-2"
+                      className="flex flex-wrap items-center gap-x-2"
                     >
+                      <MemberAvatar member={a} className="w-7 h-7 text-[0.6rem]" />
                       <span className="prompt">[{yearTag(a.year)}]</span>
                       {name}
                       <span className="text-fg-faint">::</span>
