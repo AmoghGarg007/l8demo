@@ -46,24 +46,6 @@ const LEGACY_FS = {
   ),
 } as const;
 
-const FOUNDERS = [
-  {
-    handle: "the_pwner",
-    bio: "Wrote layer8's first binary exploitation writeups, still assigned as reading for new members.",
-  },
-  {
-    handle: "the_forensics_lead",
-    bio: "Built the club's first packet-capture challenge set. It's been rerun, with variations, every year since.",
-  },
-] as const;
-
-const STATS = [
-  ["7", "years running without a break"],
-  ["150+", "weekly CTFs hosted"],
-  ["300+", "members trained through the club"],
-  [String(ALUMNI.length), "alumni on the network"],
-] as const;
-
 export default function LegacyPage() {
   return (
     <>
@@ -159,53 +141,6 @@ export default function LegacyPage() {
                 <span className="cursor">&nbsp;</span>
               </div>
             </div>
-          </div>
-        </section>
-
-        <div className="wrap">
-          <div className="rule" />
-        </div>
-
-        {/* founding crew */}
-        <section className="wrap py-12 md:py-16">
-          <span className="tag">founding_crew</span>
-          <h2 className="mt-3 font-display font-bold text-2xl md:text-3xl">
-            Who started it
-          </h2>
-          <p className="mt-2 text-sm text-fg-dim max-w-2xl">
-            Two names, one lab, no funding. What they built is still running.
-          </p>
-
-          <div className="mt-7 grid gap-3 sm:grid-cols-2">
-            {FOUNDERS.map((f) => (
-              <article key={f.handle} className="card">
-                <h3 className="font-display font-bold text-lg">{f.handle}</h3>
-                <p className="mt-2 text-[13px] text-fg-dim">{f.bio}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <div className="wrap">
-          <div className="rule" />
-        </div>
-
-        {/* by the numbers */}
-        <section className="wrap py-12 md:py-16">
-          <span className="tag">by_the_numbers</span>
-          <h2 className="mt-3 font-display font-bold text-2xl md:text-3xl">
-            Seven years in
-          </h2>
-
-          <div className="mt-7 grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border">
-            {STATS.map(([value, label]) => (
-              <div key={label} className="bg-bg-2 p-4 md:p-5">
-                <div className="font-display font-bold text-xl md:text-2xl text-accent">
-                  {value}
-                </div>
-                <p className="mt-1 text-xs text-fg-dim">{label}</p>
-              </div>
-            ))}
           </div>
         </section>
 
