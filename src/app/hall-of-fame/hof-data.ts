@@ -40,7 +40,7 @@ export const HOF: HofEvent[] = [
   {
     slug: "escape-matrix",
     event: "Escape Matrix",
-    year: "2024",
+    year: "2025",
     blurb:
       "A room-scale cybersecurity escape challenge — chained puzzle vectors, cipher locks and a live security matrix to break out of.",
     teams: [
@@ -83,7 +83,7 @@ export const HOF: HofEvent[] = [
   {
     slug: "sudo-rm",
     event: "SUDO$RM",
-    year: "2024 — 2025",
+    year: "2025",
     blurb:
       "Jeopardy-style CTF run across campuses — web, pwn, forensics and privesc, scored live.",
     teams: [
