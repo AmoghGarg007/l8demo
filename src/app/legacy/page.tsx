@@ -126,7 +126,7 @@ export default function LegacyPage() {
                       key={a.slug}
                       className="flex flex-wrap items-center gap-x-2"
                     >
-                      <MemberAvatar member={a} className="w-7 h-7 text-[0.6rem]" />
+                      <MemberAvatar member={a} className="w-11 h-11 text-xs" />
                       <span className="prompt">[{yearTag(a.year)}]</span>
                       {name}
                       <span className="text-fg-faint">::</span>
