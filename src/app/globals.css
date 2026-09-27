@@ -545,6 +545,17 @@
   }
 }
 
+/* Smaller footer on phones — unlayered so it wins over the layered
+   .pesu-chip rules above regardless of specificity. */
+@media (max-width: 640px) {
+  .pesu-chip {
+    padding: 0.35rem 0.6rem;
+  }
+  .pesu-chip img {
+    height: 1.6rem;
+  }
+}
+
 /* ---------- keyframes ---------- */
 
 @keyframes blink {
