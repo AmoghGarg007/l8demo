@@ -244,11 +244,11 @@ export function Header({ current }: { current?: string }) {
 export function Footer({ current }: { current?: string }) {
   return (
     <footer className="mt-auto border-t border-border bg-bg-2">
-      <div className="wrap py-9">
-        <div className="grid gap-x-8 gap-y-7 md:grid-cols-[1.5fr_1fr_1fr]">
+      <div className="wrap py-5 md:py-9">
+        <div className="grid gap-x-8 gap-y-4 md:gap-y-7 md:grid-cols-[1.5fr_1fr_1fr]">
           <div>
-            <Wordmark className="text-base" />
-            <p className="mt-2.5 text-xs text-fg-dim max-w-xs">
+            <Wordmark className="text-sm md:text-base" />
+            <p className="mt-2 text-xs text-fg-dim max-w-xs">
               Cybersecurity Club · PES University, Electronic City Campus,
               Bengaluru.
             </p>
@@ -256,7 +256,7 @@ export function Footer({ current }: { current?: string }) {
               href="https://www.pes.edu"
               target="_blank"
               rel="noreferrer"
-              className="pesu-chip mt-4"
+              className="pesu-chip mt-3 md:mt-4"
               aria-label="PES University"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -265,8 +265,8 @@ export function Footer({ current }: { current?: string }) {
           </div>
 
           <div>
-            <div className="kicker mb-2.5">pages</div>
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-[13px]">
+            <div className="kicker mb-2 md:mb-2.5">pages</div>
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-[12px] md:text-[13px]">
               {NAV.map((item) => {
                 const href = ROUTES[item];
                 return (
@@ -291,8 +291,8 @@ export function Footer({ current }: { current?: string }) {
           </div>
 
           <div>
-            <div className="kicker mb-2.5">elsewhere</div>
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-[13px]">
+            <div className="kicker mb-2 md:mb-2.5">elsewhere</div>
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-[12px] md:text-[13px]">
               <li>
                 <a
                   href="https://www.instagram.com/layer8.pesu/"
@@ -322,9 +322,9 @@ export function Footer({ current }: { current?: string }) {
           </div>
         </div>
 
-        <div className="rule my-5" />
+        <div className="rule my-3.5 md:my-5" />
 
-        <div className="text-xs text-fg-dim">
+        <div className="text-[11px] md:text-xs text-fg-dim">
           © {new Date().getFullYear()} Layer8 · built by Layer8
         </div>
       </div>
