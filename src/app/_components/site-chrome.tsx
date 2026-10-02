@@ -9,7 +9,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export const NAV = [
   "Blogs",
-  "CTF Writeups",
   "Weekly CTFs",
   "Events",
   "Resources",
@@ -23,7 +22,6 @@ export const NAV = [
 
 export const ROUTES: Partial<Record<(typeof NAV)[number], string>> = {
   Blogs: "/blogs",
-  "CTF Writeups": "/ctf-writeups",
   "Weekly CTFs": "/weekly-ctfs",
   Events: "/events",
   Resources: "/resources",

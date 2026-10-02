@@ -16,6 +16,18 @@ export type BlogPost = {
 };
 
 export const POSTS: BlogPost[] = [
+   {
+  slug: "aiims-delhi-ransomware-attack",
+  title: "The AIIMS Delhi Ransomware Attack",
+  author: "Nandana Shyam",
+  date: "2026-10-01",
+  readTime: "4 min",
+  category: "case-study",
+  tags: ["ransomware", "healthcare", "incident-response"],
+  excerpt:
+    "A look at the 2022 AIIMS Delhi ransomware attack, how it disrupted critical hospital operations, and what it teaches us about availability, backups, and incident response.",
+  }, 
+
   {
     slug: "cracking-the-board",
     title: "Our First Deep Dive: Cracking the Board",
