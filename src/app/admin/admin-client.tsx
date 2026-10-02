@@ -40,12 +40,6 @@ interface AuditLog {
   created_at: string;
 }
 
-interface IpStat {
-  ip: string;
-  hits: number;
-  last_seen: string;
-}
-
 interface ActivityItem {
   type: "audit" | "application";
   srn: string;
@@ -56,7 +50,6 @@ interface ActivityItem {
 
 interface Stats {
   metrics: { totalUsers: number; totalSubmissions: number };
-  ips: IpStat[];
   activity: ActivityItem[];
 }
 
@@ -350,37 +343,6 @@ function DashboardTab({
           <div className="admin-metric-value">
             {stats?.metrics.totalSubmissions ?? (loading ? "..." : 0)}
           </div>
-        </div>
-      </div>
-
-      <div className="admin-card mb-6">
-        <div className="admin-section-title">ip logs</div>
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>ip</th>
-                <th>hits</th>
-                <th>last seen</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(stats?.ips ?? []).map((ip) => (
-                <tr key={ip.ip}>
-                  <td>{ip.ip}</td>
-                  <td>{ip.hits}</td>
-                  <td>{formatToIST(ip.last_seen)}</td>
-                </tr>
-              ))}
-              {!loading && (stats?.ips ?? []).length === 0 && (
-                <tr>
-                  <td colSpan={3} className="text-fg-faint">
-                    no ip data yet
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
         </div>
       </div>
 
