@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import { useAuth } from "../_components/auth-context";
 import { Header, Footer } from "../_components/site-chrome";
 import Terminal from "./recruitment-terminal";
@@ -16,13 +16,81 @@ interface DomainQuestion {
   required?: boolean;
 }
 
-const DOMAINS: { id: DomainId; label: string; blurb: string }[] = [
-  { id: "marketing", label: "marketing", blurb: "campaigns, copy, outreach" },
-  { id: "media", label: "media", blurb: "photo, video, socials" },
-  { id: "design", label: "design", blurb: "visual identity, UI/UX" },
-  { id: "tech", label: "tech", blurb: "build & break things" },
-  { id: "events", label: "events", blurb: "plan & run experiences" },
+const DOMAINS: {
+  id: DomainId;
+  label: string;
+  blurb: string;
+  glyph: string;
+  layout: string;
+}[] = [
+  { id: "tech", label: "tech", blurb: "build & break things", glyph: "</>", layout: "col-span-2 sm:col-span-3 domain-tile-lg" },
+  { id: "events", label: "events", blurb: "plan & run experiences", glyph: "◈", layout: "col-span-2 sm:col-span-3 domain-tile-lg" },
+  { id: "marketing", label: "marketing", blurb: "campaigns, copy, outreach", glyph: "↗", layout: "col-span-1 sm:col-span-2" },
+  { id: "media", label: "media", blurb: "photo, video, socials", glyph: "◉", layout: "col-span-1 sm:col-span-2" },
+  { id: "design", label: "design", blurb: "visual identity, UI/UX", glyph: "◇", layout: "col-span-2 sm:col-span-2" },
 ];
+
+function FormHead({ n, title, note }: { n: string; title: string; note?: string }) {
+  return (
+    <div className="form-head">
+      <span className="form-head-n">{n}</span>
+      <h3>{title}</h3>
+      {note && <span className="form-head-note">{note}</span>}
+    </div>
+  );
+}
+
+function Field({
+  label,
+  required,
+  short,
+  hint,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  short?: boolean;
+  hint?: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <div className={`field ${short ? "" : "field-q"}`}>
+      <label>
+        {label}
+        {required && (
+          <span className="req" aria-hidden="true">
+            {" "}
+            *
+          </span>
+        )}
+      </label>
+      {children}
+      {hint}
+    </div>
+  );
+}
+
+function DomainSection({ id, children }: { id: DomainId; children: ReactNode }) {
+  const i = DOMAINS.findIndex((d) => d.id === id);
+  const d = DOMAINS[i];
+  return (
+    <section className="domain-section" aria-labelledby={`domain-${id}`}>
+      <span className="domain-section-glyph" aria-hidden="true">
+        {d.glyph}
+      </span>
+      <header className="domain-section-head">
+        <span className="domain-section-idx">
+          domain {String(i + 1).padStart(2, "0")}
+        </span>
+        <h3 id={`domain-${id}`} className="domain-section-title">
+          {d.label}
+        </h3>
+        <p className="domain-section-blurb">{d.blurb}</p>
+      </header>
+      {children}
+    </section>
+  );
+}
 
 const DOMAIN_QUESTIONS: Record<"marketing" | "media" | "design", DomainQuestion[]> = {
   marketing: [
@@ -455,7 +523,7 @@ export default function RecruitmentsClient() {
         )}
 
         {!isLoading && !applied && user && (
-          <form className="card" onSubmit={handleSubmit} noValidate>
+          <form className="space-y-14" onSubmit={handleSubmit} noValidate>
             <input
               type="text"
               name="website"
@@ -467,10 +535,10 @@ export default function RecruitmentsClient() {
               aria-hidden="true"
             />
 
-            <div className="flex items-center justify-between gap-3 mb-4">
-              <h3 className="text-sm text-fg-dim uppercase tracking-wide">
-                verified via pesu auth
-              </h3>
+            <div className="flex items-center justify-between gap-3 -mb-6">
+              <span className="text-xs text-accent tracking-wide">
+                ✓ verified via pesu auth
+              </span>
               <div className="flex items-center gap-2 shrink-0">
                 {user.role === "admin" && (
                   <Link href="/admin" className="btn btn-solid text-xs">
@@ -488,144 +556,154 @@ export default function RecruitmentsClient() {
               </div>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-x-4">
-              <div className="field">
-                <label>full name</label>
-                <input type="text" value={profile?.name ?? user.name} readOnly />
-              </div>
-              <div className="field">
-                <label>srn</label>
-                <input type="text" value={profile?.srn ?? user.srn} readOnly />
-              </div>
-              <div className="field">
-                <label>branch</label>
-                <input type="text" value={profile?.branch ?? user.branch} readOnly />
-              </div>
-              <div className="field">
-                <label>year</label>
-                <input type="text" value={year || "—"} readOnly />
-                {year ? (
-                  <span className="field-hint">
-                    derived from your PESU semester — this can&apos;t be
-                    edited
-                  </span>
-                ) : (
-                  <p className="field-error">
-                    {"> "}PESU Academy didn&apos;t return your semester, so we
-                    can&apos;t determine your year. Log into{" "}
-                    <a
-                      href="https://www.pesuacademy.com"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="underline"
-                    >
-                      pesuacademy.com
-                    </a>{" "}
-                    directly, accept the consent prompt if one appears, then
-                    sign out and back in here.
-                  </p>
-                )}
-              </div>
-              <div className="field">
-                <label>email</label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                />
-              </div>
-              <div className="field">
-                <label>phone</label>
-                <input
-                  type="tel"
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="10-digit phone number"
-                />
-              </div>
-            </div>
-
-            <hr className="rule" />
-
-            <h3 className="text-sm text-fg-dim uppercase tracking-wide mb-3">
-              pick your domain(s) — max 2
-            </h3>
-            <div className="checkbox-grid mb-6">
-              {DOMAINS.map((d) => {
-                const active = domains.includes(d.id);
-                const disabled = !active && domains.length >= 2;
-                return (
-                  <label
-                    key={d.id}
-                    className={`chip-check ${active ? "chip-check-active" : ""} ${
-                      disabled ? "chip-check-disabled" : ""
-                    }`}
+            <section>
+              <FormHead n="01" title="who you are" />
+              <dl className="id-strip">
+                <div className="id-strip-wide">
+                  <dt>name</dt>
+                  <dd>{profile?.name ?? user.name}</dd>
+                </div>
+                <div>
+                  <dt>srn</dt>
+                  <dd>{profile?.srn ?? user.srn}</dd>
+                </div>
+                <div>
+                  <dt>year</dt>
+                  <dd>{year || "—"}</dd>
+                </div>
+                <div className="id-strip-wide">
+                  <dt>branch</dt>
+                  <dd>{profile?.branch ?? user.branch}</dd>
+                </div>
+              </dl>
+              {year ? (
+                <p className="field-hint mt-2">
+                  pulled from your PESU profile — year is derived from your
+                  semester and can&apos;t be edited
+                </p>
+              ) : (
+                <p className="field-error mt-2">
+                  {"> "}PESU Academy didn&apos;t return your semester, so we
+                  can&apos;t determine your year. Log into{" "}
+                  <a
+                    href="https://www.pesuacademy.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline"
                   >
-                    <input
-                      type="checkbox"
-                      checked={active}
-                      disabled={disabled}
-                      onChange={() => toggleDomain(d.id)}
-                    />
-                    <span>
-                      {d.label}
-                      <span className="block text-fg-faint text-xs">{d.blurb}</span>
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
+                    pesuacademy.com
+                  </a>{" "}
+                  directly, accept the consent prompt if one appears, then
+                  sign out and back in here.
+                </p>
+              )}
+              <div className="grid sm:grid-cols-2 gap-x-4 mt-6">
+                <Field label="email" required short>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                  />
+                </Field>
+                <Field label="phone" required short>
+                  <input
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="10-digit phone number"
+                  />
+                </Field>
+              </div>
+            </section>
 
-            <hr className="rule" />
+            <section>
+              <FormHead n="02" title="pick your domains" note="max 2" />
+              <div className="domain-grid">
+                {DOMAINS.map((d, i) => {
+                  const active = domains.includes(d.id);
+                  const disabled = !active && domains.length >= 2;
+                  return (
+                    <label
+                      key={d.id}
+                      className={`domain-tile ${d.layout} ${
+                        active ? "domain-tile-active" : ""
+                      } ${disabled ? "domain-tile-disabled" : ""}`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={active}
+                        disabled={disabled}
+                        onChange={() => toggleDomain(d.id)}
+                      />
+                      <span className="domain-tile-top">
+                        <span className="domain-tile-idx">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="domain-tile-glyph" aria-hidden="true">
+                          {d.glyph}
+                        </span>
+                      </span>
+                      <span>
+                        <span className="domain-tile-name">{d.label}</span>
+                        <span className="domain-tile-blurb">{d.blurb}</span>
+                        <span className="domain-tile-state">
+                          {active ? "✓ picked" : disabled ? "max 2 reached" : "+ pick"}
+                        </span>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </section>
 
-            <h3 className="text-sm text-fg-dim uppercase tracking-wide mb-3">
-              general
-            </h3>
-            <div className="field">
-              <label>portfolio / links (optional)</label>
-              <input
-                type="url"
-                value={portfolioUrl}
-                onChange={(e) => setPortfolioUrl(e.target.value)}
-                placeholder="https://..."
-              />
-              <p className="text-fg-faint text-xs mt-1">
-                using a google drive/docs link? click{" "}
-                <span className="text-fg-dim">share → general access → anyone with the link</span>{" "}
-                before pasting it here, or we won&apos;t be able to open it.
-              </p>
-            </div>
-            <div className="field">
-              <label>relevant experience</label>
-              <textarea
-                value={experience}
-                onChange={(e) => setExperience(e.target.value)}
-              />
-            </div>
-            <div className="field">
-              <label>why do you want to join the club?</label>
-              <textarea value={whyJoin} onChange={(e) => setWhyJoin(e.target.value)} />
-            </div>
+            <section>
+              <FormHead n="03" title="about you" />
+              <Field label="why do you want to join the club?">
+                <textarea
+                  className="ta-lg"
+                  value={whyJoin}
+                  onChange={(e) => setWhyJoin(e.target.value)}
+                />
+              </Field>
+              <Field label="relevant experience">
+                <textarea
+                  className="ta-sm"
+                  value={experience}
+                  onChange={(e) => setExperience(e.target.value)}
+                />
+              </Field>
+              <Field
+                label="portfolio / links (optional)"
+                hint={
+                  <p className="text-fg-faint text-xs mt-1">
+                    using a google drive/docs link? click{" "}
+                    <span className="text-fg-dim">
+                      share → general access → anyone with the link
+                    </span>{" "}
+                    before pasting it here, or we won&apos;t be able to open it.
+                  </p>
+                }
+              >
+                <input
+                  type="url"
+                  value={portfolioUrl}
+                  onChange={(e) => setPortfolioUrl(e.target.value)}
+                  placeholder="https://..."
+                />
+              </Field>
+            </section>
 
             {(["marketing", "media", "design"] as const)
               .filter((d) => domains.includes(d))
               .map((d) => (
-                <div key={d}>
-                  <hr className="rule" />
-                  <h3 className="text-sm text-fg-dim uppercase tracking-wide mb-3">
-                    {d} domain
-                  </h3>
+                <DomainSection key={d} id={d}>
                   {DOMAIN_QUESTIONS[d].map((q) => {
                     const [value, setValue] = fieldState[q.id];
                     return (
-                      <div className="field" key={q.id}>
-                        <label>
-                          {q.label}
-                          {q.required ? " *" : ""}
-                        </label>
+                      <Field key={q.id} label={q.label} required={q.required}>
                         {q.type === "textarea" && (
                           <textarea
                             required={q.required}
@@ -644,62 +722,55 @@ export default function RecruitmentsClient() {
                         {q.type === "scale" && (
                           <ScalePicker value={value} onChange={setValue} />
                         )}
-                      </div>
+                      </Field>
                     );
                   })}
-                </div>
+                </DomainSection>
               ))}
 
             {domains.includes("tech") && (
-              <div>
-                <hr className="rule" />
-                <h3 className="text-sm text-fg-dim uppercase tracking-wide mb-3">
-                  tech domain
-                </h3>
-
-                <div className="field">
-                  <label>do you have prior cybersecurity experience? *</label>
-                  <select
-                    required
-                    value={techCyberExperience}
-                    onChange={(e) => setTechCyberExperience(e.target.value)}
-                  >
-                    <option value="">select...</option>
-                    <option value="yes">yes</option>
-                    <option value="no">no</option>
-                  </select>
+              <DomainSection id="tech">
+                <div className="grid sm:grid-cols-2 gap-x-4">
+                  <Field label="prior cybersecurity experience?" required>
+                    <select
+                      required
+                      value={techCyberExperience}
+                      onChange={(e) => setTechCyberExperience(e.target.value)}
+                    >
+                      <option value="">select...</option>
+                      <option value="yes">yes</option>
+                      <option value="no">no</option>
+                    </select>
+                  </Field>
+                  <Field label="preferred coding language(s)" required>
+                    <input
+                      type="text"
+                      required
+                      value={techLanguage}
+                      onChange={(e) => setTechLanguage(e.target.value)}
+                    />
+                  </Field>
                 </div>
 
-                <div className="field">
-                  <label>preferred coding language(s) *</label>
-                  <input
-                    type="text"
-                    required
-                    value={techLanguage}
-                    onChange={(e) => setTechLanguage(e.target.value)}
-                  />
-                </div>
-
-                <div className="field">
-                  <label>why do you want to join the tech domain? *</label>
+                <Field label="why do you want to join the tech domain?" required>
                   <textarea
+                    className="ta-sm"
                     required
                     value={techWhyDomain}
                     onChange={(e) => setTechWhyDomain(e.target.value)}
                   />
-                </div>
+                </Field>
 
-                <div className="field">
-                  <label>prior experience relevant to tech *</label>
+                <Field label="prior experience relevant to tech" required>
                   <textarea
+                    className="ta-sm"
                     required
                     value={techPriorExperience}
                     onChange={(e) => setTechPriorExperience(e.target.value)}
                   />
-                </div>
+                </Field>
 
-                <div className="field">
-                  <label>have you participated in a CTF before? *</label>
+                <Field label="have you participated in a CTF before?" required>
                   <select
                     required
                     value={techCtfParticipated}
@@ -710,132 +781,131 @@ export default function RecruitmentsClient() {
                     <option value="no">no</option>
                     <option value="other">other</option>
                   </select>
-                </div>
+                </Field>
 
                 {techCtfParticipated === "other" && (
-                  <div className="field">
-                    <label>tell us more *</label>
+                  <Field label="tell us more" required>
                     <textarea
+                      className="ta-sm"
                       required
                       value={techCtfOther}
                       onChange={(e) => setTechCtfOther(e.target.value)}
                     />
-                  </div>
+                  </Field>
                 )}
 
-                <div className="field">
-                  <label>how confident are you solving CTF challenges? (1-10) *</label>
+                <Field label="how confident are you solving CTF challenges? (1-10)" required>
                   <ScalePicker value={techCtfConfidence} onChange={setTechCtfConfidence} />
-                </div>
+                </Field>
 
-                <div className="field">
-                  <label>GitHub profile</label>
-                  <input
-                    type="text"
-                    value={techGithub}
-                    onChange={(e) => setTechGithub(e.target.value)}
-                    placeholder="https://github.com/..."
-                  />
-                </div>
-
-                <div className="field">
-                  <label>LinkedIn profile</label>
-                  <input
-                    type="text"
-                    value={techLinkedin}
-                    onChange={(e) => setTechLinkedin(e.target.value)}
-                    placeholder="https://linkedin.com/in/..."
-                  />
-                </div>
-
-                <div className="field">
-                  <label>describe a project you&apos;re proud of *</label>
+                <Field label="describe a project you're proud of" required>
                   <textarea
+                    className="ta-lg"
                     required
                     value={techProject}
                     onChange={(e) => setTechProject(e.target.value)}
                   />
+                </Field>
+
+                <div className="grid sm:grid-cols-2 gap-x-4">
+                  <Field label="GitHub profile">
+                    <input
+                      type="text"
+                      value={techGithub}
+                      onChange={(e) => setTechGithub(e.target.value)}
+                      placeholder="https://github.com/..."
+                    />
+                  </Field>
+                  <Field label="LinkedIn profile">
+                    <input
+                      type="text"
+                      value={techLinkedin}
+                      onChange={(e) => setTechLinkedin(e.target.value)}
+                      placeholder="https://linkedin.com/in/..."
+                    />
+                  </Field>
                 </div>
-              </div>
+              </DomainSection>
             )}
 
             {domains.includes("events") && (
-              <div>
-                <hr className="rule" />
-                <h3 className="text-sm text-fg-dim uppercase tracking-wide mb-3">
-                  events domain
-                </h3>
-
-                <div className="field">
-                  <label>why do you want to join events? *</label>
+              <DomainSection id="events">
+                <Field label="why do you want to join events?" required>
                   <textarea
+                    className="ta-sm"
                     required
                     value={eventsWhyJoin}
                     onChange={(e) => setEventsWhyJoin(e.target.value)}
                   />
-                </div>
+                </Field>
 
-                <div className="field">
-                  <label>prior event-planning experience *</label>
+                <Field label="prior event-planning experience" required>
                   <textarea
+                    className="ta-sm"
                     required
                     value={eventsPriorExperience}
                     onChange={(e) => setEventsPriorExperience(e.target.value)}
                   />
-                </div>
+                </Field>
 
-                <div className="field">
-                  <label>walk us through the steps you&apos;d take to plan an event *</label>
+                <Field label="walk us through the steps you'd take to plan an event" required>
                   <textarea
+                    className="ta-lg"
                     required
                     value={eventsPlanSteps}
                     onChange={(e) => setEventsPlanSteps(e.target.value)}
                   />
-                </div>
+                </Field>
 
-                <div className="field">
-                  <label>got any ideas for our next orientation? *</label>
+                <Field label="got any ideas for our next orientation?" required>
                   <textarea
                     required
                     value={eventsOrientationIdeas}
                     onChange={(e) => setEventsOrientationIdeas(e.target.value)}
                   />
-                </div>
+                </Field>
 
-                <div className="field">
-                  <label>what excites you most about running events? *</label>
+                <Field label="what excites you most about running events?" required>
                   <textarea
+                    className="ta-sm"
                     required
                     value={eventsExcites}
                     onChange={(e) => setEventsExcites(e.target.value)}
                   />
-                </div>
+                </Field>
+              </DomainSection>
+            )}
+
+            <section>
+              <FormHead n="04" title="wrap up" />
+              <Field label="feedback & queries">
+                <textarea
+                  className="ta-sm"
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  placeholder="anything you'd like us to know, or questions for us"
+                />
+              </Field>
+
+              {errorMessage && (
+                <p className="field-error mb-4">{"> error: " + errorMessage}</p>
+              )}
+
+              <div className="flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="field-hint">
+                  {domains.length === 0
+                    ? "select at least one domain to submit"
+                    : `applying to: ${domains.join(" + ")}`}
+                </p>
+                <button
+                  type="submit"
+                  className="btn btn-solid justify-center sm:px-10"
+                  disabled={domains.length === 0 || status === "submitting"}
+                >
+                  {status === "submitting" ? "submitting..." : "submit_application"}
+                </button>
               </div>
-            )}
-
-            <hr className="rule" />
-
-            <div className="field">
-              <label>feedback & queries</label>
-              <textarea
-                value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
-                placeholder="anything you'd like us to know, or questions for us"
-              />
-            </div>
-
-            {errorMessage && <p className="field-error mb-4">{"> error: " + errorMessage}</p>}
-
-            <button
-              type="submit"
-              className="btn btn-solid w-full justify-center"
-              disabled={domains.length === 0 || status === "submitting"}
-            >
-              {status === "submitting" ? "submitting..." : "submit_application"}
-            </button>
-            {domains.length === 0 && (
-              <p className="field-hint mt-2">select at least one domain to submit</p>
-            )}
+            </section>
           </form>
         )}
       </section>
