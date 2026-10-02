@@ -15,7 +15,7 @@ export async function GET() {
 
   const client = await db();
   const result = await client.execute({
-    sql: `SELECT srn, prn, name, program, branch, section, semester, email, phone, campus
+    sql: `SELECT srn, role, prn, name, program, branch, section, semester, email, phone, campus
           FROM users WHERE srn = ?`,
     args: [payload.srn],
   });
@@ -27,6 +27,7 @@ export async function GET() {
   const row = result.rows[0] as unknown as
     | {
         srn: string;
+        role: string;
         prn: string | null;
         name: string;
         program: string | null;
@@ -43,7 +44,7 @@ export async function GET() {
     user: {
       srn: payload.srn,
       name: payload.name,
-      role: payload.role,
+      role: row?.role === "admin" ? "admin" : "member",
       branch: payload.branch,
       semester: payload.semester,
     },
