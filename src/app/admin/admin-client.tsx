@@ -585,6 +585,16 @@ function AuditTab({
   );
 }
 
+const BRANCH_ABBREVIATIONS: Record<string, string> = {
+  "computer science and engineering": "CSE",
+  "computer science and engineering (ai/ml)": "CSE (AI/ML)",
+};
+
+function abbreviateBranch(branch: string | undefined): string {
+  if (!branch) return "";
+  return BRANCH_ABBREVIATIONS[branch.trim().toLowerCase()] ?? branch;
+}
+
 const DOMAIN_LABELS: Record<string, string> = {
   tech: "tech",
   events: "events",
@@ -812,7 +822,7 @@ function SubmissionsTab({
                   ))}
                 </span>
                 <span className="admin-sub-meta">
-                  {s.branch} · yr {s.year}
+                  {abbreviateBranch(s.branch)} · yr {s.year}
                 </span>
                 <span className="admin-sub-date">{formatToIST(s.createdAt)}</span>
                 <button
