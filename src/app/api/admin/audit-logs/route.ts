@@ -18,7 +18,7 @@ export async function GET() {
 
   const client = await db();
   const result = await client.execute(`
-    SELECT id, srn, ip, user_type, action, detail, created_at
+    SELECT id, srn, user_type, action, detail, created_at
     FROM audit_logs
     ORDER BY created_at DESC
     LIMIT 100

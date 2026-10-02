@@ -17,7 +17,7 @@ export async function GET() {
       client.execute(`SELECT COUNT(*) as count FROM users`),
       client.execute(`SELECT COUNT(*) as count FROM applications`),
       client.execute(`
-        SELECT srn, action, ip, created_at
+        SELECT srn, action, created_at
         FROM audit_logs
         ORDER BY created_at DESC
         LIMIT 15
@@ -35,14 +35,12 @@ export async function GET() {
       type: "audit" as const,
       srn: r.srn as string,
       action: r.action as string,
-      ip: r.ip as string | null,
       created_at: r.created_at as string,
     })),
     ...recentApps.rows.map((r) => ({
       type: "application" as const,
       srn: r.srn as string,
       action: `Application submitted by ${r.fullName as string}`,
-      ip: null,
       created_at: r.createdAt as string,
     })),
   ]
