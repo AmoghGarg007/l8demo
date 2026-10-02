@@ -12,18 +12,10 @@ export async function GET() {
 
   const client = await db();
 
-  const [usersCount, submissionsCount, ips, recentAudit, recentApps] =
+  const [usersCount, submissionsCount, recentAudit, recentApps] =
     await Promise.all([
       client.execute(`SELECT COUNT(*) as count FROM users`),
       client.execute(`SELECT COUNT(*) as count FROM applications`),
-      client.execute(`
-        SELECT ip, COUNT(*) as hits, MAX(created_at) as last_seen
-        FROM audit_logs
-        WHERE ip IS NOT NULL
-        GROUP BY ip
-        ORDER BY hits DESC
-        LIMIT 10
-      `),
       client.execute(`
         SELECT srn, action, ip, created_at
         FROM audit_logs
@@ -62,11 +54,6 @@ export async function GET() {
       totalUsers: Number(usersCount.rows[0]?.count ?? 0),
       totalSubmissions: Number(submissionsCount.rows[0]?.count ?? 0),
     },
-    ips: ips.rows.map((r) => ({
-      ip: r.ip,
-      hits: Number(r.hits),
-      last_seen: r.last_seen,
-    })),
     activity,
   });
 }
