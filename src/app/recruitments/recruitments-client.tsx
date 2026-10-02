@@ -535,7 +535,7 @@ export default function RecruitmentsClient() {
               aria-hidden="true"
             />
 
-            <div className="flex items-center justify-between gap-3 -mb-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="text-xs text-accent tracking-wide">
                 ✓ verified via pesu auth
               </span>
