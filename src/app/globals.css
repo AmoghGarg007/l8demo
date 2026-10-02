@@ -1284,6 +1284,32 @@
   }
 }
 
+@media (max-width: 640px) {
+  .domain-tile {
+    min-height: 6.5rem;
+    padding: 0.7rem 0.85rem 0.75rem;
+    gap: 1rem;
+  }
+  .domain-tile-lg {
+    min-height: 7.5rem;
+  }
+  .domain-tile-name {
+    font-size: 1.25rem;
+  }
+  .domain-tile-lg .domain-tile-name {
+    font-size: 1.75rem;
+  }
+  .domain-tile-blurb {
+    font-size: 0.68rem;
+  }
+  .domain-tile-state {
+    font-size: 0.58rem;
+  }
+  .domain-tile-idx {
+    font-size: 0.62rem;
+  }
+}
+
 .domain-tile {
   position: relative;
   display: flex;
