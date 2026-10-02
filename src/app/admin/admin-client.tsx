@@ -475,7 +475,7 @@ function UsersTab({
                     {u.role}
                   </span>
                 </td>
-                <td>{u.branch}</td>
+                <td>{abbreviateBranch(u.branch)}</td>
                 <td>{u.semester}</td>
                 <td>{formatToIST(u.last_login)}</td>
                 <td>
@@ -587,6 +587,7 @@ function AuditTab({
 
 const BRANCH_ABBREVIATIONS: Record<string, string> = {
   "computer science and engineering": "CSE",
+  "computer science and engineering (ai&ml)": "CSE (AI/ML)",
   "computer science and engineering (ai/ml)": "CSE (AI/ML)",
 };
 
