@@ -33,7 +33,6 @@ interface AdminUser {
 interface AuditLog {
   id: number;
   srn: string;
-  ip: string | null;
   user_type: string;
   action: string;
   detail: string | null;
@@ -44,7 +43,6 @@ interface ActivityItem {
   type: "audit" | "application";
   srn: string;
   action: string;
-  ip: string | null;
   created_at: string;
 }
 
@@ -506,7 +504,6 @@ function AuditTab({
             <tr>
               <th>time</th>
               <th>srn</th>
-              <th>ip</th>
               <th>type</th>
               <th>action</th>
               <th>detail</th>
@@ -517,7 +514,6 @@ function AuditTab({
               <tr key={l.id}>
                 <td>{formatToIST(l.created_at)}</td>
                 <td>{l.srn}</td>
-                <td>{l.ip ?? "—"}</td>
                 <td>
                   <span className="admin-badge">{l.user_type}</span>
                 </td>
@@ -535,7 +531,7 @@ function AuditTab({
             ))}
             {!loading && logs.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-fg-faint">
+                <td colSpan={5} className="text-fg-faint">
                   no audit logs yet
                 </td>
               </tr>
