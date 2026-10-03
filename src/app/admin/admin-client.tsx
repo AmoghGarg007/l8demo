@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../_components/auth-context";
 import { formatToIST } from "@/lib/date";
@@ -33,30 +34,21 @@ interface AdminUser {
 interface AuditLog {
   id: number;
   srn: string;
-  ip: string | null;
   user_type: string;
   action: string;
   detail: string | null;
   created_at: string;
 }
 
-interface IpStat {
-  ip: string;
-  hits: number;
-  last_seen: string;
-}
-
 interface ActivityItem {
   type: "audit" | "application";
   srn: string;
   action: string;
-  ip: string | null;
   created_at: string;
 }
 
 interface Stats {
   metrics: { totalUsers: number; totalSubmissions: number };
-  ips: IpStat[];
   activity: ActivityItem[];
 }
 
@@ -275,6 +267,10 @@ export default function AdminPage() {
     <div className="admin-page">
       <div className="admin-container">
         <div className="mb-6">
+          <Link href="/recruitments" className="btn mb-4 inline-flex">
+            &lt; back_to_recruitments
+          </Link>
+          <br />
           <span className="kicker">admin</span>
           <h1 className="text-2xl font-display mt-2">control_panel</h1>
         </div>
@@ -350,37 +346,6 @@ function DashboardTab({
           <div className="admin-metric-value">
             {stats?.metrics.totalSubmissions ?? (loading ? "..." : 0)}
           </div>
-        </div>
-      </div>
-
-      <div className="admin-card mb-6">
-        <div className="admin-section-title">ip logs</div>
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>ip</th>
-                <th>hits</th>
-                <th>last seen</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(stats?.ips ?? []).map((ip) => (
-                <tr key={ip.ip}>
-                  <td>{ip.ip}</td>
-                  <td>{ip.hits}</td>
-                  <td>{formatToIST(ip.last_seen)}</td>
-                </tr>
-              ))}
-              {!loading && (stats?.ips ?? []).length === 0 && (
-                <tr>
-                  <td colSpan={3} className="text-fg-faint">
-                    no ip data yet
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
         </div>
       </div>
 
@@ -475,7 +440,7 @@ function UsersTab({
                     {u.role}
                   </span>
                 </td>
-                <td>{u.branch}</td>
+                <td>{abbreviateBranch(u.branch)}</td>
                 <td>{u.semester}</td>
                 <td>{formatToIST(u.last_login)}</td>
                 <td>
@@ -544,7 +509,6 @@ function AuditTab({
             <tr>
               <th>time</th>
               <th>srn</th>
-              <th>ip</th>
               <th>type</th>
               <th>action</th>
               <th>detail</th>
@@ -555,7 +519,6 @@ function AuditTab({
               <tr key={l.id}>
                 <td>{formatToIST(l.created_at)}</td>
                 <td>{l.srn}</td>
-                <td>{l.ip ?? "—"}</td>
                 <td>
                   <span className="admin-badge">{l.user_type}</span>
                 </td>
@@ -573,7 +536,7 @@ function AuditTab({
             ))}
             {!loading && logs.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-fg-faint">
+                <td colSpan={5} className="text-fg-faint">
                   no audit logs yet
                 </td>
               </tr>
@@ -583,6 +546,17 @@ function AuditTab({
       </div>
     </div>
   );
+}
+
+const BRANCH_ABBREVIATIONS: Record<string, string> = {
+  "computer science and engineering": "CSE",
+  "computer science and engineering (ai&ml)": "CSE (AI/ML)",
+  "computer science and engineering (ai/ml)": "CSE (AI/ML)",
+};
+
+function abbreviateBranch(branch: string | undefined): string {
+  if (!branch) return "";
+  return BRANCH_ABBREVIATIONS[branch.trim().toLowerCase()] ?? branch;
 }
 
 const DOMAIN_LABELS: Record<string, string> = {
@@ -812,7 +786,7 @@ function SubmissionsTab({
                   ))}
                 </span>
                 <span className="admin-sub-meta">
-                  {s.branch} · yr {s.year}
+                  {abbreviateBranch(s.branch)} · yr {s.year}
                 </span>
                 <span className="admin-sub-date">{formatToIST(s.createdAt)}</span>
                 <button
