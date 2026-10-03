@@ -740,49 +740,6 @@
   color: var(--danger);
 }
 
-/* ---------- checkboxes / chips (domain picker) ---------- */
-
-.checkbox-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 0.6rem;
-}
-
-.chip-check {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  border: 1px solid var(--border);
-  padding: 0.6rem 0.75rem;
-  font-size: 0.82rem;
-  cursor: pointer;
-  color: var(--fg-dim);
-  transition:
-    border-color 0.15s ease,
-    color 0.15s ease,
-    background 0.15s ease;
-  user-select: none;
-}
-
-.chip-check:hover {
-  border-color: var(--fg-faint);
-}
-
-.chip-check input {
-  accent-color: var(--accent);
-}
-
-.chip-check-active {
-  border-color: var(--accent);
-  color: var(--fg);
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
-}
-
-.chip-check-disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
 /* ---------- scale picker (1-10 confidence ratings) ---------- */
 
 .scale-grid {
@@ -813,6 +770,331 @@
   border-color: var(--accent);
   color: var(--bg);
   font-weight: 600;
+}
+
+/* ---------- recruitment form: layout + domain emphasis ---------- */
+
+.form-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.4rem;
+}
+
+.form-head::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  align-self: center;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+.form-head-n {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+
+.form-head h3 {
+  font-family: var(--font-display), var(--font-mono), sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+.form-head-note {
+  font-size: 0.7rem;
+  color: var(--fg-faint);
+  letter-spacing: 0.06em;
+}
+
+/* question-style fields: readable sentence-case labels instead of tiny caps */
+.field-q label {
+  font-size: 0.88rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--fg);
+  line-height: 1.45;
+}
+
+.field .req {
+  color: var(--accent);
+}
+
+.field textarea.ta-sm {
+  min-height: 4.5rem;
+}
+
+.field textarea.ta-lg {
+  min-height: 10rem;
+}
+
+/* read-only identity pulled from PESU auth */
+.id-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.id-strip > div {
+  background: var(--bg-2);
+  padding: 0.7rem 0.95rem;
+  min-width: 0;
+}
+
+.id-strip dt {
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+.id-strip dd {
+  margin-top: 0.15rem;
+  color: var(--fg);
+  font-size: 0.88rem;
+  overflow-wrap: anywhere;
+}
+
+.id-strip-wide {
+  grid-column: span 2;
+}
+
+@media (min-width: 640px) {
+  .id-strip {
+    grid-template-columns: 2fr 1.2fr 0.8fr;
+  }
+  .id-strip-wide {
+    grid-column: span 1;
+  }
+  .id-strip > div:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* domain picker: oversized tiles, uneven rows */
+.domain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .domain-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.domain-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.8rem;
+  min-height: 8.5rem;
+  padding: 0.95rem 1.1rem 1rem;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.domain-tile-lg {
+  min-height: 10.5rem;
+}
+
+.domain-tile input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.domain-tile:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.domain-tile:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.domain-tile:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.domain-tile-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.domain-tile-idx {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  color: var(--fg-faint);
+}
+
+.domain-tile-glyph {
+  font-size: 1rem;
+  color: var(--fg-faint);
+  transition: color 0.18s ease;
+}
+
+.domain-tile-name {
+  display: block;
+  font-family: var(--font-display), var(--font-mono), sans-serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+
+.domain-tile-lg .domain-tile-name {
+  font-size: 2.3rem;
+}
+
+.domain-tile-blurb {
+  display: block;
+  margin-top: 0.45rem;
+  font-size: 0.74rem;
+  color: var(--fg-dim);
+}
+
+.domain-tile-state {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+.domain-tile-active {
+  border-color: var(--accent);
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--accent) 24%, var(--bg-2)),
+    var(--bg-2) 72%
+  );
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 14px 34px -14px var(--glow);
+}
+
+.domain-tile-active .domain-tile-name {
+  color: var(--accent-2);
+  text-shadow: 0 0 20px var(--glow);
+}
+
+.domain-tile-active .domain-tile-idx,
+.domain-tile-active .domain-tile-glyph,
+.domain-tile-active .domain-tile-state {
+  color: var(--accent);
+}
+
+.domain-tile-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.domain-tile-disabled:hover {
+  border-color: var(--border);
+  transform: none;
+}
+
+/* per-domain question block: accent rail, tinted panel, big title */
+.domain-section {
+  position: relative;
+  counter-reset: q;
+  padding: 1.7rem 1.25rem 0.8rem 1.5rem;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 8%, var(--bg-2)),
+    var(--bg-2) 45%
+  );
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  box-shadow: -20px 0 44px -30px var(--glow);
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .domain-section {
+    margin-left: -1.5rem;
+    padding-left: 2rem;
+  }
+}
+
+.domain-section-glyph {
+  position: absolute;
+  top: -0.6rem;
+  right: 1rem;
+  font-family: var(--font-display), var(--font-mono), sans-serif;
+  font-size: 7rem;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+.domain-section-head {
+  position: relative;
+  margin-bottom: 1.8rem;
+}
+
+.domain-section-idx {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.domain-section-title {
+  margin-top: 0.25rem;
+  font-family: var(--font-display), var(--font-mono), sans-serif;
+  font-size: clamp(2.2rem, 7vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--accent-2);
+  text-shadow: 0 0 26px var(--glow);
+}
+
+.domain-section-blurb {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+}
+
+.domain-section .field-q label::before {
+  counter-increment: q;
+  content: counter(q, decimal-leading-zero);
+  margin-right: 0.55rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .domain-tile,
+  .domain-tile:hover,
+  .domain-tile:active {
+    transition: none;
+    transform: none;
+  }
 }
 
 /* ---------- extra .term-* pieces the recruitment terminal/login use ---------- */
@@ -1199,6 +1481,9 @@
   font-size: 0.72rem;
   color: var(--fg-dim);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .admin-sub-date {
@@ -1314,5 +1599,31 @@
   .term-cursor {
     opacity: 1;
     animation: none !important;
+  }
+}
+/* phone-only: compact domain picker */
+@media (max-width: 639px) {
+  .domain-grid {
+    gap: 0.5rem;
+  }
+  .domain-tile,
+  .domain-tile-lg {
+    min-height: 0;
+    gap: 0.45rem;
+    padding: 0.65rem 0.85rem 0.7rem;
+  }
+  .domain-tile-name,
+  .domain-tile-lg .domain-tile-name {
+    font-size: 1.3rem;
+  }
+  .domain-tile-blurb {
+    margin-top: 0.2rem;
+    font-size: 0.7rem;
+  }
+  .domain-tile-state {
+    display: none;
+  }
+  .domain-tile-glyph {
+    font-size: 0.85rem;
   }
 }
