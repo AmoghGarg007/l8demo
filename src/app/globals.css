@@ -888,35 +888,6 @@
   }
 }
 
-@media (max-width: 640px) {
-  .domain-tile {
-    min-height: 6.5rem;
-    padding: 0.7rem 0.85rem 0.75rem;
-    gap: 1rem;
-  }
-  .domain-tile-lg {
-    min-height: 7.5rem;
-  }
-  .domain-tile-name {
-    font-size: 1.2rem;
-  }
-  .domain-tile-lg .domain-tile-name {
-    font-size: 1.6rem;
-  }
-  .domain-tile-blurb {
-    font-size: 0.65rem;
-  }
-  .domain-tile-state {
-    font-size: 0.58rem;
-  }
-  .domain-tile-idx {
-    font-size: 0.6rem;
-  }
-  .domain-tile-glyph {
-    font-size: 0.85rem;
-  }
-}
-
 .domain-tile {
   position: relative;
   display: flex;
@@ -1628,5 +1599,31 @@
   .term-cursor {
     opacity: 1;
     animation: none !important;
+  }
+}
+/* phone-only: compact domain picker */
+@media (max-width: 639px) {
+  .domain-grid {
+    gap: 0.5rem;
+  }
+  .domain-tile,
+  .domain-tile-lg {
+    min-height: 0;
+    gap: 0.45rem;
+    padding: 0.65rem 0.85rem 0.7rem;
+  }
+  .domain-tile-name,
+  .domain-tile-lg .domain-tile-name {
+    font-size: 1.3rem;
+  }
+  .domain-tile-blurb {
+    margin-top: 0.2rem;
+    font-size: 0.7rem;
+  }
+  .domain-tile-state {
+    display: none;
+  }
+  .domain-tile-glyph {
+    font-size: 0.85rem;
   }
 }
