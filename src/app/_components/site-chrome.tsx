@@ -222,7 +222,7 @@ export function Header({ current }: { current?: string }) {
 
       {open && (
         <div className="lg:hidden border-t border-border bg-bg-2">
-          <div className="wrap py-3 grid grid-cols-2 gap-x-4 gap-y-1">
+          <div className="wrap grid max-h-[calc(100dvh-4rem)] grid-cols-1 gap-x-4 gap-y-1 overflow-y-auto py-3 sm:grid-cols-2">
             {NAV.map((item) => (
               <NavItem
                 key={item}

@@ -16,12 +16,21 @@ export const metadata: Metadata = {
     "Layer8's history and the alumni still on the network — the people who moved on but kept the door open.",
 };
 
-const alumniLink = (a: (typeof ALUMNI)[number]) =>
-  a.portfolio ??
-  (a.github ? `https://github.com/${a.github}` : undefined) ??
-  (a.linkedin ? `https://www.linkedin.com/in/${a.linkedin}` : undefined);
-
 const yearTag = (year?: string) => (year ?? "alum").split(",")[0].trim();
+
+function LinkedInIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="17"
+      height="17"
+      fill="currentColor"
+      aria-hidden
+    >
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  );
+}
 
 const LEGACY_SCRIPT = ALUMNI.length
   ? `$ ls alumni/
@@ -107,34 +116,43 @@ export default function LegacyPage() {
                 {ALUMNI.length === 1 ? "node" : "nodes"} found
               </div>
               <div className="mt-3 space-y-1.5">
-                {ALUMNI.map((a) => {
-                  const href = alumniLink(a);
-                  const name = href ? (
-                    <a
-                      href={href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-fg-dim hover:text-accent transition-colors"
-                    >
-                      {a.name}
-                    </a>
-                  ) : (
-                    <span className="text-fg-dim">{a.name}</span>
-                  );
-                  return (
-                    <div
-                      key={a.slug}
-                      className="flex flex-wrap items-center gap-x-2"
-                    >
-                      <MemberAvatar member={a} className="w-11 h-11 text-xs" />
-                      <span className="prompt">[{yearTag(a.year)}]</span>
-                      {name}
-                      <span className="text-fg-faint">::</span>
-                      <span className="text-fg-dim">{a.role}</span>
-                      <span className="ml-auto text-accent text-xs">[UP]</span>
+                {ALUMNI.map((a) => (
+                  <div
+                    key={a.slug}
+                    className="flex min-w-0 items-center gap-3 py-1.5"
+                  >
+                    <MemberAvatar member={a} className="h-14 w-14 text-sm" />
+
+                    <div className="min-w-0 flex-1 sm:flex sm:flex-wrap sm:items-center sm:gap-x-2">
+                      <div className="flex min-w-0 flex-wrap items-center gap-x-2">
+                        <span className="prompt shrink-0">
+                          [{yearTag(a.year)}]
+                        </span>
+                        <span className="text-fg-dim">{a.name}</span>
+                      </div>
+                      <div className="flex min-w-0 flex-wrap items-center gap-x-2">
+                        <span className="hidden text-fg-faint sm:inline">::</span>
+                        <span className="text-fg-dim">{a.role}</span>
+                      </div>
                     </div>
-                  );
-                })}
+
+                    <span className="hidden shrink-0 text-xs text-accent sm:inline">
+                      [UP]
+                    </span>
+                    {a.linkedin && (
+                      <a
+                        href={`https://www.linkedin.com/in/${a.linkedin}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Open ${a.name}'s LinkedIn profile`}
+                        title={`${a.name} on LinkedIn`}
+                        className="grid h-9 w-9 shrink-0 place-items-center border border-border text-fg-dim transition-colors hover:border-accent hover:text-accent focus-visible:border-accent focus-visible:text-accent focus-visible:outline-none"
+                      >
+                        <LinkedInIcon />
+                      </a>
+                    )}
+                  </div>
+                ))}
               </div>
               <div className="mt-3 text-fg-dim">
                 uptime: still reachable. no node has gone dark.
