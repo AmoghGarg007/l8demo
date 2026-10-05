@@ -16,6 +16,11 @@ export const metadata: Metadata = {
     "Layer8's history and the alumni still on the network — the people who moved on but kept the door open.",
 };
 
+const alumniLink = (a: (typeof ALUMNI)[number]) =>
+  a.portfolio ??
+  (a.github ? `https://github.com/${a.github}` : undefined) ??
+  (a.linkedin ? `https://www.linkedin.com/in/${a.linkedin}` : undefined);
+
 const yearTag = (year?: string) => (year ?? "alum").split(",")[0].trim();
 
 const LEGACY_SCRIPT = ALUMNI.length
@@ -103,37 +108,30 @@ export default function LegacyPage() {
               </div>
               <div className="mt-3 space-y-1.5">
                 {ALUMNI.map((a) => {
-                  const linkedinHref = a.linkedin
-                    ? `https://www.linkedin.com/in/${a.linkedin}`
-                    : undefined;
+                  const href = alumniLink(a);
+                  const name = href ? (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-fg-dim hover:text-accent transition-colors"
+                    >
+                      {a.name}
+                    </a>
+                  ) : (
+                    <span className="text-fg-dim">{a.name}</span>
+                  );
                   return (
                     <div
                       key={a.slug}
-                      className="flex min-h-14 flex-wrap items-center gap-x-2 gap-y-1"
+                      className="flex flex-wrap items-center gap-x-2"
                     >
-                      <MemberAvatar member={a} className="w-14 h-14 text-sm" />
+                      <MemberAvatar member={a} className="w-11 h-11 text-xs" />
                       <span className="prompt">[{yearTag(a.year)}]</span>
-                      <span className="text-fg-dim">{a.name}</span>
+                      {name}
                       <span className="text-fg-faint">::</span>
                       <span className="text-fg-dim">{a.role}</span>
-                      {linkedinHref ? (
-                        <a
-                          href={linkedinHref}
-                          target="_blank"
-                          rel="noreferrer"
-                          aria-label={`Open ${a.name}'s LinkedIn profile`}
-                          title={`${a.name} on LinkedIn`}
-                          className="ml-auto inline-flex h-9 w-9 shrink-0 items-center justify-center border border-border bg-bg-3 text-fg-dim transition-colors hover:border-accent hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                        >
-                          <svg
-                            viewBox="0 0 24 24"
-                            aria-hidden="true"
-                            className="h-4 w-4 fill-current"
-                          >
-                            <path d="M6.5 8.5H3.2V19h3.3V8.5ZM4.85 3A1.91 1.91 0 1 0 4.85 6.82 1.91 1.91 0 0 0 4.85 3ZM20.8 13c0-3.16-1.69-4.63-3.94-4.63a3.4 3.4 0 0 0-3.08 1.7V8.5h-3.3V19h3.3v-5.2c0-1.37.26-2.7 1.96-2.7 1.68 0 1.7 1.57 1.7 2.79V19h3.3L20.8 13Z" />
-                          </svg>
-                        </a>
-                      ) : null}
+                      <span className="ml-auto text-accent text-xs">[UP]</span>
                     </div>
                   );
                 })}

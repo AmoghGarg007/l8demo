@@ -121,7 +121,7 @@ Body paragraphs: `0.875rem`–`1rem`, colour `--fg-dim`, `max-width: ~36rem`.
 ```css
 .wrap {
   width: 100%;
-  max-width: 1600px;
+  max-width: 1160px;
   margin-inline: auto;
   padding-inline: clamp(1.1rem, 4vw, 2.5rem);
   position: relative;
@@ -371,7 +371,7 @@ Not using Tailwind? Everything above is plain CSS + variables — just include i
 
 - [ ] Tokens from §1 defined on `:root`; no hard‑coded hex in components
 - [ ] JetBrains Mono is the default body font; Space Grotesk only on display type
-- [ ] `.wrap` (or an equivalent `max-width: 1600px`, `z-index: 3` container) around content
+- [ ] `.wrap` (or an equivalent `max-width: 1160px`, `z-index: 3` container) around content
 - [ ] Grid + vignette + scanline layers on `body`
 - [ ] Buttons lowercase with `>` prefix; single blue accent only
 - [ ] Every animation has a `prefers-reduced-motion` guard
