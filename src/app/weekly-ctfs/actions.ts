@@ -148,9 +148,27 @@ export async function requestPasswordReset(
   if (!isValidEmail(email)) return { error: "Enter a valid email address." };
 
   const supabase = await createClient();
-  await supabase.auth.resetPasswordForEmail(email, {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${getSiteUrl()}/auth/confirm?next=/weekly-ctfs/reset-password`,
   });
+
+  if (error) {
+    console.error("Could not send CTF password reset email", {
+      code: error.code,
+      status: error.status,
+      message: error.message,
+    });
+
+    if (error.status === 429) {
+      return {
+        error: "Too many recovery emails were requested. Wait a few minutes and try again.",
+      };
+    }
+
+    return {
+      error: "The recovery email could not be sent right now. Please try again later.",
+    };
+  }
 
   return {
     error: null,
