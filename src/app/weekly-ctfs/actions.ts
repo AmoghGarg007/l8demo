@@ -116,7 +116,7 @@ export async function signUp(
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -127,10 +127,28 @@ export async function signUp(
   });
 
   if (error) {
+    if (error.code === "email_address_not_authorized") {
+      return {
+        error:
+          "Account email delivery is not configured yet. Please contact a CTF administrator.",
+      };
+    }
+    if (error.status === 429) {
+      return {
+        error: "Too many signup attempts. Wait a few minutes and try again.",
+      };
+    }
     if (/username|duplicate|unique/i.test(error.message)) {
       return { error: "That username is already taken." };
     }
     return { error: "We could not create that account. Check your details and try again." };
+  }
+
+  // When email confirmation is disabled, Supabase creates a session immediately.
+  // Send the new user into the CTF instead of showing a misleading email prompt.
+  if (data.session) {
+    revalidatePath("/weekly-ctfs", "layout");
+    redirect("/weekly-ctfs");
   }
 
   redirect(`/weekly-ctfs/check-email?email=${encodeURIComponent(email)}`);
