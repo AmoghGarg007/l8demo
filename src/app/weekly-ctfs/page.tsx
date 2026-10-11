@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { loadCtfDashboard } from "../../lib/ctf";
+import { WeeklyCtfsLanding } from "./_components/weekly-ctfs-landing";
 import { WeeklyCtfsDashboard } from "./weekly-ctfs-client";
 
 export const metadata: Metadata = {
@@ -10,5 +11,10 @@ export const metadata: Metadata = {
 
 export default async function WeeklyCtfsPage() {
   const data = await loadCtfDashboard();
+
+  if (!data.viewer) {
+    return <WeeklyCtfsLanding />;
+  }
+
   return <WeeklyCtfsDashboard data={data} />;
 }
