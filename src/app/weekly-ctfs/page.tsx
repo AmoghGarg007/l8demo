@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { loadCtfDashboard } from "../../lib/ctf";
 import { WeeklyCtfsDashboard } from "./weekly-ctfs-client";
 
@@ -10,5 +11,10 @@ export const metadata: Metadata = {
 
 export default async function WeeklyCtfsPage() {
   const data = await loadCtfDashboard();
+
+  if (!data.viewer) {
+    redirect("/weekly-ctfs/sign-in");
+  }
+
   return <WeeklyCtfsDashboard data={data} />;
 }
