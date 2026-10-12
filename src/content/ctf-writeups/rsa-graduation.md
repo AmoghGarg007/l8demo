@@ -44,5 +44,5 @@ Because `x` is small relative to `n`, a lattice-based small-root technique—com
 The recovered flag is:
 
 ```
-layer8{if_m4g1c_m4de_1t}
+Layer8{if_m4g1c_m4de_1t}
 ```

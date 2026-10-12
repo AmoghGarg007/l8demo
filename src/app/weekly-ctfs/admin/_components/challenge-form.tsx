@@ -7,6 +7,10 @@ import type {
   CtfAdminWeek,
 } from "../../../../lib/ctf-admin";
 import {
+  CTF_FLAG_FORMAT,
+  CTF_FLAG_INPUT_PATTERN,
+} from "../../../../lib/ctf-flag";
+import {
   createChallenge,
   updateChallenge,
   type AdminState,
@@ -167,7 +171,9 @@ export default function ChallengeForm({
           spellCheck={false}
           required={!editing}
           maxLength={512}
-          placeholder="layer8{...}"
+          placeholder={CTF_FLAG_FORMAT}
+          pattern={CTF_FLAG_INPUT_PATTERN}
+          title={`Use the exact flag format ${CTF_FLAG_FORMAT}`}
           className={FIELD}
         />
       </Field>
