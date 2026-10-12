@@ -4,6 +4,10 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { submitFlag, type FlagState } from "../actions";
 import type { CtfChallenge } from "../../../lib/ctf";
+import {
+  CTF_FLAG_FORMAT,
+  CTF_FLAG_INPUT_PATTERN,
+} from "../../../lib/ctf-flag";
 
 const INITIAL: FlagState = { status: "idle", message: null };
 
@@ -113,7 +117,9 @@ export function FlagForm({
             name="flag"
             type="text"
             required
-            placeholder="L8{...}"
+            placeholder={CTF_FLAG_FORMAT}
+            pattern={CTF_FLAG_INPUT_PATTERN}
+            title={`Use the exact flag format ${CTF_FLAG_FORMAT}`}
             disabled={pending}
             autoComplete="off"
             spellCheck={false}

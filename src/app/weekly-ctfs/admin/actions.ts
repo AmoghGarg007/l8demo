@@ -7,6 +7,10 @@ import {
   requireCtfAdmin,
   requireCtfHost,
 } from "../../../lib/ctf-host";
+import {
+  CTF_FLAG_FORMAT,
+  isCanonicalCtfFlag,
+} from "../../../lib/ctf-flag";
 
 export type AdminState = {
   status: "idle" | "error" | "success";
@@ -324,7 +328,9 @@ export async function createChallenge(
     const { admin, userId } = await requireCtfHost();
     const weekId = required(formData, "weekId");
     const flag = required(formData, "flag");
-    if (flag.length > 512) throw new Error("The flag is unexpectedly long.");
+    if (!isCanonicalCtfFlag(flag)) {
+      throw new Error(`Flags must use the exact format ${CTF_FLAG_FORMAT}.`);
+    }
 
     const { data: challenge, error } = await admin
       .from("ctf_challenges")
@@ -377,7 +383,9 @@ export async function updateChallenge(
 
     const replacementFlag = String(formData.get("flag") ?? "").trim();
     if (replacementFlag) {
-      if (replacementFlag.length > 512) throw new Error("The flag is unexpectedly long.");
+      if (!isCanonicalCtfFlag(replacementFlag)) {
+        throw new Error(`Flags must use the exact format ${CTF_FLAG_FORMAT}.`);
+      }
       const flagHash = createHash("sha256").update(replacementFlag).digest("hex");
       const { error: secretError } = await admin
         .from("ctf_challenge_secrets")

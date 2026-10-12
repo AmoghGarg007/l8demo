@@ -15,6 +15,7 @@ import {
 } from "../../lib/ctf-auth";
 import { isSupabaseConfigured } from "../../lib/supabase/config";
 import { createClient } from "../../lib/supabase/server";
+import { CTF_FLAG_FORMAT, isCanonicalCtfFlag } from "../../lib/ctf-flag";
 
 export type AuthState = {
   error: string | null;
@@ -324,6 +325,13 @@ export async function submitFlag(
     return {
       status: "error",
       message: "That flag is unexpectedly long.",
+    };
+  }
+
+  if (!isCanonicalCtfFlag(flag)) {
+    return {
+      status: "error",
+      message: `Use the exact flag format ${CTF_FLAG_FORMAT}.`,
     };
   }
 
